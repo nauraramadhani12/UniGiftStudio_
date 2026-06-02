@@ -111,7 +111,7 @@
         const API_BASE = 'http://localhost:3000';
 
         const token = localStorage.getItem('adminToken');
-        if (!token) window.location.href = 'login.html?next=admin';
+        if (!token) window.location.href = '../consumer/login.html?next=admin';
 
         function authHeader() {
             return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
@@ -120,7 +120,7 @@
         function logout() {
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminUser');
-            window.location.href = 'login.html?next=admin';
+            window.location.href = '../consumer/login.html?next=admin';
         }
 
         const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
@@ -152,7 +152,7 @@
                 const res = await fetch(`${API_BASE}/api/admin/orders`, { headers: authHeader() });
                 if (res.status === 401 || res.status === 403) {
                     localStorage.removeItem('adminToken');
-                    window.location.href = 'login.html?next=admin';
+                    window.location.href = '../consumer/login.html?next=admin';
                     return;
                 }
                 const json = await res.json();

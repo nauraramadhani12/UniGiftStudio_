@@ -97,7 +97,7 @@
 
         // ── Auth ──────────────────────────────────────────────────────
         const token = localStorage.getItem('adminToken');
-        if (!token) window.location.href = 'login.html';
+        if (!token) window.location.href = '../consumer/login.html';
 
         function authHeader() {
             return {
@@ -109,7 +109,7 @@
         function logout() {
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminUser');
-            window.location.href = 'login.html';
+            window.location.href = '../consumer/login.html';
         }
 
         const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
@@ -164,7 +164,7 @@
                 });
                 if (res.status === 401 || res.status === 403) {
                     localStorage.removeItem('adminToken');
-                    window.location.href = 'login.html';
+                    window.location.href = '../consumer/login.html';
                     return;
                 }
                 const json = await res.json();

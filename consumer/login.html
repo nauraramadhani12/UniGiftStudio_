@@ -106,7 +106,7 @@
         const adminToken = localStorage.getItem('adminToken');
         const adminUser = JSON.parse(localStorage.getItem('adminUser') || 'null');
         if (adminToken && adminUser && adminUser.role === 'admin') {
-            window.location.href = 'dashboard_admin.html';
+            window.location.href = '../seller/dashboard_admin.html';
         }
 
         // Pelanggan yang sudah login TIDAK di-redirect otomatis dari sini
@@ -183,9 +183,9 @@
         // ── Redirect berdasarkan role ─────────────────────────────────
         function redirectByRole(role) {
             if (role === 'admin') {
-                window.location.href = 'dashboard_admin.html';
+                window.location.href = '../seller/dashboard_admin.html';
             } else if (role === 'kreator') {
-                window.location.href = 'seller/dashboard.html';
+                window.location.href = '../seller/dashboard.html';
             } else {
                 window.location.href = 'index.html';
             }

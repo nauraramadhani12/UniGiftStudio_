@@ -191,7 +191,7 @@
     <script>
         const API_BASE = 'http://localhost:3000';
         const token = localStorage.getItem('adminToken');
-        if (!token) window.location.href = 'login.html?next=admin';
+        if (!token) window.location.href = '../consumer/login.html?next=admin';
 
         const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
         const initials = (adminUser.nama || 'AU').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
@@ -201,7 +201,7 @@
         function logout() {
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminUser');
-            window.location.href = 'login.html?next=admin';
+            window.location.href = '../consumer/login.html?next=admin';
         }
 
         let allAI   = [];
