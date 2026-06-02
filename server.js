@@ -465,8 +465,220 @@ app.patch('/api/admin/orders/:id/status', verifyAdmin, asyncHandler(async(req, r
 }));
 
 /* ==========================================================
- * 9. ROUTES — SELLER / CONSUMER (dari server lama, tetap jalan)
+ * 9. ROUTES — CONSUMER (endpoint sesuai file teman)
  * ========================================================== */
+
+/**
+ * POST /api/login  — alias untuk consumer/login.html
+ * Response format: { pesan, user }
+ */
+app.post('/api/login', asyncHandler(async(req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password)
+        return res.status(400).json({ pesan: 'Email dan password wajib diisi.' });
+
+    const [rows] = await pool.query(
+        'SELECT id, nama_lengkap, email, role, status_akun FROM users WHERE email = ? AND password = ?',
+        [email.trim(), password]
+    );
+    if (rows.length === 0)
+        return res.status(401).json({ pesan: 'Email atau password salah.' });
+
+    const user = rows[0];
+    if (user.status_akun === 'diblokir')
+        return res.status(403).json({ pesan: 'Akun kamu diblokir.' });
+
+    res.json({ pesan: 'Login berhasil!', user });
+}));
+
+/**
+ * POST /api/register  — alias untuk consumer/register.html
+ * Body: { nama, email, password }
+ * Response: { pesan }
+ */
+app.post('/api/register', asyncHandler(async(req, res) => {
+    const { nama, email, password } = req.body;
+    if (!nama || !email || !password)
+        return res.status(400).json({ pesan: 'Semua field wajib diisi.' });
+    if (password.length < 6)
+        return res.status(400).json({ pesan: 'Password minimal 6 karakter.' });
+
+    const [existing] = await pool.query('SELECT id FROM users WHERE email = ?', [email.trim()]);
+    if (existing.length > 0)
+        return res.status(409).json({ pesan: 'Email sudah terdaftar. Silakan login.' });
+
+    await pool.query(
+        'INSERT INTO users (nama_lengkap, email, password, role, status_akun) VALUES (?, ?, ?, ?, ?)',
+        [nama.trim(), email.trim(), password, 'pelanggan', 'aktif']
+    );
+    res.status(201).json({ pesan: 'Akun berhasil dibuat! Silakan login.' });
+}));
+
+/**
+ * GET /api/products/:id  — detail produk untuk product-detail.html
+ */
+app.get('/api/products/:id', asyncHandler(async(req, res) => {
+    const [rows] = await pool.query(
+        'SELECT * FROM products WHERE id = ?', [req.params.id]
+    );
+    if (rows.length === 0)
+        return res.status(404).json({ pesan: 'Produk tidak ditemukan.' });
+    res.json(rows[0]);
+}));
+
+/**
+ * GET /api/orders/:userId  — riwayat pesanan user untuk order-history.html
+ */
+app.get('/api/orders/:userId', asyncHandler(async(req, res) => {
+    const userId = req.params.userId;
+    // Cek apakah userId adalah angka (bukan "detail")
+    if (isNaN(userId)) return res.status(400).json({ pesan: 'User ID tidak valid.' });
+
+    const [rows] = await pool.query(
+        `SELECT o.*,
+                (SELECT COUNT(*) FROM order_items oi WHERE oi.order_id = o.id) AS jumlah_item
+         FROM orders o
+         WHERE o.user_id = ?
+         ORDER BY o.created_at DESC`,
+        [userId]
+    );
+    res.json(rows);
+}));
+
+/**
+ * GET /api/orders/detail/:orderId  — detail invoice untuk invoice.html
+ */
+app.get('/api/orders/detail/:orderId', asyncHandler(async(req, res) => {
+    const [orders] = await pool.query(
+        'SELECT * FROM orders WHERE id = ?', [req.params.orderId]
+    );
+    if (orders.length === 0)
+        return res.status(404).json({ pesan: 'Pesanan tidak ditemukan.' });
+
+    const order = orders[0];
+    const [items] = await pool.query(
+        `SELECT oi.*, p.nama_produk, p.foto_url
+         FROM order_items oi
+         LEFT JOIN products p ON p.id = oi.product_id
+         WHERE oi.order_id = ?`,
+        [order.id]
+    );
+    order.items = items;
+    res.json(order);
+}));
+
+/**
+ * PUT /api/orders/:orderId/pay  — simulasi bayar untuk invoice.html
+ */
+app.put('/api/orders/:orderId/pay', asyncHandler(async(req, res) => {
+    const [result] = await pool.query(
+        `UPDATE orders SET status_pesanan = 'diproses' WHERE id = ? AND status_pesanan = 'belum_bayar'`,
+        [req.params.orderId]
+    );
+    if (result.affectedRows === 0)
+        return res.status(400).json({ pesan: 'Pesanan tidak ditemukan atau sudah dibayar.' });
+
+    res.json({ pesan: 'Pembayaran berhasil! Pesananmu sedang diproses.' });
+}));
+
+/**
+ * POST /api/orders  — buat pesanan baru dari checkout.html
+ * Body: { pic_id, total_tagihan, metode_pembayaran, metode_pengiriman, order_items[] }
+ */
+app.post('/api/orders', asyncHandler(async(req, res) => {
+    const { pic_id, total_tagihan, metode_pembayaran, metode_pengiriman, order_items } = req.body;
+    if (!pic_id || !total_tagihan || !order_items || order_items.length === 0)
+        return res.status(400).json({ pesan: 'Data pesanan tidak lengkap.' });
+
+    // Ambil alamat utama user
+    const [addresses] = await pool.query(
+        'SELECT * FROM user_addresses WHERE user_id = ? ORDER BY is_utama DESC LIMIT 1', [pic_id]
+    );
+    const addr = addresses[0] || {};
+
+    const kode = 'UGS-' + Math.floor(Math.random() * 90000 + 10000);
+    const subtotal = order_items.reduce((s, i) => s + (i.harga * i.kuantitas), 0);
+    const ongkir   = metode_pengiriman === 'Ekspres' ? 25000 : 15000;
+    const layanan  = 1000;
+    const total    = subtotal + ongkir + layanan;
+
+    const [orderResult] = await pool.query(
+        `INSERT INTO orders
+         (user_id, kode_pesanan, nama_penerima, nomor_telepon, alamat_lengkap,
+          jenis_pengiriman, metode_pembayaran, subtotal_produk, ongkos_kirim,
+          biaya_layanan, total_bayar, status_pesanan)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'belum_bayar')`,
+        [pic_id, kode,
+         addr.nama_penerima || 'Belum ada alamat',
+         addr.nomor_telepon || '-',
+         addr.detail_alamat ? `${addr.detail_alamat}, ${addr.wilayah}` : 'Belum ada alamat',
+         metode_pengiriman, metode_pembayaran,
+         subtotal, ongkir, layanan, total]
+    );
+
+    const orderId = orderResult.insertId;
+    for (const item of order_items) {
+        await pool.query(
+            'INSERT INTO order_items (order_id, product_id, harga_satuan, kuantitas, varian) VALUES (?, ?, ?, ?, ?)',
+            [orderId, item.id || item.product_id, item.harga || item.harga_jual, item.kuantitas, item.varian || null]
+        );
+    }
+
+    res.status(201).json({ pesan: 'Pesanan berhasil dibuat!', kode_pesanan: kode, order_id: orderId });
+}));
+
+/**
+ * POST /api/addresses  — simpan alamat baru untuk tambah_alamat.html
+ * Body: { pic_id, nama_penerima, nomor_telepon, label_alamat, wilayah, detail_alamat, latitude, longitude, is_utama }
+ */
+app.post('/api/addresses', asyncHandler(async(req, res) => {
+    const { pic_id, nama_penerima, nomor_telepon, label_alamat, wilayah, detail_alamat, latitude, longitude, is_utama } = req.body;
+    if (!pic_id || !nama_penerima || !detail_alamat)
+        return res.status(400).json({ pesan: 'Data alamat tidak lengkap.' });
+
+    // Kalau is_utama = 1, reset semua alamat lain dulu
+    if (is_utama) {
+        await pool.query('UPDATE user_addresses SET is_utama = 0 WHERE user_id = ?', [pic_id]);
+    }
+
+    const [result] = await pool.query(
+        `INSERT INTO user_addresses
+         (user_id, nama_penerima, nomor_telepon, label_alamat, wilayah, detail_alamat, latitude, longitude, is_utama)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [pic_id, nama_penerima, nomor_telepon || '-', label_alamat || 'Rumah',
+         wilayah || '-', detail_alamat, latitude || null, longitude || null, is_utama ? 1 : 0]
+    );
+
+    res.status(201).json({ pesan: 'Alamat berhasil disimpan!', insertId: result.insertId });
+}));
+
+/**
+ * POST /api/cart  — simpan/update item keranjang
+ * (Disimpan di DB, tapi consumer juga pakai localStorage sebagai cache)
+ */
+app.post('/api/cart', asyncHandler(async(req, res) => {
+    const { user_id, product_id, kuantitas } = req.body;
+    if (!user_id || !product_id)
+        return res.status(400).json({ pesan: 'Data keranjang tidak lengkap.' });
+
+    // Cek apakah produk sudah ada di keranjang
+    const [existing] = await pool.query(
+        'SELECT id, kuantitas FROM carts WHERE user_id = ? AND product_id = ?', [user_id, product_id]
+    );
+
+    if (existing.length > 0) {
+        await pool.query(
+            'UPDATE carts SET kuantitas = ? WHERE id = ?',
+            [existing[0].kuantitas + (kuantitas || 1), existing[0].id]
+        );
+    } else {
+        await pool.query(
+            'INSERT INTO carts (user_id, product_id, kuantitas) VALUES (?, ?, ?)',
+            [user_id, product_id, kuantitas || 1]
+        );
+    }
+    res.status(201).json({ pesan: 'Produk ditambahkan ke keranjang!' });
+}));
 
 app.get('/api/orders', asyncHandler(async(req, res) => {
     const [rows] = await pool.query(`
