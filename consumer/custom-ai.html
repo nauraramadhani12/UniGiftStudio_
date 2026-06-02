@@ -790,7 +790,7 @@
             } else if (userToken && userSession) {
                 const nama = userSession.nama_lengkap || userSession.nama || 'Pengguna';
                 const role = userSession.role;
-                const dashHref = role === 'kreator' ? '../seller/dashboard.html' : '../index.html';
+                const dashHref = role === 'kreator' ? '../seller/dashboard.html' : 'index.html';
                 authDiv.innerHTML = `
                     <span class="text-sm font-bold text-slate-500">Halo, <span class="text-orange-500">${nama.split(' ')[0]}</span> 👋</span>
                     <a href="${dashHref}" class="bg-slate-950 text-white px-8 py-3 rounded-2xl font-black hover:bg-orange-600 transition-all shadow-xl text-sm">${role === 'kreator' ? 'Dashboard' : 'Akun Saya'}</a>`;
@@ -1058,7 +1058,7 @@
         function goCheckout() {
             const prompt = document.getElementById('userPrompt').value.trim();
             if (prompt) sessionStorage.setItem('aiPrompt', prompt);
-            window.location.href = '../products.html';
+            window.location.href = 'products.html';
         }
 
         // ── Submit to store (dari viewport) ──────────────────────────
