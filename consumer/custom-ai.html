@@ -967,36 +967,32 @@
             const refNote = refFile ? `, with reference: "${refFile.name}"` : '';
             const finalPrompt = `${promptInput}${refNote}, ${visualStyle} style, 3D souvenir product, white background`;
 
-            async function fetchWithTimeout(url, timeoutMs = 35000) {
-                const controller = new AbortController();
-                const timer = setTimeout(() => controller.abort(), timeoutMs);
-                try {
-                    const res = await fetch(url, { signal: controller.signal });
-                    clearTimeout(timer);
-                    if (!res.ok) throw new Error('API error ' + res.status);
-                    const blob = await res.blob();
-                    return URL.createObjectURL(blob);
-                } catch(e) {
-                    clearTimeout(timer);
-                    throw e;
-                }
+            // Pakai backend kita sebagai proxy → hindari CORS browser
+            function loadImageViaProxy(prompt, seed, size) {
+                return new Promise((resolve, reject) => {
+                    const url = `${API_BASE}/api/ai-generate?prompt=${encodeURIComponent(prompt)}&seed=${seed}&size=${size}`;
+                    const img = new Image();
+                    const timer = setTimeout(() => { img.src = ''; reject(new Error('timeout')); }, 42000);
+                    img.onload  = () => { clearTimeout(timer); resolve(url); };
+                    img.onerror = () => { clearTimeout(timer); reject(new Error('load error')); };
+                    img.src = url;
+                });
             }
 
             async function tryGenerate(attempt = 1, maxAttempts = 3) {
                 const seed = Math.floor(Math.random() * 999999);
-                const size = attempt === 1 ? 768 : 512;
-                const url  = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?width=${size}&height=${size}&nologo=true&seed=${seed}`;
+                const size = attempt === 1 ? 512 : 384;
 
                 loadingTipEl.textContent = attempt > 1
                     ? `Mencoba ulang (${attempt}/${maxAttempts})... ⏳`
-                    : tips[tipIdx % tips.length];
+                    : 'Memproses prompt kamu...';
 
                 try {
-                    const blobUrl = await fetchWithTimeout(url, 35000);
+                    const imgUrl = await loadImageViaProxy(finalPrompt, seed, size);
                     clearInterval(tipInterval);
 
-                    currentImageUrl = blobUrl;
-                    renderImage.src = blobUrl;
+                    currentImageUrl = imgUrl;
+                    renderImage.src = imgUrl;
 
                     loading.style.display = 'none';
                     initialState.classList.add('hidden');
@@ -1010,7 +1006,7 @@
                         promptInput.length > 40 ? promptInput.slice(0,40) + '…' : promptInput;
                     generateBtn.disabled = false;
 
-                    saveToHistory({ prompt: promptInput, style: visualStyle, material: selectedMaterial, url: blobUrl, ts: Date.now() });
+                    saveToHistory({ prompt: promptInput, style: visualStyle, material: selectedMaterial, url: imgUrl, ts: Date.now() });
                     renderHistory();
 
                     fetch(`${API_BASE}/api/ai-request`, {

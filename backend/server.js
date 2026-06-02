@@ -890,6 +890,35 @@ app.patch('/api/admin/ai-requests/:id/status', verifyAdmin, asyncHandler(async(r
     res.json({ success: true, message: 'Status berhasil diperbarui.' });
 }));
 
+/**
+ * GET /api/ai-generate?prompt=...&seed=...&size=...
+ * Proxy ke Pollinations.ai — hindari CORS di browser
+ */
+app.get('/api/ai-generate', asyncHandler(async(req, res) => {
+    const { prompt, seed, size } = req.query;
+    if (!prompt) return res.status(400).json({ error: 'prompt wajib diisi' });
+
+    const px  = parseInt(size) || 512;
+    const s   = seed || Math.floor(Math.random() * 999999);
+    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=${px}&height=${px}&nologo=true&seed=${s}`;
+
+    try {
+        const response = await fetch(url, {
+            signal: AbortSignal.timeout(40000) // 40 detik timeout
+        });
+        if (!response.ok) throw new Error(`Pollinations error: ${response.status}`);
+
+        const contentType = response.headers.get('content-type') || 'image/jpeg';
+        const buffer = Buffer.from(await response.arrayBuffer());
+
+        res.set('Content-Type', contentType);
+        res.set('Cache-Control', 'public, max-age=3600');
+        res.send(buffer);
+    } catch (err) {
+        res.status(503).json({ error: 'AI sedang sibuk, coba lagi.', detail: err.message });
+    }
+}));
+
 app.post('/api/ai-request', asyncHandler(async(req, res) => {
     const { user_id, creator_id, prompt_text, visual_style, kualitas, material } = req.body;
     if (!prompt_text || prompt_text.trim().length === 0) {
