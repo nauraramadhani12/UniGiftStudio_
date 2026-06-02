@@ -597,7 +597,9 @@ app.post('/api/orders', asyncHandler(async(req, res) => {
     const addr = addresses[0] || {};
 
     const kode = 'UGS-' + Math.floor(Math.random() * 90000 + 10000);
-    const subtotal = order_items.reduce((s, i) => s + (i.harga * i.kuantitas), 0);
+
+    // Support field name dari cart.html (price/quantity) maupun format lain (harga/kuantitas)
+    const subtotal = order_items.reduce((s, i) => s + ((i.price || i.harga || i.harga_jual || 0) * (i.quantity || i.kuantitas || 1)), 0);
     const ongkir   = metode_pengiriman === 'Ekspres' ? 25000 : 15000;
     const layanan  = 1000;
     const total    = subtotal + ongkir + layanan;
@@ -618,9 +620,12 @@ app.post('/api/orders', asyncHandler(async(req, res) => {
 
     const orderId = orderResult.insertId;
     for (const item of order_items) {
+        const productId  = item.id || item.product_id || null;
+        const harga      = item.price || item.harga || item.harga_jual || 0;
+        const qty        = item.quantity || item.kuantitas || 1;
         await pool.query(
             'INSERT INTO order_items (order_id, product_id, harga_satuan, kuantitas, varian) VALUES (?, ?, ?, ?, ?)',
-            [orderId, item.id || item.product_id, item.harga || item.harga_jual, item.kuantitas, item.varian || null]
+            [orderId, productId, harga, qty, item.varian || null]
         );
     }
 
@@ -657,25 +662,42 @@ app.post('/api/addresses', asyncHandler(async(req, res) => {
  * (Disimpan di DB, tapi consumer juga pakai localStorage sebagai cache)
  */
 app.post('/api/cart', asyncHandler(async(req, res) => {
-    const { user_id, product_id, kuantitas } = req.body;
-    if (!user_id || !product_id)
-        return res.status(400).json({ pesan: 'Data keranjang tidak lengkap.' });
+    // Support dua format:
+    // Format cart.html: { pic_id, cart_items: [{id, price, quantity, ...}] }
+    // Format lama: { user_id, product_id, kuantitas }
+    const userId = req.body.pic_id || req.body.user_id;
+    const cartItems = req.body.cart_items;
 
-    // Cek apakah produk sudah ada di keranjang
+    if (!userId) return res.status(400).json({ pesan: 'User ID tidak ditemukan.' });
+
+    if (cartItems && Array.isArray(cartItems)) {
+        // Sync seluruh keranjang: hapus lama, insert baru
+        await pool.query('DELETE FROM carts WHERE user_id = ?', [userId]);
+        for (const item of cartItems) {
+            const productId = item.id || item.product_id;
+            const qty = item.quantity || item.kuantitas || 1;
+            if (productId) {
+                await pool.query(
+                    'INSERT INTO carts (user_id, product_id, kuantitas) VALUES (?, ?, ?)',
+                    [userId, productId, qty]
+                );
+            }
+        }
+        return res.status(201).json({ pesan: 'Keranjang berhasil disinkronisasi!' });
+    }
+
+    // Format lama — satu item
+    const { product_id, kuantitas } = req.body;
+    if (!product_id) return res.status(400).json({ pesan: 'Data keranjang tidak lengkap.' });
     const [existing] = await pool.query(
-        'SELECT id, kuantitas FROM carts WHERE user_id = ? AND product_id = ?', [user_id, product_id]
+        'SELECT id, kuantitas FROM carts WHERE user_id = ? AND product_id = ?', [userId, product_id]
     );
-
     if (existing.length > 0) {
-        await pool.query(
-            'UPDATE carts SET kuantitas = ? WHERE id = ?',
-            [existing[0].kuantitas + (kuantitas || 1), existing[0].id]
-        );
+        await pool.query('UPDATE carts SET kuantitas = ? WHERE id = ?',
+            [existing[0].kuantitas + (kuantitas || 1), existing[0].id]);
     } else {
-        await pool.query(
-            'INSERT INTO carts (user_id, product_id, kuantitas) VALUES (?, ?, ?)',
-            [user_id, product_id, kuantitas || 1]
-        );
+        await pool.query('INSERT INTO carts (user_id, product_id, kuantitas) VALUES (?, ?, ?)',
+            [userId, product_id, kuantitas || 1]);
     }
     res.status(201).json({ pesan: 'Produk ditambahkan ke keranjang!' });
 }));
