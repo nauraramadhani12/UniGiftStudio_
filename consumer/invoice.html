@@ -8,82 +8,255 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        @media print { .no-print { display: none; } body { background-color: white; } }
+        @media print { .no-print { display: none !important; } body { background-color: white; } }
     </style>
 </head>
-<body class="p-8">
+<body class="p-4 md:p-8">
 
     <div class="max-w-2xl mx-auto">
-        <div class="flex justify-between mb-8 no-print">
+        <div class="flex justify-between items-center mb-8 no-print">
             <a href="order-history.html" class="text-slate-500 font-bold hover:text-orange-500">← Kembali</a>
             <button onclick="window.print()" class="bg-slate-900 text-white px-6 py-2 rounded-lg font-bold hover:bg-orange-500 transition">Print Invoice</button>
         </div>
 
-        <div class="bg-white p-10 rounded-2xl border border-slate-200 shadow-sm">
-            <div class="flex justify-between items-start border-b border-slate-200 pb-8 mb-8">
+        <div id="invoiceLoading" class="text-center py-20 bg-white rounded-2xl shadow-sm border border-slate-200 no-print">
+            <div class="w-10 h-10 border-4 border-orange-500/20 border-t-orange-500 rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-slate-500 font-bold">Memuat Detail Invoice...</p>
+        </div>
+
+        <div id="invoiceCard" class="bg-white p-6 md:p-10 rounded-2xl border border-slate-200 shadow-sm hidden">
+            
+            <div id="statusBanner" class="mb-8 p-4 rounded-xl font-bold text-center no-print"></div>
+
+            <div class="flex flex-col md:flex-row justify-between items-start border-b border-slate-200 pb-8 mb-8 gap-6 md:gap-0">
                 <div>
                     <h1 class="text-3xl font-black text-orange-500 mb-1">INVOICE</h1>
-                    <p class="text-slate-500 font-bold text-sm">#UGS-9928310</p>
+                    <p id="invKodePesanan" class="text-slate-500 font-bold text-sm">#UGS-XXXXX</p>
                 </div>
-                <div class="text-right">
+                <div class="md:text-right">
                     <h2 class="text-xl font-extrabold text-slate-900">Uni Gift Studio</h2>
                     <p class="text-sm text-slate-500 mt-1">hello@unigift.studio<br>Jakarta, Indonesia</p>
                 </div>
             </div>
 
-            <div class="flex justify-between mb-10 text-sm">
+            <div class="flex flex-col md:flex-row justify-between mb-10 text-sm gap-6 md:gap-0">
                 <div>
                     <p class="font-bold text-slate-400 uppercase tracking-widest text-xs mb-2">Ditagihkan Kepada:</p>
-                    <p class="font-extrabold text-slate-800 text-base">Naura</p>
-                    <p class="text-slate-500 mt-1 max-w-xs">Jl. Sudirman No. 123, Kel. Senayan, Kec. Kebayoran Baru, Jakarta Selatan 12190</p>
+                    <p id="invNama" class="font-extrabold text-slate-800 text-base">Nama Pembeli</p>
+                    <p id="invTelp" class="text-slate-600 font-medium mt-1">08xxxxx</p>
+                    <p id="invAlamat" class="text-slate-500 mt-1 max-w-xs leading-relaxed">Alamat lengkap...</p>
                 </div>
-                <div class="text-right">
+                <div class="md:text-right">
                     <p class="font-bold text-slate-400 uppercase tracking-widest text-xs mb-2">Tanggal Order:</p>
-                    <p class="font-bold text-slate-800">30 Maret 2026</p>
+                    <p id="invTanggal" class="font-bold text-slate-800 mb-4">DD Month YYYY</p>
+                    
+                    <p class="font-bold text-slate-400 uppercase tracking-widest text-xs mb-2">Metode Pembayaran:</p>
+                    <p id="invMetode" class="font-bold text-slate-800">QRIS / Transfer</p>
                 </div>
             </div>
 
-            <table class="w-full text-left mb-8">
-                <thead>
-                    <tr class="border-b border-slate-200 text-slate-400 text-xs uppercase tracking-widest">
-                        <th class="pb-3 font-bold">Deskripsi Item</th>
-                        <th class="pb-3 font-bold text-center">Qty</th>
-                        <th class="pb-3 font-bold text-right">Harga</th>
-                        <th class="pb-3 font-bold text-right">Total</th>
-                    </tr>
-                </thead>
-                <tbody class="text-sm font-semibold text-slate-700">
-                    <tr class="border-b border-slate-100">
-                        <td class="py-4">Night Ride Glow Tag (Hijau Glow)</td>
-                        <td class="py-4 text-center">1</td>
-                        <td class="py-4 text-right">Rp 45.000</td>
-                        <td class="py-4 text-right font-extrabold text-slate-900">Rp 45.000</td>
-                    </tr>
-                    <tr class="border-b border-slate-100">
-                        <td class="py-4">Ongkos Kirim (J&T)</td>
-                        <td class="py-4 text-center">1</td>
-                        <td class="py-4 text-right">Rp 20.000</td>
-                        <td class="py-4 text-right font-extrabold text-slate-900">Rp 20.000</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left mb-8 min-w-[500px]">
+                    <thead>
+                        <tr class="border-b border-slate-200 text-slate-400 text-xs uppercase tracking-widest">
+                            <th class="pb-3 font-bold w-1/2">Deskripsi Item</th>
+                            <th class="pb-3 font-bold text-center">Qty</th>
+                            <th class="pb-3 font-bold text-right">Harga</th>
+                            <th class="pb-3 font-bold text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invItemsTable" class="text-sm font-semibold text-slate-700">
+                        </tbody>
+                </table>
+            </div>
 
             <div class="flex justify-end text-right">
-                <div class="w-1/2">
+                <div class="w-full md:w-1/2">
                     <div class="flex justify-between text-sm font-bold text-slate-500 mb-2">
-                        <span>Subtotal</span>
-                        <span>Rp 65.000</span>
+                        <span>Subtotal Produk</span>
+                        <span id="invSubtotal">Rp 0</span>
                     </div>
-                    <div class="flex justify-between text-lg font-black text-slate-900 border-t border-slate-200 pt-2 mt-2">
+                    <div class="flex justify-between text-sm font-bold text-slate-500 mb-2">
+                        <span id="invPengirimanTeks">Ongkos Kirim (Reguler)</span>
+                        <span id="invOngkir">Rp 0</span>
+                    </div>
+                    <div class="flex justify-between text-sm font-bold text-slate-500 mb-2">
+                        <span>Biaya Layanan</span>
+                        <span id="invLayanan">Rp 1.000</span>
+                    </div>
+                    <div class="flex justify-between text-lg font-black text-slate-900 border-t border-slate-200 pt-3 mt-3">
                         <span>Total Tagihan</span>
-                        <span class="text-orange-500">Rp 65.000</span>
+                        <span id="invTotalTagihan" class="text-orange-500">Rp 0</span>
                     </div>
                 </div>
             </div>
             
             <p class="text-center text-slate-400 text-xs font-bold mt-16">Terima kasih telah berbelanja di Uni Gift Studio!</p>
+
+            <div id="simulasiContainer" class="mt-10 pt-6 border-t border-dashed border-orange-200 text-center no-print hidden">
+                <p class="text-sm font-bold text-orange-500 mb-4">--- PEMBAYARAN VIA QRIS ---</p>
+                <div class="bg-orange-50 p-6 rounded-xl border border-orange-200 inline-block text-center mb-6 max-w-full">
+                    <p class="text-xs font-bold text-slate-500 mb-2 uppercase tracking-widest">Scan QRIS Ini</p>
+                    <img src="assets/images/qris.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg'" class="w-64 max-w-full mx-auto rounded-lg shadow-sm border border-slate-200 bg-white p-2">
+                </div>
+                
+                <div class="max-w-md mx-auto mb-6 text-left">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 text-center">Upload Bukti Pembayaran (JPG/PNG)</label>
+                    <label class="flex items-center gap-3 cursor-pointer w-full px-4 py-3.5 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 hover:border-orange-400 transition text-sm font-semibold text-slate-500">
+                        <span class="text-lg">📷</span>
+                        <span id="uploadLabel">Pilih file bukti transfer...</span>
+                        <input id="buktiFile" type="file" accept="image/*" class="hidden" onchange="document.getElementById('uploadLabel').innerText = this.files[0]?.name || 'Pilih file bukti transfer...'">
+                    </label>
+                </div>
+
+                <button onclick="uploadDanBayar()" id="btnBayar" class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-xl font-black text-lg transition shadow-lg shadow-green-500/30 w-full sm:w-auto">
+                     KONFIRMASI PEMBAYARAN
+                </button>
+                <a href="order-history.html" class="block text-center mt-3 text-sm text-slate-500 hover:text-orange-500 transition font-semibold">
+                    ← Lihat Semua Pesanan Saya
+                </a>
+            </div>
         </div>
     </div>
 
+    <script>
+        // 1. Ambil Parameter ID Pesanan dari URL browser
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('id');
+
+        if (!orderId) {
+            alert("Pesanan tidak ditemukan!");
+            window.location.href = 'order-history.html';
+        } else {
+            fetchInvoiceDetail();
+        }
+
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        async function fetchInvoiceDetail() {
+            try {
+                const response = await fetch(`http://localhost:3000/api/orders/detail/${orderId}`);
+                const order = await response.json();
+                
+                if(response.ok) {
+                    renderInvoice(order);
+                } else {
+                    alert("Pesanan tidak ditemukan di database!");
+                }
+            } catch (error) {
+                alert("Server backend mati!");
+            }
+        }
+
+        function renderInvoice(order) {
+            document.getElementById('invoiceLoading').classList.add('hidden');
+            document.getElementById('invoiceCard').classList.remove('hidden');
+
+            document.getElementById('invKodePesanan').innerText = `#${order.kode_pesanan}`;
+            document.getElementById('invNama').innerText = order.nama_penerima;
+            document.getElementById('invTelp').innerText = order.nomor_telepon;
+            document.getElementById('invAlamat').innerHTML = order.alamat_lengkap;
+            document.getElementById('invTanggal').innerText = formatDate(order.created_at);
+            document.getElementById('invMetode').innerText = order.metode_pembayaran;
+
+            document.getElementById('invSubtotal').innerText = formatRupiah(order.subtotal_produk);
+            document.getElementById('invPengirimanTeks').innerText = `Ongkos Kirim (${order.jenis_pengiriman})`;
+            document.getElementById('invOngkir').innerText = formatRupiah(order.ongkos_kirim);
+            document.getElementById('invLayanan').innerText = formatRupiah(order.biaya_layanan);
+            document.getElementById('invTotalTagihan').innerText = formatRupiah(order.total_bayar);
+
+            // Render Tabel Barang
+            const table = document.getElementById('invItemsTable');
+            table.innerHTML = '';
+            order.items.forEach(item => {
+                const totalItem = item.kuantitas * item.harga_satuan;
+                table.innerHTML += `
+                    <tr class="border-b border-slate-100">
+                        <td class="py-4 pr-4">
+                            <div>${item.nama_produk}</div>
+                            ${item.varian ? `<div class="text-xs text-slate-400 mt-0.5">Varian: ${item.varian}</div>` : ''}
+                        </td>
+                        <td class="py-4 text-center">${item.kuantitas}</td>
+                        <td class="py-4 text-right">${formatRupiah(item.harga_satuan)}</td>
+                        <td class="py-4 text-right font-extrabold text-slate-900">${formatRupiah(totalItem)}</td>
+                    </tr>
+                `;
+            });
+
+            // Logika Status Pembayaran
+            const banner = document.getElementById('statusBanner');
+            const simulasiArea = document.getElementById('simulasiContainer');
+
+            if (order.status_pesanan === 'belum_bayar') {
+                banner.className = "mb-8 p-4 rounded-xl font-bold text-center no-print bg-red-100 text-red-600";
+                banner.innerText = "MENUNGGU PEMBAYARAN";
+                simulasiArea.classList.remove('hidden'); // Munculin area demo QRIS
+            } else {
+                banner.className = "mb-8 p-4 rounded-xl font-bold text-center no-print bg-green-100 text-green-600";
+                banner.innerText = "LUNAS";
+                simulasiArea.classList.add('hidden'); // Sembunyikan area demo
+            }
+        }
+
+        // FUNGSI SAKTI DEMO: Mengubah status belum_bayar jadi diproses
+        async function uploadDanBayar() {
+            const fileInput = document.getElementById('buktiFile');
+            if (fileInput.files.length === 0) {
+                alert('Harap pilih file bukti pembayaran terlebih dahulu!');
+                return;
+            }
+
+            const btn = document.getElementById('btnBayar');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "Mengupload Bukti...";
+            btn.disabled = true;
+
+            try {
+                // 1. Upload file
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                const uploadRes = await fetch(`http://localhost:3000/api/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const uploadResult = await uploadRes.json();
+                if (!uploadRes.ok || !uploadResult.success) {
+                    throw new Error(uploadResult.message || 'Gagal mengupload bukti pembayaran');
+                }
+
+                const fileUrl = uploadResult.fileUrl;
+                btn.innerHTML = "Memproses Pembayaran...";
+
+                // 2. Kirim URL bukti ke payment API
+                const res = await fetch(`http://localhost:3000/api/orders/${orderId}/pay`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ bukti_pembayaran: fileUrl })
+                });
+
+                const result = await res.json();
+                if (res.ok) {
+                    alert(result.pesan);
+                    window.location.href = 'order-history.html';
+                } else {
+                    alert(result.pesan);
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                alert('Gagal konfirmasi pembayaran: ' + e.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>

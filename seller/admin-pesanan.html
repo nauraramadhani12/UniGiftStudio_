@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+<script>const API_ORIGIN = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? 'http://localhost:3000' : ''; const CONSUMER_BASE = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? '../consumer/' : '../';</script>
 </head>
 <body class="bg-slate-50 text-slate-900 flex h-screen overflow-hidden">
 
@@ -20,20 +21,20 @@
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 px-2">Menu Utama</p>
                 <nav class="space-y-1">
                     <a href="dashboard_admin.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold">
-                        <span class="text-xl">📊</span> Dashboard
+                        <span class="text-xl"></span> Dashboard
                     </a>
                     <a href="admin-pesanan.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-500 text-white font-semibold shadow-lg shadow-orange-500/20">
-                        <span class="text-xl">📦</span> Pesanan
+                        <span class="text-xl"></span> Pesanan
                     </a>
                     <a href="admin-custom-ai.html" class="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold">
-                        <div class="flex items-center gap-3"><span class="text-xl">✨</span> Custom AI</div>
+                        <div class="flex items-center gap-3"><span class="text-xl"></span> Custom AI</div>
                         <span id="badge-ai-nav" class="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">...</span>
                     </a>
                     <a href="admin-katalog.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold">
-                        <span class="text-xl">🛍️</span> Katalog Produk
+                        <span class="text-xl"></span> Katalog Produk
                     </a>
                     <a href="admin-pengguna.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold">
-                        <span class="text-xl">👥</span> Manajemen Pengguna
+                        <span class="text-xl"></span> Manajemen Pengguna
                     </a>
                 </nav>
             </div>
@@ -108,10 +109,10 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:3000';
+        const API_BASE = API_ORIGIN + '';
 
         const token = localStorage.getItem('adminToken');
-        if (!token) window.location.href = '../consumer/login.html?next=admin';
+        if (!token) window.location.href = CONSUMER_BASE + 'login.html?next=admin';
 
         function authHeader() {
             return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
@@ -120,7 +121,7 @@
         function logout() {
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminUser');
-            window.location.href = '../consumer/login.html?next=admin';
+            window.location.href = CONSUMER_BASE + 'login.html?next=admin';
         }
 
         const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
@@ -152,7 +153,7 @@
                 const res = await fetch(`${API_BASE}/api/admin/orders`, { headers: authHeader() });
                 if (res.status === 401 || res.status === 403) {
                     localStorage.removeItem('adminToken');
-                    window.location.href = '../consumer/login.html?next=admin';
+                    window.location.href = CONSUMER_BASE + 'login.html?next=admin';
                     return;
                 }
                 const json = await res.json();
@@ -232,10 +233,10 @@
                 `Menampilkan ${filtered.length} dari ${allOrders.length} pesanan`;
         }
 
-        fetch(`${API_BASE}/api/stats`)
+        fetch(`${API_BASE}/api/admin/dashboard`, { headers: authHeader() })
             .then(r => r.json())
             .then(j => {
-                if (j.success) document.getElementById('badge-ai-nav').textContent = `${j.data.total_ai_requests ?? 0} Baru`;
+                if (j.success) document.getElementById('badge-ai-nav').textContent = `${j.data.totalAiRequests ?? 0} Baru`;
             }).catch(() => {});
 
         window.onload = loadOrders;

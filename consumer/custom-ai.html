@@ -207,6 +207,7 @@
         
         .badge-tier {
             background: linear-gradient(135deg, #fbbf24, #f97316);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -239,7 +240,7 @@
             <div class="hidden md:flex space-x-10 font-bold text-slate-500">
                 <a href="index.html" class="hover:text-orange-500 transition-all duration-300">Home</a>
                 <a href="products.html" class="hover:text-orange-500 transition-all duration-300">Products</a>
-                <a href="custom-ai.html" class="text-orange-600 border-b-4 border-orange-500/30">✨ Custom AI</a>
+                <a href="custom-ai.html" class="text-orange-600 border-b-4 border-orange-500/30">Custom AI</a>
             </div>
             <div id="navbar-auth" class="flex items-center gap-6">
                 <a href="login.html" class="text-slate-600 font-bold hover:text-slate-950 transition-colors text-sm">Login</a>
@@ -266,23 +267,14 @@
             </p>
 
             <!-- 3 Feature highlights -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto text-left">
-                <div class="bg-white/70 rounded-2xl p-4 border border-orange-100 shadow-sm flex items-start gap-3 cursor-pointer hover:border-orange-300 transition" onclick="switchTab('ai-studio')">
-                    <span class="text-2xl">🤖</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-xl mx-auto text-center">
+                <div class="bg-white/70 rounded-2xl p-4 border border-orange-100 shadow-sm flex flex-col items-center justify-center cursor-pointer hover:border-orange-300 transition" onclick="switchTab('ai-studio')">
                     <div>
-                        <p class="font-bold text-slate-800 text-sm">AI Studio</p>
+                        <p class="font-bold text-slate-800 text-sm">Kustomisasi Desain</p>
                         <p class="text-xs text-slate-500">Generate + upload referensi</p>
                     </div>
                 </div>
-                <div class="bg-white/70 rounded-2xl p-4 border border-green-100 shadow-sm flex items-start gap-3 cursor-pointer hover:border-green-300 transition" onclick="switchTab('submit-design')">
-                    <span class="text-2xl">🎨</span>
-                    <div>
-                        <p class="font-bold text-slate-800 text-sm">Upload & Earn</p>
-                        <p class="text-xs text-slate-500">Submit design, dapat fee 15%</p>
-                    </div>
-                </div>
-                <div class="bg-white/70 rounded-2xl p-4 border border-blue-100 shadow-sm flex items-start gap-3 cursor-pointer hover:border-blue-300 transition" onclick="switchTab('kontributor')">
-                    <span class="text-2xl">🤝</span>
+                <div class="bg-white/70 rounded-2xl p-4 border border-blue-100 shadow-sm flex flex-col items-center justify-center cursor-pointer hover:border-blue-300 transition" onclick="switchTab('kontributor')">
                     <div>
                         <p class="font-bold text-slate-800 text-sm">Jadi Kontributor</p>
                         <p class="text-xs text-slate-500">HIMA/komunitas bisa kolaborasi</p>
@@ -296,10 +288,7 @@
     <div class="sticky top-[73px] z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
         <div class="max-w-7xl mx-auto px-6 flex gap-2 py-3">
             <button id="tab-btn-ai-studio" onclick="switchTab('ai-studio')" class="main-tab-btn active flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm">
-                🤖 AI Studio
-            </button>
-            <button id="tab-btn-submit-design" onclick="switchTab('submit-design')" class="main-tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-slate-500 hover:bg-slate-100">
-                🎨 Upload & Earn
+                Kustomisasi Desain
             </button>
             <button id="tab-btn-kontributor" onclick="switchTab('kontributor')" class="main-tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-slate-500 hover:bg-slate-100">
                 Jadi Kontributor
@@ -320,7 +309,7 @@
                     <div class="glass-card p-8 rounded-[2.5rem] border border-white shadow-2xl">
 
                         <h2 class="text-2xl font-black mb-6 flex items-center gap-4 text-slate-800 tracking-tight">
-                            <span class="bg-orange-100 w-10 h-10 flex items-center justify-center rounded-xl text-lg">🛠️</span> Config
+                            <span class="bg-orange-100 w-10 h-10 flex items-center justify-center rounded-xl text-lg"></span> Config
                         </h2>
 
                         <!-- Step progress -->
@@ -345,29 +334,10 @@
 
                                 <!-- Quick chips -->
                                 <div class="flex flex-wrap gap-2">
-                                    <button class="prompt-chip bg-orange-50 border border-orange-200 text-orange-700 text-[10px] font-bold px-3 py-1.5 rounded-full hover:bg-orange-100" onclick="fillPrompt('Gantungan kunci berbentuk hati dengan nama pasangan, warna merah metalik')">💕 Gantungan kunci hati</button>
-                                    <button class="prompt-chip bg-orange-50 border border-orange-200 text-orange-700 text-[10px] font-bold px-3 py-1.5 rounded-full hover:bg-orange-100" onclick="fillPrompt('Mini statue kucing lucu duduk dengan mahkota kecil, warna putih dan emas')">🐱 Mini statue kucing</button>
-                                    <button class="prompt-chip bg-orange-50 border border-orange-200 text-orange-700 text-[10px] font-bold px-3 py-1.5 rounded-full hover:bg-orange-100" onclick="fillPrompt('Kaos kaki dengan motif batik mega mendung biru dongker modern')">🧦 Kaos kaki batik</button>
+                                    <button class="prompt-chip bg-orange-50 border border-orange-200 text-orange-700 text-[10px] font-bold px-3 py-1.5 rounded-full hover:bg-orange-100" onclick="fillPrompt('Gantungan kunci berbentuk hati dengan nama pasangan, warna merah metalik')">Gantungan kunci hati</button>
+                                    <button class="prompt-chip bg-orange-50 border border-orange-200 text-orange-700 text-[10px] font-bold px-3 py-1.5 rounded-full hover:bg-orange-100" onclick="fillPrompt('Mini statue kucing lucu duduk dengan mahkota kecil, warna putih dan emas')">Mini statue kucing</button>
+                                    <button class="prompt-chip bg-orange-50 border border-orange-200 text-orange-700 text-[10px] font-bold px-3 py-1.5 rounded-full hover:bg-orange-100" onclick="fillPrompt('Kaos kaki dengan motif batik mega mendung biru dongker modern')">Kaos kaki batik</button>
                                 </div>
-                            </div>
-
-                            <!-- UPLOAD REFERENSI (fitur baru) -->
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Upload Referensi <span class="text-slate-300 normal-case font-semibold">(opsional)</span></label>
-                                <div id="refDropZone" class="drop-zone rounded-2xl p-5 text-center cursor-pointer" onclick="document.getElementById('refFileInput').click()" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
-                                    <div id="refPlaceholder" class="space-y-1">
-                                        <div class="text-2xl">📎</div>
-                                        <p class="text-xs font-bold text-slate-400">Drag & drop atau klik untuk upload</p>
-                                        <p class="text-[10px] text-slate-300">PNG, JPG, SVG · Maks. 5MB</p>
-                                    </div>
-                                    <div id="refPreview" class="hidden">
-                                        <img id="refPreviewImg" class="max-h-24 mx-auto rounded-xl object-contain" src="">
-                                        <p id="refFileName" class="text-[10px] font-bold text-green-600 mt-2"></p>
-                                        <button onclick="clearRef(event)" class="text-[10px] text-red-400 font-bold mt-1 hover:underline">Hapus</button>
-                                    </div>
-                                </div>
-                                <input type="file" id="refFileInput" accept="image/*,.stl,.obj" class="hidden" onchange="handleRefFile(event)">
-                                <p class="text-[10px] text-slate-400 ml-2">💡 AI akan menyesuaikan output dengan referensi yang kamu upload</p>
                             </div>
 
                             <!-- Style & Quality -->
@@ -395,26 +365,26 @@
                                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Langkah 2: Material Dasar</label>
                                 <div class="flex flex-wrap gap-2" id="materialContainer">
                                     <div class="tooltip">
-                                        <button data-material="Resin Crystal" class="material-btn px-4 py-2.5 rounded-xl text-[10px] font-black bg-orange-500 text-white shadow-lg shadow-orange-100 uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center gap-2">💎 Resin Crystal</button>
+                                        <button data-material="Resin Crystal" class="material-btn px-4 py-2.5 rounded-xl text-[10px] font-black bg-orange-500 text-white shadow-lg shadow-orange-100 uppercase tracking-widest transition-all hover:scale-105 active:scale-95 flex items-center gap-2">Resin Crystal</button>
                                         <div class="tooltip-box">Transparan, kilap tinggi, cocok detail halus</div>
                                     </div>
                                     <div class="tooltip">
-                                        <button data-material="PLA Matte" class="material-btn px-4 py-2.5 rounded-xl text-[10px] font-black bg-white text-slate-500 border border-slate-200 hover:border-orange-500 uppercase tracking-widest transition-all flex items-center gap-2">🧱 PLA Matte</button>
+                                        <button data-material="PLA Matte" class="material-btn px-4 py-2.5 rounded-xl text-[10px] font-black bg-white text-slate-500 border border-slate-200 hover:border-orange-500 uppercase tracking-widest transition-all flex items-center gap-2">PLA Matte</button>
                                         <div class="tooltip-box">Matte, ramah lingkungan, warna solid</div>
                                     </div>
                                     <div class="tooltip">
-                                        <button data-material="Metal Cast" class="material-btn px-4 py-2.5 rounded-xl text-[10px] font-black bg-white text-slate-500 border border-slate-200 hover:border-orange-500 uppercase tracking-widest transition-all flex items-center gap-2">⚙️ Metal Cast</button>
+                                        <button data-material="Metal Cast" class="material-btn px-4 py-2.5 rounded-xl text-[10px] font-black bg-white text-slate-500 border border-slate-200 hover:border-orange-500 uppercase tracking-widest transition-all flex items-center gap-2">Metal Cast</button>
                                         <div class="tooltip-box">Logam cor, premium, tahan lama</div>
                                     </div>
                                 </div>
                                 <div class="text-[10px] text-slate-400 font-semibold ml-2 flex items-center gap-1.5">
-                                    <span id="materialInfoText">💎 Resin Crystal — transparan & kilap tinggi, cocok untuk detail halus.</span>
+                                    <span id="materialInfoText">Resin Crystal — transparan & kilap tinggi, cocok untuk detail halus.</span>
                                 </div>
                             </div>
 
                             <!-- Generate -->
                             <button onclick="generateModel()" id="generateBtn" class="btn-generate w-full text-white py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-4 group">
-                                GENERATE RENDER <span class="text-xl group-hover:rotate-12 transition-transform">⚡</span>
+                                GENERATE RENDER <span class="text-xl group-hover:rotate-12 transition-transform"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 inline"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg></span>
                             </button>
 
                             <p id="saveStatus" class="text-center text-xs font-bold text-slate-400 hidden"></p>
@@ -462,37 +432,65 @@
                             <div class="absolute inset-0 bg-orange-500/5 blur-[120px] rounded-full glow-pulse"></div>
                             <img id="renderImage" src="" class="object-contain max-h-full rounded-[2rem] shadow-2xl border border-white/10">
                             <div class="absolute bottom-8 flex items-center gap-5 bg-slate-900/80 backdrop-blur-3xl px-8 py-4 rounded-[2rem] border border-white/20 shadow-2xl z-[50]">
-                                <button class="text-white/70 hover:text-orange-400 transition-all text-xs font-black uppercase tracking-widest">🔄 Orbit</button>
+                                <button class="text-white/70 hover:text-orange-400 transition-all text-xs font-black uppercase tracking-widest">Orbit</button>
                                 <div class="w-px h-4 bg-white/10"></div>
-                                <button class="text-white/70 hover:text-orange-400 transition-all text-xs font-black uppercase tracking-widest">🔍 Zoom</button>
+                                <button class="text-white/70 hover:text-orange-400 transition-all text-xs font-black uppercase tracking-widest">Zoom</button>
                                 <div class="w-px h-4 bg-white/10"></div>
-                                <button onclick="submitToStore()" class="text-orange-400 hover:text-orange-300 transition-all text-xs font-black uppercase tracking-widest">📤 Submit ke Store</button>
+                                <button onclick="submitToStore()" class="text-orange-400 hover:text-orange-300 transition-all text-xs font-black uppercase tracking-widest">Submit ke Store</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Action panel -->
+                    <!-- Action panel: Estimasi + Konfirmasi -->
                     <div id="actionPanel" class="glass-card p-8 rounded-[3rem] opacity-0 translate-y-10 pointer-events-none transition-all duration-700 ease-out border-white">
-                        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                            <div class="flex items-center gap-6">
-                                <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-3xl">💎</div>
+                        <!-- State 1: Estimasi Biaya & Jadwal -->
+                        <div id="estimasiPanel">
+                            <div class="flex items-center gap-3 mb-5">
+                                <span class="w-10 h-10 bg-green-100 flex items-center justify-center rounded-xl text-lg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M20 6 9 17l-5-5"/></svg></span>
                                 <div>
-                                    <h3 id="actionTitle" class="text-2xl font-black text-slate-950 tracking-tighter">Custom AI Souvenir</h3>
-                                    <p class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-1">Prototype Ready to Ship</p>
+                                    <h3 id="actionTitle" class="text-xl font-black text-slate-950 tracking-tighter">Desain Layak Produksi</h3>
+                                    <p class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-0.5">Analisis AI selesai — konfirmasi untuk lanjut ke seller</p>
                                 </div>
                             </div>
-                            <div class="flex gap-3 flex-wrap justify-center">
-                                <button onclick="exportImage()" class="px-6 py-4 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all text-xs uppercase tracking-widest">⬇️ Download</button>
-                                <button onclick="switchTab('submit-design')" class="px-6 py-4 rounded-xl font-bold text-green-700 bg-green-100 hover:bg-green-200 transition-all text-xs uppercase tracking-widest">Submit & Earn 💰</button>
-                                <button onclick="goCheckout()" class="bg-slate-950 text-white px-10 py-4 rounded-xl font-black hover:bg-orange-600 transition-all shadow-xl text-xs uppercase tracking-widest">🛒 Pesan Sekarang</button>
+                            <div class="grid grid-cols-2 gap-4 mb-5">
+                                <div class="bg-orange-50 rounded-2xl p-4 border border-orange-100">
+                                    <p class="text-[10px] font-black text-orange-400 uppercase tracking-widest mb-1">Estimasi Biaya</p>
+                                    <p id="estiBiaya" class="text-base font-black text-slate-800">Rp 125.000 – 200.000</p>
+                                    <p class="text-[10px] text-slate-400 mt-0.5">Tergantung kompleksitas cetak</p>
+                                </div>
+                                <div class="bg-blue-50 rounded-2xl p-4 border border-blue-100">
+                                    <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Estimasi Jadwal</p>
+                                    <p id="estiJadwal" class="text-base font-black text-slate-800">5–7 Hari Kerja</p>
+                                    <p class="text-[10px] text-slate-400 mt-0.5">Setelah konfirmasi pesanan</p>
+                                </div>
                             </div>
+                            <!-- Pilih Seller -->
+                            <div class="mb-4">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Pilih Seller / Kreator</label>
+                                <select id="sellerSelect" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-sm text-slate-700 outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
+                                    <option value="">Memuat daftar seller...</option>
+                                </select>
+                            </div>
+                            <div class="flex gap-3 flex-wrap">
+                                <button onclick="exportImage()" class="px-5 py-3 rounded-xl font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 transition text-xs uppercase tracking-widest">⬇️ Download</button>
+                                <button onclick="batalkanPesanan()" class="flex-1 py-3 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-red-50 hover:text-red-500 transition text-sm">Batalkan</button>
+                                <button id="btnKonfirmasi" onclick="konfirmasiPesanan()" class="flex-1 py-3 rounded-xl font-black text-white bg-orange-500 hover:bg-orange-600 transition shadow-lg shadow-orange-200 text-sm">Konfirmasi Pesanan</button>
+                            </div>
+                        </div>
+                        <!-- State 2: Sudah dikonfirmasi -->
+                        <div id="konfirmasiPanel" class="hidden text-center py-2">
+                            <div class="text-4xl mb-3"></div>
+                            <h3 class="text-xl font-black text-green-600 mb-1">Pesanan Dikonfirmasi!</h3>
+                            <p class="text-slate-500 text-sm mb-3">Desainmu sudah dikirim ke seller untuk divalidasi. Pantau status pesananmu di Riwayat Pesanan.</p>
+                            <a href="order-history.html" class="inline-block w-full mb-2 py-3 rounded-xl font-black text-white bg-orange-500 hover:bg-orange-600 transition text-sm text-center">Lihat Riwayat Pesanan →</a>
+                            <button onclick="exportImage()" class="px-6 py-3 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition text-sm">⬇️ Download Gambar</button>
                         </div>
                     </div>
 
                     <!-- History Panel -->
                     <div id="historyPanel" class="hidden">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-black text-slate-700 text-sm uppercase tracking-widest">🕒 Riwayat Generate</h3>
+                            <h3 class="font-black text-slate-700 text-sm uppercase tracking-widest">Riwayat Generate</h3>
                             <button onclick="clearHistory()" class="text-[10px] text-red-400 font-bold hover:underline">Hapus Semua</button>
                         </div>
                         <div id="historyGrid" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
@@ -504,136 +502,6 @@
         <!-- ============================================================
              TAB 2: UPLOAD & EARN
         ============================================================ -->
-        <div id="tab-submit-design" class="tab-content hidden max-w-5xl mx-auto px-6 py-12">
-
-            <!-- Hero earn section -->
-            <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-10 mb-10 relative overflow-hidden">
-                <div class="absolute -right-10 -top-10 w-64 h-64 bg-orange-500 opacity-10 rounded-full"></div>
-                <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-green-500 opacity-10 rounded-full"></div>
-                <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-                    <div>
-                        <span class="inline-block px-3 py-1 mb-3 text-xs font-black tracking-widest text-green-400 uppercase bg-green-400/10 rounded-full border border-green-400/20">💰 Creator Program</span>
-                        <h2 class="text-3xl font-black text-white mb-3">Upload Desain, Hasilkan Uang</h2>
-                        <p class="text-slate-400 text-sm font-medium max-w-lg leading-relaxed">Punya desain keren? Upload ke platform kami. Setiap kali desainmu dibeli oleh pelanggan, kamu otomatis dapat <span class="text-green-400 font-black">15% fee dari harga jual</span>. Tanpa batas penghasilan.</p>
-                    </div>
-                    <div class="text-center float-anim shrink-0">
-                        <div class="text-7xl mb-2">🎨</div>
-                        <div class="bg-green-500/20 border border-green-500/30 rounded-2xl px-6 py-3">
-                            <p class="text-green-400 font-black text-2xl">15%</p>
-                            <p class="text-slate-400 text-[10px] uppercase font-bold tracking-widest">Fee per Penjualan</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- How it works -->
-            <div class="mb-10">
-                <h3 class="text-xl font-black text-slate-800 mb-6">Cara Kerja</h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 fee-steps">
-                    <div class="fee-step bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex gap-4 items-start">
-                        <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-black text-sm shrink-0">1</div>
-                        <div>
-                            <p class="font-bold text-slate-800 text-sm">Upload Desain</p>
-                            <p class="text-xs text-slate-400 mt-1">Upload file PNG/JPG/STL desainmu</p>
-                        </div>
-                    </div>
-                    <div class="fee-step bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex gap-4 items-start">
-                        <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-black text-sm shrink-0">2</div>
-                        <div>
-                            <p class="font-bold text-slate-800 text-sm">Review Tim</p>
-                            <p class="text-xs text-slate-400 mt-1">Tim kami review dalam 1–3 hari kerja</p>
-                        </div>
-                    </div>
-                    <div class="fee-step bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex gap-4 items-start">
-                        <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-black text-sm shrink-0">3</div>
-                        <div>
-                            <p class="font-bold text-slate-800 text-sm">Masuk Katalog</p>
-                            <p class="text-xs text-slate-400 mt-1">Desain tampil di toko dengan nama kamu</p>
-                        </div>
-                    </div>
-                    <div class="fee-step bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex gap-4 items-start">
-                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-black text-sm shrink-0">💰</div>
-                        <div>
-                            <p class="font-bold text-slate-800 text-sm">Terima Fee</p>
-                            <p class="text-xs text-slate-400 mt-1">15% per terjual, dibayar tiap bulan</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Upload form -->
-            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
-                <h3 class="text-xl font-black text-slate-800 mb-6">Submit Desainmu</h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Upload area -->
-                    <div>
-                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">File Desain *</label>
-                        <div id="designDropZone" class="drop-zone rounded-2xl p-8 text-center cursor-pointer min-h-[200px] flex flex-col items-center justify-center" onclick="document.getElementById('designFileInput').click()" ondragover="onDragOver(event,'designDropZone')"
-                            ondragleave="onDragLeave(event,'designDropZone')" ondrop="onDropDesign(event)">
-                            <div id="designPlaceholder">
-                                <div class="text-4xl mb-3">📂</div>
-                                <p class="font-bold text-slate-600 text-sm">Drag & drop file desain kamu</p>
-                                <p class="text-xs text-slate-400 mt-1">PNG, JPG, SVG, STL · Maks. 20MB</p>
-                                <button class="mt-4 bg-orange-50 border border-orange-200 text-orange-600 px-5 py-2 rounded-xl font-bold text-xs hover:bg-orange-100 transition">Pilih File</button>
-                            </div>
-                            <div id="designPreviewWrap" class="hidden w-full">
-                                <img id="designPreviewImg" src="" class="max-h-40 mx-auto rounded-xl object-contain mb-3">
-                                <p id="designFileName" class="text-xs font-bold text-green-600 text-center"></p>
-                                <button onclick="clearDesign(event)" class="block mx-auto mt-2 text-[10px] text-red-400 font-bold hover:underline">Ganti File</button>
-                            </div>
-                        </div>
-                        <input type="file" id="designFileInput" accept="image/*,.stl,.obj" class="hidden" onchange="handleDesignFile(event)">
-                    </div>
-
-                    <!-- Form fields -->
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Nama Desain *</label>
-                            <input id="design-nama" type="text" placeholder="Contoh: Gantungan Kunci Bunga Sakura" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Kategori *</label>
-                            <select id="design-kategori" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium">
-                                <option value="">-- Pilih Kategori --</option>
-                                <option value="Keychain">Keychain / Gantungan Kunci</option>
-                                <option value="Statue">Mini Statue / Patung</option>
-                                <option value="Figure">Action Figure</option>
-                                <option value="Socks">Kaos Kaki Custom</option>
-                                <option value="Custom">Lainnya (Custom)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Deskripsi Desain</label>
-                            <textarea id="design-deskripsi" rows="3" placeholder="Ceritakan inspirasi atau keunikan desainmu..." class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium resize-none"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Saran Harga Jual (Rp)</label>
-                            <input id="design-harga" type="number" min="10000" placeholder="Contoh: 75000" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium">
-                            <p class="text-[10px] text-slate-400 mt-1 ml-1">Tim akan menentukan harga final. Fee kamu = 15% × harga jual.</p>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Email / WhatsApp *</label>
-                            <input id="design-kontak" type="text" placeholder="Untuk notifikasi approval & pembayaran fee" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Terms & Submit -->
-                <div class="mt-6 pt-6 border-t border-slate-100">
-                    <label class="flex items-start gap-3 cursor-pointer mb-6">
-                        <input type="checkbox" id="design-terms" class="mt-0.5 accent-orange-500">
-                        <span class="text-xs text-slate-500 font-medium">Saya menyatakan bahwa desain ini adalah karya original saya dan saya menyetujui <span class="text-orange-500 font-bold underline cursor-pointer">syarat & ketentuan</span> program Creator Uni Gift Studio.</span>
-                    </label>
-
-                    <p id="design-msg" class="hidden text-sm font-bold text-center mb-4"></p>
-
-                    <button onclick="submitDesign()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 rounded-2xl font-black text-base hover:from-green-600 hover:to-emerald-700 transition shadow-lg shadow-green-200">
-                        Submit Desain & Daftar Jadi Creator 🚀
-                    </button>
-                </div>
-            </div>
-        </div>
 
         <!-- ============================================================
              TAB 3: JADI KONTRIBUTOR
@@ -645,7 +513,7 @@
                 <div class="absolute -right-16 -top-16 w-72 h-72 bg-blue-500 opacity-10 rounded-full"></div>
                 <div class="absolute -left-8 -bottom-8 w-40 h-40 bg-orange-500 opacity-10 rounded-full"></div>
                 <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
-                    <div class="text-6xl float-anim shrink-0">🤝</div>
+                    <div class="text-6xl float-anim shrink-0"></div>
                     <div>
                         <span class="inline-block px-3 py-1 mb-3 text-xs font-black tracking-widest text-blue-300 uppercase bg-blue-300/10 rounded-full border border-blue-300/20">Open Contributor Program</span>
                         <h2 class="text-3xl font-black text-white mb-3">Kolaborasi Bersama Kami</h2>
@@ -662,12 +530,12 @@
                     <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 relative overflow-hidden">
                         <div class="absolute top-0 right-0 w-24 h-24 bg-orange-100 rounded-bl-full opacity-50"></div>
                         <p class="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Tier</p>
-                        <h4 class="text-2xl font-black text-orange-600 mb-4">🥉 Bronze</h4>
+                        <h4 class="text-2xl font-black text-orange-600 mb-4">Bronze</h4>
                         <p class="text-xs font-bold text-slate-500 mb-4">Untuk komunitas & UKM kecil</p>
                         <ul class="space-y-2 text-sm">
-                            <li class="flex items-center gap-2"><span class="text-green-500 font-black">✓</span> Logo di halaman Mitra</li>
-                            <li class="flex items-center gap-2"><span class="text-green-500 font-black">✓</span> 1 desain eksklusif/bulan</li>
-                            <li class="flex items-center gap-2"><span class="text-green-500 font-black">✓</span> Diskon produk 10%</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500 font-black"></span>Logo di halaman Mitra</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500 font-black"></span>1 desain eksklusif/bulan</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500 font-black"></span>Diskon produk 10%</li>
                             <li class="flex items-center gap-2"><span class="text-slate-300 font-black">—</span><span class="text-slate-400"> Revenue share</span></li>
                         </ul>
                     </div>
@@ -676,27 +544,27 @@
                         <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-widest">Paling Populer</div>
                         <div class="absolute top-0 right-0 w-24 h-24 bg-orange-100 rounded-bl-full opacity-50"></div>
                         <p class="text-xs font-black uppercase tracking-widest text-slate-400 mb-2 mt-2">Tier</p>
-                        <h4 class="text-2xl font-black text-orange-500 mb-4">🥈 Silver</h4>
+                        <h4 class="text-2xl font-black text-orange-500 mb-4">Silver</h4>
                         <p class="text-xs font-bold text-slate-500 mb-4">Untuk HIMA & organisasi kampus</p>
                         <ul class="space-y-2 text-sm">
-                            <li class="flex items-center gap-2"><span class="text-green-500 font-black">✓</span> Logo + halaman profil khusus</li>
-                            <li class="flex items-center gap-2"><span class="text-green-500 font-black">✓</span> 3 desain eksklusif/bulan</li>
-                            <li class="flex items-center gap-2"><span class="text-green-500 font-black">✓</span> Diskon produk 20%</li>
-                            <li class="flex items-center gap-2"><span class="text-green-500 font-black">✓</span> Revenue share 10%</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500 font-black"></span>Logo + halaman profil khusus</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500 font-black"></span>3 desain eksklusif/bulan</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500 font-black"></span>Diskon produk 20%</li>
+                            <li class="flex items-center gap-2"><span class="text-green-500 font-black"></span>Revenue share 10%</li>
                         </ul>
                     </div>
                     <!-- Gold -->
                     <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl shadow-xl p-6 relative overflow-hidden text-white">
                         <div class="absolute top-0 right-0 w-24 h-24 bg-yellow-500 rounded-bl-full opacity-10"></div>
                         <p class="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Tier</p>
-                        <h4 class="text-2xl font-black text-yellow-400 mb-4">🥇 Gold</h4>
+                        <h4 class="text-2xl font-black text-yellow-400 mb-4">Gold</h4>
                         <p class="text-xs font-bold text-slate-400 mb-4">Untuk brand & perusahaan</p>
                         <ul class="space-y-2 text-sm">
-                            <li class="flex items-center gap-2"><span class="text-green-400 font-black">✓</span> Co-branding penuh</li>
-                            <li class="flex items-center gap-2"><span class="text-green-400 font-black">✓</span> Desain eksklusif unlimited</li>
-                            <li class="flex items-center gap-2"><span class="text-green-400 font-black">✓</span> Diskon produk 30%</li>
-                            <li class="flex items-center gap-2"><span class="text-green-400 font-black">✓</span> Revenue share 20%</li>
-                            <li class="flex items-center gap-2"><span class="text-green-400 font-black">✓</span> Account manager khusus</li>
+                            <li class="flex items-center gap-2"><span class="text-green-400 font-black"></span>Co-branding penuh</li>
+                            <li class="flex items-center gap-2"><span class="text-green-400 font-black"></span>Desain eksklusif unlimited</li>
+                            <li class="flex items-center gap-2"><span class="text-green-400 font-black"></span>Diskon produk 30%</li>
+                            <li class="flex items-center gap-2"><span class="text-green-400 font-black"></span>Revenue share 20%</li>
+                            <li class="flex items-center gap-2"><span class="text-green-400 font-black"></span>Account manager khusus</li>
                         </ul>
                     </div>
                 </div>
@@ -738,9 +606,9 @@
                     <div>
                         <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Tier yang Diminati</label>
                         <select id="c-tier" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium">
-                            <option value="Bronze">🥉 Bronze</option>
-                            <option value="Silver" selected>🥈 Silver (Populer)</option>
-                            <option value="Gold">🥇 Gold</option>
+                            <option value="Bronze">Bronze</option>
+                            <option value="Silver" selected>Silver (Populer)</option>
+                            <option value="Gold">Gold</option>
                         </select>
                     </div>
                     <div class="md:col-span-2">
@@ -752,7 +620,7 @@
                 <div class="mt-6 pt-6 border-t border-slate-100">
                     <p id="kontributor-msg" class="hidden text-sm font-bold text-center mb-4"></p>
                     <button onclick="submitKontributor()" class="w-full bg-gradient-to-r from-blue-600 to-slate-800 text-white py-4 rounded-2xl font-black text-base hover:from-blue-700 hover:to-slate-900 transition shadow-lg shadow-blue-200">
-                        Kirim Pendaftaran Kontributor 🤝
+                        Kirim Pendaftaran Kontributor
                     </button>
                 </div>
             </div>
@@ -761,28 +629,28 @@
     </main>
 
     <script>
-        const API_BASE = 'http://localhost:3000';
+        const API_BASE = 'http://127.0.0.1:3000';
         let selectedMaterial = 'Resin Crystal';
-        let refFile = null;
         let designFile = null;
         let currentImageUrl = '';
+        let pendingAiData = null;
 
         const materialDescriptions = {
-            'Resin Crystal': '💎 Resin Crystal — transparan & kilap tinggi, cocok untuk detail halus.',
-            'PLA Matte': '🧱 PLA Matte — matte & ramah lingkungan, ideal untuk warna solid.',
-            'Metal Cast': '⚙️ Metal Cast — logam cor premium, sangat tahan lama & eksklusif.',
+            'Resin Crystal': 'Resin Crystal — transparan & kilap tinggi, cocok untuk detail halus.',
+            'PLA Matte': 'PLA Matte — matte & ramah lingkungan, ideal untuk warna solid.',
+            'Metal Cast': 'Metal Cast — logam cor premium, sangat tahan lama & eksklusif.',
         };
 
         // ── Auth-aware navbar ─────────────────────────────────────────
-        (function () {
+        (function() {
             const adminToken = localStorage.getItem('adminToken');
-            const adminUser  = JSON.parse(localStorage.getItem('adminUser') || 'null');
-            const userToken  = localStorage.getItem('userToken');
+            const adminUser = JSON.parse(localStorage.getItem('adminUser') || 'null');
+            const userToken = localStorage.getItem('userToken');
             const userSession = JSON.parse(localStorage.getItem('userSession') || 'null');
             const authDiv = document.getElementById('navbar-auth');
             if (!authDiv) return;
 
-            if (adminToken && adminUser?.role === 'admin') {
+            if (adminToken && adminUser && adminUser.role === 'admin') {
                 const namaAdmin = adminUser.nama_lengkap || adminUser.nama || 'Admin';
                 authDiv.innerHTML = `
                     <span class="text-sm font-bold text-slate-500">Halo, <span class="text-orange-500">${namaAdmin}</span></span>
@@ -790,9 +658,10 @@
             } else if (userToken && userSession) {
                 const nama = userSession.nama_lengkap || userSession.nama || 'Pengguna';
                 const role = userSession.role;
-                const dashHref = role === 'kreator' ? '../seller/dashboard.html' : 'index.html';
+                const dashHref = role === 'kreator' ? '../seller/dashboard.html' : 'profile.html';
                 authDiv.innerHTML = `
-                    <span class="text-sm font-bold text-slate-500">Halo, <span class="text-orange-500">${nama.split(' ')[0]}</span> 👋</span>
+                    <span class="text-sm font-bold text-slate-500">Halo, <span class="text-orange-500">${nama.split(' ')[0]}</span></span>
+                    <a href="order-history.html" class="text-xs bg-orange-50 hover:bg-orange-500 hover:text-white text-orange-600 font-bold px-4 py-2 rounded-2xl transition border border-orange-200">Pesanan Saya</a>
                     <a href="${dashHref}" class="bg-slate-950 text-white px-8 py-3 rounded-2xl font-black hover:bg-orange-600 transition-all shadow-xl text-sm">${role === 'kreator' ? 'Dashboard' : 'Akun Saya'}</a>`;
             }
         })();
@@ -814,14 +683,14 @@
         function updateSteps() {
             const hasPrompt = document.getElementById('userPrompt').value.trim().length > 0;
             document.getElementById('dot1').className = hasPrompt ? 'step-dot done' : 'step-dot active';
-            document.getElementById('dot1').textContent = hasPrompt ? '✓' : '1';
+            document.getElementById('dot1').textContent = hasPrompt ? 'OK' : '1';
             document.getElementById('line1').className = hasPrompt ? 'step-line done' : 'step-line inactive';
             document.getElementById('dot2').className = hasPrompt ? 'step-dot active' : 'step-dot inactive';
         }
 
         function setStep3Active() {
             document.getElementById('dot2').className = 'step-dot done';
-            document.getElementById('dot2').textContent = '✓';
+            document.getElementById('dot2').textContent = 'OK';
             document.getElementById('line2').className = 'step-line done';
             document.getElementById('dot3').className = 'step-dot active';
         }
@@ -845,35 +714,6 @@
             document.getElementById('materialInfoText').textContent = materialDescriptions[selectedMaterial] || selectedMaterial;
         });
 
-        // ── Upload referensi ──────────────────────────────────────────
-        function handleRefFile(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            refFile = file;
-            const reader = new FileReader();
-            reader.onload = ev => {
-                document.getElementById('refPreviewImg').src = ev.target.result;
-                document.getElementById('refFileName').textContent = `✓ ${file.name}`;
-                document.getElementById('refPlaceholder').classList.add('hidden');
-                document.getElementById('refPreview').classList.remove('hidden');
-            };
-            if (file.type.startsWith('image/')) reader.readAsDataURL(file);
-            else {
-                document.getElementById('refPreviewImg').src = '';
-                document.getElementById('refFileName').textContent = `✓ ${file.name}`;
-                document.getElementById('refPlaceholder').classList.add('hidden');
-                document.getElementById('refPreview').classList.remove('hidden');
-            }
-        }
-
-        function clearRef(e) {
-            e.stopPropagation();
-            refFile = null;
-            document.getElementById('refFileInput').value = '';
-            document.getElementById('refPreview').classList.add('hidden');
-            document.getElementById('refPlaceholder').classList.remove('hidden');
-        }
-
         // ── Upload design ─────────────────────────────────────────────
         function handleDesignFile(e) {
             const file = e.target.files[0];
@@ -882,14 +722,14 @@
             const reader = new FileReader();
             reader.onload = ev => {
                 document.getElementById('designPreviewImg').src = ev.target.result;
-                document.getElementById('designFileName').textContent = `✓ ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+                document.getElementById('designFileName').textContent = `${file.name} (${(file.size/1024).toFixed(1)} KB)`;
                 document.getElementById('designPlaceholder').classList.add('hidden');
                 document.getElementById('designPreviewWrap').classList.remove('hidden');
             };
             if (file.type.startsWith('image/')) reader.readAsDataURL(file);
             else {
                 document.getElementById('designPreviewImg').src = '';
-                document.getElementById('designFileName').textContent = `✓ ${file.name}`;
+                document.getElementById('designFileName').textContent = `${file.name}`;
                 document.getElementById('designPlaceholder').classList.add('hidden');
                 document.getElementById('designPreviewWrap').classList.remove('hidden');
             }
@@ -904,27 +744,15 @@
         }
 
         // ── Drag & drop helpers ───────────────────────────────────────
-        function onDragOver(e, zoneId) {
-            e.preventDefault();
-            document.getElementById(zoneId || 'refDropZone').classList.add('drag-over');
-        }
-
-        function onDragLeave(e, zoneId) {
-            document.getElementById(zoneId || 'refDropZone').classList.remove('drag-over');
-        }
-
-        function onDrop(e) {
-            e.preventDefault();
-            document.getElementById('refDropZone').classList.remove('drag-over');
-            const file = e.dataTransfer.files[0];
-            if (file) handleRefFile({ target: { files: e.dataTransfer.files } });
-        }
-
         function onDropDesign(e) {
             e.preventDefault();
             document.getElementById('designDropZone').classList.remove('drag-over');
             const file = e.dataTransfer.files[0];
-            if (file) handleDesignFile({ target: { files: e.dataTransfer.files } });
+            if (file) handleDesignFile({
+                target: {
+                    files: e.dataTransfer.files
+                }
+            });
         }
 
         // ── Generate model ────────────────────────────────────────────
@@ -933,19 +761,20 @@
             'Membangun geometri 3D...',
             'Menerapkan material...',
             'Rendering lighting & shadow...',
-            'Hampir selesai! ✨',
+            'Hampir selesai!',
         ];
 
         async function generateModel() {
             const promptInput = document.getElementById('userPrompt').value.trim();
             const visualStyle = document.getElementById('visualStyle').value;
+            const kualitasVal = document.getElementById('kualitas').value;
             if (!promptInput) {
                 alert('Silakan isi deskripsi souvenir dulu!');
                 document.getElementById('userPrompt').focus();
                 return;
             }
 
-            const loading    = document.getElementById('loadingOverlay');
+            const loading = document.getElementById('loadingOverlay');
             const renderImage = document.getElementById('renderImage');
             const initialState = document.getElementById('initialState');
             const resultState = document.getElementById('resultState');
@@ -964,31 +793,100 @@
                 loadingTipEl.textContent = loadingTips[tipIdx++ % loadingTips.length];
             }, 1500);
 
-            const refNote = refFile ? `, with reference: "${refFile.name}"` : '';
-            const finalPrompt = `${promptInput}${refNote}, ${visualStyle} style, 3D souvenir product, white background`;
+            const finalPrompt = `${promptInput}, ${visualStyle} style, 3D souvenir product, white background`;
+            const storedPrompt = promptInput;
 
-            // Pakai backend kita sebagai proxy → hindari CORS browser
-            function loadImageViaProxy(prompt, seed, size) {
-                return new Promise((resolve, reject) => {
-                    const url = `${API_BASE}/api/ai-generate?prompt=${encodeURIComponent(prompt)}&seed=${seed}&size=${size}`;
-                    const img = new Image();
-                    const timer = setTimeout(() => { img.src = ''; reject(new Error('timeout')); }, 42000);
-                    img.onload  = () => { clearTimeout(timer); resolve(url); };
-                    img.onerror = () => { clearTimeout(timer); reject(new Error('load error')); };
-                    img.src = url;
+            // AI Horde — komunitas GPU gratis, tanpa API key berbayar
+            async function loadImageDirectly(prompt, seed, size) {
+                const HORDE = 'https://aihorde.net/api/v2';
+                const w = Math.round(Math.min(size, 512) / 64) * 64 || 512;
+                const h = w;
+
+                loadingTipEl.textContent = 'Mengirim ke AI Horde...';
+                console.log('[Horde] Submit prompt:', prompt);
+
+                const submitResp = await fetch(`${HORDE}/generate/async`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': 'bn_maDnOEiP55AjyCoGmkQ',
+                        'Client-Agent': 'uni-gift-studio:1.0:amadea'
+                    },
+                    body: JSON.stringify({
+                        prompt,
+                        params: { width: w, height: h, steps: 14, n: 1, cfg_scale: 7.5 },
+                        r2: false,
+                        slow_workers: true
+                    }),
+                    signal: AbortSignal.timeout(30000)
                 });
+
+                console.log('[Horde] Submit status:', submitResp.status);
+                if (!submitResp.ok) {
+                    const t = await submitResp.text().catch(() => '');
+                    console.error('[Horde] Submit error:', t.slice(0, 300));
+                    throw new Error(`Submit gagal: ${submitResp.status}`);
+                }
+
+                const { id } = await submitResp.json();
+                console.log('[Horde] Job ID:', id);
+
+                // Poll setiap 3 detik sampai selesai
+                for (let i = 0; i < 400; i++) {
+                    await new Promise(r => setTimeout(r, 3000));
+                    let chk;
+                    try {
+                        chk = await fetch(`${HORDE}/generate/check/${id}`, {
+                            signal: AbortSignal.timeout(10000)
+                        }).then(r => r.json());
+                    } catch (e) {
+                        // Hiccup jaringan saat polling, bukan job-nya yang gagal — coba cek lagi nanti
+                        console.warn('[Horde] Polling check gagal, dicoba lagi:', e.message);
+                        continue;
+                    }
+
+                    console.log(`[Horde] done=${chk.done} queue=${chk.queue_position} wait=${chk.wait_time}s`);
+                    loadingTipEl.textContent = chk.queue_position > 0
+                        ? `Antrian: posisi ${chk.queue_position}, estimasi ${chk.wait_time ?? '?'}s...`
+                        : `Sedang di-render... estimasi ${chk.wait_time ?? '?'}s`;
+
+                    if (chk.faulted) throw new Error('Job gagal di AI Horde');
+
+                    if (chk.done) {
+                        const status = await fetch(`${HORDE}/generate/status/${id}`, {
+                            signal: AbortSignal.timeout(30000)
+                        }).then(r => r.json());
+
+                        const gen = status.generations?.[0];
+                        if (!gen) throw new Error('Tidak ada hasil dari AI Horde');
+
+                        console.log('[Horde] Berhasil! model:', gen.model);
+                        // Pakai data URL langsung (bukan blob URL) agar tetap valid setelah halaman di-refresh
+                        return `data:image/webp;base64,${gen.img}`;
+                    }
+                }
+                const queueTimeoutErr = new Error('Antrian AI Horde masih panjang setelah 20 menit');
+                queueTimeoutErr.isQueueTimeout = true;
+                throw queueTimeoutErr;
             }
 
             async function tryGenerate(attempt = 1, maxAttempts = 3) {
                 const seed = Math.floor(Math.random() * 999999);
-                const size = attempt === 1 ? 512 : 384;
 
-                loadingTipEl.textContent = attempt > 1
-                    ? `Mencoba ulang (${attempt}/${maxAttempts})... ⏳`
-                    : 'Memproses prompt kamu...';
+                // Map kualitas value to resolution size
+                let size = 512;
+                if (kualitasVal === 'Draft') {
+                    size = attempt === 1 ? 384 : 256;
+                } else { // Ultra Max
+                    size = attempt === 1 ? 1024 : 512;
+                }
+
+                loadingTipEl.textContent = attempt > 1 ?
+                    `Mencoba ulang (${attempt}/${maxAttempts})... ⏳` :
+                    'Memproses prompt kamu...';
 
                 try {
-                    const imgUrl = await loadImageViaProxy(finalPrompt, seed, size);
+                    const imgUrl = await loadImageDirectly(finalPrompt, seed, size);
                     clearInterval(tipInterval);
 
                     currentImageUrl = imgUrl;
@@ -996,26 +894,48 @@
 
                     loading.style.display = 'none';
                     initialState.classList.add('hidden');
-                    resultState.classList.remove('hidden','opacity-0','scale-110');
-                    resultState.classList.add('opacity-100','scale-100');
-                    actionPanel.classList.remove('hidden','opacity-0','translate-y-10','pointer-events-none');
-                    actionPanel.classList.add('opacity-100','translate-y-0');
+                    resultState.classList.remove('hidden', 'opacity-0', 'scale-110');
+                    resultState.classList.add('opacity-100', 'scale-100');
+                    actionPanel.classList.remove('hidden', 'opacity-0', 'translate-y-10', 'pointer-events-none');
+                    actionPanel.classList.add('opacity-100', 'translate-y-0');
                     document.getElementById('dot3').className = 'step-dot done';
-                    document.getElementById('dot3').textContent = '✓';
+                    document.getElementById('dot3').textContent = 'OK';
                     document.getElementById('actionTitle').textContent =
-                        promptInput.length > 40 ? promptInput.slice(0,40) + '…' : promptInput;
+                        promptInput.length > 40 ? promptInput.slice(0, 40) + '…' : promptInput;
                     generateBtn.disabled = false;
 
-                    saveToHistory({ prompt: promptInput, style: visualStyle, material: selectedMaterial, url: imgUrl, ts: Date.now() });
+                    saveToHistory({
+                        prompt: promptInput,
+                        style: visualStyle,
+                        material: selectedMaterial,
+                        url: imgUrl,
+                        ts: Date.now()
+                    });
                     renderHistory();
+                    updateEstimasi(selectedMaterial, kualitasVal);
+                    loadSellerOptions();
 
-                    fetch(`${API_BASE}/api/ai-request`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ prompt_text: promptInput, visual_style: visualStyle, kualitas: document.getElementById('kualitas').value, material: selectedMaterial }),
-                    }).catch(() => {});
+                    // Simpan data untuk konfirmasi nanti (belum dikirim ke DB)
+                    pendingAiData = {
+                        prompt_text: storedPrompt,
+                        visual_style: visualStyle,
+                        kualitas: kualitasVal,
+                        material: selectedMaterial,
+                        image_url: imgUrl
+                    };
+                    document.getElementById('estimasiPanel').classList.remove('hidden');
+                    document.getElementById('konfirmasiPanel').classList.add('hidden');
 
-                } catch(err) {
+                } catch (err) {
+                    if (err.isQueueTimeout) {
+                        // Job asli masih ngantri di AI Horde — jangan submit job baru, cukup beri tahu pengguna
+                        clearInterval(tipInterval);
+                        loading.style.display = 'none';
+                        generateBtn.disabled = false;
+                        initialState.style.opacity = '1';
+                        alert('Antrian AI Horde masih sangat panjang. Job kamu kemungkinan masih diproses di server mereka — coba lagi beberapa saat lagi.');
+                        return;
+                    }
                     if (attempt < maxAttempts) {
                         loadingTipEl.textContent = `Gagal, mencoba ulang (${attempt+1}/${maxAttempts})... ⏳`;
                         await new Promise(r => setTimeout(r, 2000));
@@ -1031,6 +951,98 @@
             }
 
             await tryGenerate();
+        }
+
+        // ── Load daftar seller ke dropdown ───────────────────────────
+        async function loadSellerOptions() {
+            const sel = document.getElementById('sellerSelect');
+            try {
+                const res = await fetch(`${API_BASE}/api/sellers`, {
+                    signal: AbortSignal.timeout(8000)
+                });
+                const json = await res.json();
+                if (!json.success || !json.data.length) {
+                    sel.innerHTML = '<option value="">Tidak ada seller tersedia</option>';
+                    return;
+                }
+                sel.innerHTML = '<option value="">-- Pilih Seller --</option>' +
+                    json.data.map(s => `<option value="${s.id}">${s.nama_lengkap}</option>`).join('');
+            } catch (e) {
+                console.error('[Sellers]', e);
+                sel.innerHTML = `<option value="">Gagal: ${e.message || 'Backend tidak merespons'}</option>`;
+            }
+        }
+
+        // Load seller options saat halaman pertama dibuka
+        loadSellerOptions();
+
+        // ── Estimasi biaya & jadwal ───────────────────────────────────
+        function updateEstimasi(material, kualitas) {
+            const biayaMap = {
+                'Resin Crystal': { 'Draft': 'Rp 75.000 – 125.000', 'Ultra Max': 'Rp 125.000 – 200.000' },
+                'PLA Matte':     { 'Draft': 'Rp 50.000 – 85.000',  'Ultra Max': 'Rp 85.000 – 140.000'  },
+                'Metal Cast':    { 'Draft': 'Rp 150.000 – 250.000','Ultra Max': 'Rp 250.000 – 400.000' },
+            };
+            const jadwalMap = { 'Draft': '3–5 Hari Kerja', 'Ultra Max': '5–7 Hari Kerja' };
+            const biaya = (biayaMap[material] || biayaMap['Resin Crystal'])[kualitas] || 'Hubungi kami';
+            const jadwal = jadwalMap[kualitas] || '5–7 Hari Kerja';
+            document.getElementById('estiBiaya').textContent = biaya;
+            document.getElementById('estiJadwal').textContent = jadwal;
+        }
+
+        // ── Batalkan pesanan (reset ke initial state) ─────────────────
+        function batalkanPesanan() {
+            pendingAiData = null;
+            const actionPanel = document.getElementById('actionPanel');
+            actionPanel.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+            actionPanel.classList.remove('opacity-100', 'translate-y-0');
+        }
+
+        // ── Konfirmasi pesanan → kirim ke DB → notif seller ──────────
+        async function konfirmasiPesanan() {
+            if (!pendingAiData) return;
+            const creatorId = document.getElementById('sellerSelect').value;
+            if (!creatorId) {
+                alert('Pilih seller terlebih dahulu!');
+                document.getElementById('sellerSelect').focus();
+                return;
+            }
+            const btn = document.getElementById('btnKonfirmasi');
+            btn.disabled = true;
+            btn.textContent = 'Mengirim...';
+            try {
+                const userSession = JSON.parse(localStorage.getItem('userSession') || 'null');
+                const userId = userSession ? userSession.id : null;
+
+                // Gambar hasil AI berupa data URL base64 yang sangat panjang —
+                // upload jadi file asli dulu supaya cuma URL pendek yang disimpan ke DB
+                let imageUrl = pendingAiData.image_url;
+                if (imageUrl && imageUrl.startsWith('data:')) {
+                    btn.textContent = 'Mengunggah gambar...';
+                    const blob = await fetch(imageUrl).then(r => r.blob());
+                    const formData = new FormData();
+                    formData.append('file', blob, `ai-design-${Date.now()}.webp`);
+                    const uploadRes = await fetch(`${API_BASE}/api/upload`, { method: 'POST', body: formData });
+                    const uploadJson = await uploadRes.json();
+                    if (uploadJson.success) imageUrl = uploadJson.fileUrl;
+                }
+
+                btn.textContent = 'Mengirim...';
+                const res = await fetch(`${API_BASE}/api/ai-request`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId, creator_id: creatorId, ...pendingAiData, image_url: imageUrl }),
+                });
+                const json = await res.json();
+                if (!json.success) throw new Error(json.message || 'Gagal menyimpan ke database');
+                pendingAiData = null;
+                document.getElementById('estimasiPanel').classList.add('hidden');
+                document.getElementById('konfirmasiPanel').classList.remove('hidden');
+            } catch (err) {
+                btn.disabled = false;
+                btn.textContent = 'Konfirmasi Pesanan';
+                alert('Gagal mengirim pesanan: ' + err.message);
+            }
         }
 
         // ── Export / Download image ───────────────────────────────────
@@ -1062,7 +1074,10 @@
             const prompt = document.getElementById('userPrompt').value.trim();
             if (prompt) document.getElementById('design-deskripsi').value = prompt;
             switchTab('submit-design');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         }
 
         // ── History (localStorage) ────────────────────────────────────
@@ -1075,11 +1090,24 @@
             localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
         }
 
+        function getCleanHistory() {
+            const raw = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            // Buang riwayat lama yang URL-nya sudah tidak valid (blob: kadaluarsa / kosong)
+            const clean = raw.filter(h => h && h.url && !h.url.startsWith('blob:'));
+            if (clean.length !== raw.length) {
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(clean));
+            }
+            return clean;
+        }
+
         function renderHistory() {
-            const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            const history = getCleanHistory();
             const panel = document.getElementById('historyPanel');
-            const grid  = document.getElementById('historyGrid');
-            if (history.length === 0) { panel.classList.add('hidden'); return; }
+            const grid = document.getElementById('historyGrid');
+            if (history.length === 0) {
+                panel.classList.add('hidden');
+                return;
+            }
             panel.classList.remove('hidden');
             grid.innerHTML = history.map((h, i) => `
                 <div class="relative group cursor-pointer rounded-2xl overflow-hidden border border-slate-200 shadow-sm aspect-square bg-slate-100"
@@ -1092,7 +1120,7 @@
         }
 
         function loadFromHistory(idx) {
-            const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            const history = getCleanHistory();
             const h = history[idx];
             if (!h) return;
             document.getElementById('userPrompt').value = h.prompt;
@@ -1107,9 +1135,12 @@
             const actionPanel = document.getElementById('actionPanel');
             actionPanel.classList.remove('hidden', 'opacity-0', 'translate-y-10', 'pointer-events-none');
             actionPanel.classList.add('opacity-100', 'translate-y-0');
-            document.getElementById('actionTitle').textContent = h.prompt.length > 40
-                ? h.prompt.slice(0, 40) + '…' : h.prompt;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('actionTitle').textContent = h.prompt.length > 40 ?
+                h.prompt.slice(0, 40) + '…' : h.prompt;
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         }
 
         function clearHistory() {
@@ -1123,38 +1154,80 @@
 
         // ── Submit design (Tab 2) ─────────────────────────────────────
         async function submitDesign() {
-            const nama   = document.getElementById('design-nama').value.trim();
-            const kat    = document.getElementById('design-kategori').value;
-            const desc   = document.getElementById('design-deskripsi').value.trim();
-            const harga  = document.getElementById('design-harga').value;
+            const nama = document.getElementById('design-nama').value.trim();
+            const kat = document.getElementById('design-kategori').value;
+            const desc = document.getElementById('design-deskripsi').value.trim();
+            const harga = document.getElementById('design-harga').value;
             const kontak = document.getElementById('design-kontak').value.trim();
-            const terms  = document.getElementById('design-terms').checked;
-            const msgEl  = document.getElementById('design-msg');
+            const terms = document.getElementById('design-terms').checked;
+            const msgEl = document.getElementById('design-msg');
 
-            if (!designFile)  { showMsg(msgEl, 'Harap upload file desain terlebih dahulu.', 'red'); return; }
-            if (!nama)        { showMsg(msgEl, 'Nama desain wajib diisi.', 'red'); return; }
-            if (!kat)         { showMsg(msgEl, 'Pilih kategori produk.', 'red'); return; }
-            if (!kontak)      { showMsg(msgEl, 'Email / WhatsApp wajib diisi.', 'red'); return; }
-            if (!terms)       { showMsg(msgEl, 'Harap setujui syarat & ketentuan terlebih dahulu.', 'red'); return; }
+            if (!designFile) {
+                showMsg(msgEl, 'Harap upload file desain terlebih dahulu.', 'red');
+                return;
+            }
+            if (!nama) {
+                showMsg(msgEl, 'Nama desain wajib diisi.', 'red');
+                return;
+            }
+            if (!kat) {
+                showMsg(msgEl, 'Pilih kategori produk.', 'red');
+                return;
+            }
+            if (!kontak) {
+                showMsg(msgEl, 'Email / WhatsApp wajib diisi.', 'red');
+                return;
+            }
+            if (!terms) {
+                showMsg(msgEl, 'Harap setujui syarat & ketentuan terlebih dahulu.', 'red');
+                return;
+            }
+
+            showMsg(msgEl, 'Mengunggah file desain... ⏳', 'gray');
+
+            let uploadedDesignUrl = null;
+            try {
+                const formData = new FormData();
+                formData.append('file', designFile);
+                const uploadRes = await fetch(`${API_BASE}/api/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const uploadJson = await uploadRes.json();
+                if (!uploadJson.success) throw new Error(uploadJson.message || 'Gagal mengunggah file.');
+                uploadedDesignUrl = uploadJson.fileUrl;
+            } catch (err) {
+                showMsg(msgEl, `${err.message || 'Gagal mengunggah file desain. Coba lagi.'}`, 'red');
+                return;
+            }
 
             showMsg(msgEl, 'Mengirim desain... ⏳', 'gray');
 
             try {
                 const res = await fetch(`${API_BASE}/api/design-submissions`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nama, kategori: kat, deskripsi: desc, harga_saran: harga || null, kontak }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nama,
+                        kategori: kat,
+                        deskripsi: desc,
+                        harga_saran: harga || null,
+                        kontak,
+                        image_url: uploadedDesignUrl
+                    }),
                 });
                 const json = await res.json();
                 if (!json.success) throw new Error(json.message);
-                showMsg(msgEl, `✅ ${json.message}`, 'green');
+                showMsg(msgEl, `${json.message}`, 'green');
             } catch (err) {
-                showMsg(msgEl, `❌ ${err.message || 'Gagal mengirim. Coba lagi.'}`, 'red');
+                showMsg(msgEl, `${err.message || 'Gagal mengirim. Coba lagi.'}`, 'red');
                 return;
             }
 
             setTimeout(() => {
-                ['design-nama','design-deskripsi','design-kontak'].forEach(x => document.getElementById(x).value = '');
+                ['design-nama', 'design-deskripsi', 'design-kontak'].forEach(x => document.getElementById(x).value = '');
                 document.getElementById('design-kategori').value = '';
                 document.getElementById('design-harga').value = '';
                 document.getElementById('design-terms').checked = false;
@@ -1165,11 +1238,11 @@
 
         // ── Submit kontributor (Tab 3) ────────────────────────────────
         async function submitKontributor() {
-            const org   = document.getElementById('c-org').value.trim();
-            const tipe  = document.getElementById('c-tipe').value;
-            const pic   = document.getElementById('c-pic').value.trim();
+            const org = document.getElementById('c-org').value.trim();
+            const tipe = document.getElementById('c-tipe').value;
+            const pic = document.getElementById('c-pic').value.trim();
             const email = document.getElementById('c-email').value.trim();
-            const wa    = document.getElementById('c-wa').value.trim();
+            const wa = document.getElementById('c-wa').value.trim();
             const msgEl = document.getElementById('kontributor-msg');
 
             if (!org || !tipe || !pic || !email || !wa) {
@@ -1182,24 +1255,29 @@
             try {
                 const res = await fetch(`${API_BASE}/api/contributor-apply`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
-                        nama_organisasi: org, tipe_organisasi: tipe, nama_pic: pic,
-                        email, nomor_wa: wa,
+                        nama_organisasi: org,
+                        tipe_organisasi: tipe,
+                        nama_pic: pic,
+                        email,
+                        nomor_wa: wa,
                         tier: document.getElementById('c-tier').value,
                         pesan: document.getElementById('c-pesan').value,
                     }),
                 });
                 const json = await res.json();
                 if (!json.success) throw new Error(json.message);
-                showMsg(msgEl, `✅ ${json.message}`, 'green');
+                showMsg(msgEl, `${json.message}`, 'green');
             } catch (err) {
-                showMsg(msgEl, `❌ ${err.message || 'Gagal mengirim. Coba lagi.'}`, 'red');
+                showMsg(msgEl, `${err.message || 'Gagal mengirim. Coba lagi.'}`, 'red');
                 return;
             }
 
             setTimeout(() => {
-                ['c-org','c-pic','c-email','c-wa','c-pesan'].forEach(x => document.getElementById(x).value = '');
+                ['c-org', 'c-pic', 'c-email', 'c-wa', 'c-pesan'].forEach(x => document.getElementById(x).value = '');
                 document.getElementById('c-tipe').value = '';
                 document.getElementById('c-tier').value = 'Silver';
             }, 3000);
@@ -1207,7 +1285,11 @@
 
         // ── Helper ────────────────────────────────────────────────────
         function showMsg(el, msg, color) {
-            const colors = { red: 'text-red-500', green: 'text-green-600', gray: 'text-slate-400' };
+            const colors = {
+                red: 'text-red-500',
+                green: 'text-green-600',
+                gray: 'text-slate-400'
+            };
             el.textContent = msg;
             el.className = `text-sm font-bold text-center mb-4 ${colors[color] || 'text-slate-500'}`;
             el.classList.remove('hidden');

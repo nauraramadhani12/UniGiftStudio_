@@ -4,21 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Night Ride Glow Tag | Uni Gift Studio</title>
+    <title id="page-title">Product Detail | Uni Gift Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
-        
-        /* Custom Radio Button Sytle for Colors */
         .color-radio:checked + label {
             ring-width: 2px;
             ring-offset-width: 2px;
-            ring-color: #f97316; /* orange-500 */
+            ring-color: #f97316;
             transform: scale(1.1);
         }
     </style>
+<script>const API_ORIGIN = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? 'http://localhost:3000' : '';</script>
 </head>
 
 <body class="bg-slate-50 text-slate-900 flex flex-col min-h-screen">
@@ -33,13 +32,13 @@
             <div class="hidden md:flex space-x-10 font-semibold text-slate-600">
                 <a href="index.html" class="hover:text-orange-500 transition">Home</a>
                 <a href="products.html" class="text-orange-600">Products</a>
-                <a href="custom-ai.html" class="hover:text-orange-500 transition">✨ Custom AI</a>
+                <a href="custom-ai.html" class="hover:text-orange-500 transition">Custom AI</a>
             </div>
 
-            <div class="flex items-center gap-6">
+            <div id="authMenu" class="flex items-center gap-6">
                 <a href="cart.html" class="relative text-slate-600 hover:text-orange-500 transition group">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    <span id="cartBadgeDetail" class="absolute -top-2 -right-2 bg-orange-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">2</span>
+                    <span id="cartBadgeDetail" class="absolute -top-2 -right-2 bg-orange-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white hidden">0</span>
                 </a>
                 <a href="login.html" class="font-semibold text-slate-600 hover:text-orange-500 transition">Login</a>
             </div>
@@ -49,9 +48,7 @@
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-12 w-full">
         
         <a href="products.html" class="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-orange-500 hover:border-orange-200 hover:bg-orange-50 transition-all mb-6 bg-white border border-slate-200 px-5 py-2.5 rounded-full shadow-sm hover:shadow group w-max">
-            <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
+            <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali ke Katalog
         </a>
 
@@ -61,41 +58,21 @@
                 <li><span class="mx-2">/</span></li>
                 <li><a href="products.html" class="hover:text-orange-500 transition">Products</a></li>
                 <li><span class="mx-2">/</span></li>
-                <li><a href="#" class="hover:text-orange-500 transition">Keychain</a></li>
-                <li><span class="mx-2">/</span></li>
-                <li class="text-slate-800 font-bold">Night Ride Glow Tag</li>
+                <li id="breadcrumb-title" class="text-slate-800 font-bold">Memuat...</li>
             </ol>
         </nav>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
             
             <div class="flex flex-col gap-4">
-                <div class="w-full aspect-square bg-slate-900 rounded-3xl flex items-center justify-center shadow-lg relative overflow-hidden group">
-                    <span class="text-9xl group-hover:scale-110 transition-transform duration-500">🏍️</span>
-                    <div class="absolute top-6 left-6 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-1.5 rounded-full text-sm font-bold tracking-wider">
-                        GLOW IN THE DARK
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-4 gap-4">
-                    <div class="aspect-square bg-slate-800 rounded-xl flex items-center justify-center cursor-pointer border-2 border-orange-500">
-                        <span class="text-3xl">🏍️</span>
-                    </div>
-                    <div class="aspect-square bg-slate-900 rounded-xl flex items-center justify-center cursor-pointer hover:bg-slate-800 transition">
-                        <span class="text-3xl opacity-50">🌙</span>
-                    </div>
-                    <div class="aspect-square bg-slate-900 rounded-xl flex items-center justify-center cursor-pointer hover:bg-slate-800 transition">
-                        <span class="text-3xl opacity-50">✨</span>
-                    </div>
-                    <div class="aspect-square bg-slate-100 rounded-xl flex items-center justify-center cursor-pointer hover:bg-slate-200 transition">
-                        <span class="text-xs font-bold text-slate-500">Video</span>
-                    </div>
+                <div id="main-container" class="w-full aspect-square bg-slate-100 rounded-3xl flex items-center justify-center shadow-sm relative overflow-hidden group border border-slate-200">
+                    <div class="w-10 h-10 border-4 border-orange-500/20 border-t-orange-500 rounded-full animate-spin"></div>
                 </div>
             </div>
 
             <div class="flex flex-col justify-center">
-                <span class="text-orange-500 font-extrabold text-sm tracking-widest uppercase mb-2">Exclusive Keychain</span>
-                <h1 class="text-4xl md:text-5xl font-black text-slate-900 mb-4 leading-tight">Night Ride Glow Tag</h1>
+                <span id="product-badge" class="text-orange-500 font-extrabold text-sm tracking-widest uppercase mb-2">Memuat...</span>
+                <h1 id="product-title" class="text-4xl md:text-5xl font-black text-slate-900 mb-4 leading-tight">Sedang Memuat Data</h1>
                 
                 <div class="flex items-center gap-3 mb-6">
                     <div class="flex text-yellow-400">
@@ -105,44 +82,33 @@
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                         <svg class="w-5 h-5 text-slate-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                     </div>
-                    <span class="text-sm font-bold text-slate-500">4.8 (124 Reviews)</span>
+                    <span id="ratingInfo" class="text-sm font-bold text-slate-500"></span>
                 </div>
 
                 <div class="flex items-end gap-4 mb-6">
-                    <span class="text-4xl font-black text-slate-900">Rp 45.000</span>
-                    <span class="text-lg font-bold text-slate-400 line-through mb-1">Rp 60.000</span>
-                    <span class="bg-green-100 text-green-600 px-2 py-1 rounded text-xs font-extrabold mb-1.5">HEMAT 25%</span>
+                    <span id="product-price" class="text-4xl font-black text-slate-900">Rp 0</span>
+                    <span id="product-original-price" class="text-lg font-bold text-slate-400 line-through mb-1 hidden">Rp 0</span>
+                    <span id="product-discount" class="bg-green-100 text-green-600 px-2 py-1 rounded text-xs font-extrabold mb-1.5 hidden">HEMAT 0%</span>
                 </div>
 
-                <p class="text-slate-500 mb-8 leading-relaxed">
-                    Gantungan kunci kustom yang dicetak menggunakan teknologi 3D Printing presisi tinggi. Dilengkapi dengan material *photoluminescent* yang menyerap cahaya di siang hari dan menyala terang (*glow in the dark*) saat kamu berkendara di malam hari.
+                <p id="product-desc" class="text-slate-500 mb-8 leading-relaxed">
+                    Deskripsi sedang dimuat...
                 </p>
 
                 <hr class="border-slate-200 mb-8">
 
-                <div class="mb-8">
-                    <h3 class="font-extrabold text-slate-800 mb-4">Pilih Warna Glow</h3>
-                    <div class="flex gap-4">
-                        <div class="relative">
-                            <input type="radio" name="color" id="color-green" class="hidden color-radio" checked>
-                            <label for="color-green" class="w-10 h-10 rounded-full bg-green-400 cursor-pointer block border-2 border-white shadow-sm hover:scale-105 transition-transform"></label>
-                        </div>
-                        <div class="relative">
-                            <input type="radio" name="color" id="color-blue" class="hidden color-radio">
-                            <label for="color-blue" class="w-10 h-10 rounded-full bg-cyan-400 cursor-pointer block border-2 border-white shadow-sm hover:scale-105 transition-transform"></label>
-                        </div>
-                        <div class="relative">
-                            <input type="radio" name="color" id="color-orange" class="hidden color-radio">
-                            <label for="color-orange" class="w-10 h-10 rounded-full bg-orange-400 cursor-pointer block border-2 border-white shadow-sm hover:scale-105 transition-transform"></label>
-                        </div>
-                    </div>
+                <!-- Varian produk (dinamis, diatur kreator saat create produk) -->
+                <div id="varianSection" class="mb-8 hidden">
+                    <h3 id="varianLabel" class="font-extrabold text-slate-800 mb-4">Pilih Varian</h3>
+                    <div id="varianOptions" class="flex gap-3 flex-wrap"></div>
                 </div>
 
-                <div class="mb-8">
+                <!-- Teks kustom (hanya tampil jika kreator mengaktifkan) -->
+                <div id="teksKustomSection" class="mb-8 hidden">
                     <h3 class="font-extrabold text-slate-800 mb-3 flex justify-between items-center">
-                        Teks Kustom <span class="text-xs font-semibold text-slate-400 font-normal">Maks 8 Huruf</span>
+                        Teks Kustom <span id="teksKustomHint" class="text-xs font-semibold text-slate-400 font-normal"></span>
                     </h3>
-                    <input type="text" placeholder="Masukkan inisial atau plat nomor..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-medium text-slate-700 transition">
+                    <input type="text" id="teksKustomInput" placeholder="Masukkan inisial atau plat nomor..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-medium text-slate-700 transition">
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-4">
@@ -184,45 +150,265 @@
 
     <script>
         let quantity = 1;
-        let currentCartTotal = 2; 
+        let currentCartTotal = 0;
+        let currentProduct = null;
+
+        // ── Navbar & badge sesuai status login (samakan dgn products.html) ──
+        function updateCartBadge() {
+            const badge = document.getElementById('cartBadgeDetail');
+            if (!badge) return;
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const total = cart.reduce((s, i) => s + (i.quantity || 0), 0);
+            if (total > 0) { badge.innerText = total; badge.classList.remove('hidden'); }
+            else { badge.classList.add('hidden'); }
+        }
+
+        function checkLoginStatus() {
+            const userData = localStorage.getItem('userSession');
+            if (userData) {
+                const user = JSON.parse(userData);
+                document.getElementById('authMenu').innerHTML = `
+                    <a href="cart.html" class="relative text-slate-600 hover:text-orange-500 transition group mr-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        <span id="cartBadgeDetail" class="absolute -top-2 -right-2 bg-orange-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white hidden">0</span>
+                    </a>
+                    <div class="flex items-center gap-3 ml-2">
+                        <span class="font-bold text-slate-800">Halo, ${user.nama_lengkap.split(' ')[0]}!</span>
+                        <a href="order-history.html" class="text-xs bg-orange-50 hover:bg-orange-500 hover:text-white text-orange-600 font-bold px-4 py-2 rounded-full transition border border-orange-200">Pesanan Saya</a>
+                        <button onclick="logout()" class="text-xs bg-slate-100 hover:bg-red-100 text-slate-600 hover:text-red-600 font-bold px-4 py-2 rounded-full transition border border-slate-200">Keluar</button>
+                    </div>`;
+            }
+            updateCartBadge();
+        }
+
+        function logout() {
+            localStorage.removeItem('userToken');
+            localStorage.removeItem('userSession');
+            localStorage.removeItem('cart');
+            window.location.href = 'index.html';
+        }
+
+        // Fungsi Tarik Data dari MySQL Berdasarkan URL id=X
+        async function fetchDetail() {
+            // Mengambil ID produk dari URL (misal: ?id=2)
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            if (!productId) {
+                alert("Produk tidak ditemukan!");
+                window.location.href = 'products.html'; // Balikin ke katalog
+                return;
+            }
+
+            try {
+                // Meminta data SATU produk dari server kita
+                const response = await fetch(`${API_ORIGIN}/api/products/${productId}`);
+                if (!response.ok) throw new Error("Produk tidak ada");
+                const p = await response.json();
+                if (p.status_produk === 'nonaktif') throw new Error("Produk tidak tersedia");
+                currentProduct = p;
+
+                // 1. Mengubah Teks
+                document.getElementById('page-title').innerText = `${p.nama_produk} | Uni Gift Studio`;
+                document.getElementById('breadcrumb-title').innerText = p.nama_produk;
+                document.getElementById('product-title').innerText = p.nama_produk;
+                document.getElementById('product-badge').innerText = p.kategori.charAt(0).toUpperCase() + p.kategori.slice(1);
+                document.getElementById('product-desc').innerText = p.deskripsi;
+
+                // 2. Mengubah Harga dan Diskon
+                const hargaRupiah = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(p.harga_jual);
+                document.getElementById('product-price').innerText = hargaRupiah;
+
+                if (p.harga_asli > p.harga_jual) {
+                    const hargaAsliRupiah = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(p.harga_asli);
+                    document.getElementById('product-original-price').innerText = hargaAsliRupiah;
+                    document.getElementById('product-original-price').classList.remove('hidden');
+
+                    const diskon = Math.round(((p.harga_asli - p.harga_jual) / p.harga_asli) * 100);
+                    document.getElementById('product-discount').innerText = `HEMAT ${diskon}%`;
+                    document.getElementById('product-discount').classList.remove('hidden');
+                }
+
+                // 3. Mengubah Gambar (pakai foto asli produk, fallback ikon kategori)
+                const mainContainer = document.getElementById('main-container');
+                if (p.foto_url) {
+                    mainContainer.innerHTML = `<img src="${p.foto_url}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full bg-slate-100 flex items-center justify-center\\'><svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\' stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' class=\\'w-20 h-20 text-slate-300\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'/><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'/><path d=\\'M21 15l-5-5L5 21\\'/></svg></div>'">`;
+                } else if (p.kategori === 'socks') {
+                    mainContainer.innerHTML = `<div class="w-full h-full bg-orange-100 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-24 h-24"><path d="M6 4v6a3 3 0 0 0 3 3h0a3 3 0 0 0 3-3V4"/><path d="M18 4v8a4 4 0 0 1-4 4h-2"/><path d="M4 4h16"/><path d="M6 14v2a4 4 0 0 0 4 4h4a4 4 0 0 0 4-4v-2"/></svg></div>`;
+                } else if (p.kode_produk === 'PRD-001') {
+                    mainContainer.innerHTML = `<div class="w-full h-full bg-slate-900 flex items-center justify-center relative"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-24 h-24 text-white"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6M5 17l2-7h6l3 4h2M9 10V6h3"/></svg><div class="absolute top-6 left-6 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-1.5 rounded-full text-sm font-bold tracking-wider">GLOW IN THE DARK</div></div>`;
+                } else {
+                    mainContainer.innerHTML = `<div class="w-full h-full bg-slate-100 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-20 h-20 text-slate-300"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>`;
+                }
+
+                // 4. Render varian & teks kustom sesuai pengaturan kreator
+                renderVarian(p);
+
+                // Rating & jumlah terjual (dari data review asli)
+                const ratingInfo = document.getElementById('ratingInfo');
+                const ratingTxt = Number(p.rata_rating) > 0
+                    ? `${p.rata_rating} (${p.jumlah_review} Review${p.jumlah_review > 1 ? 's' : ''})`
+                    : 'Belum ada review';
+                ratingInfo.textContent = `${ratingTxt} · ${p.total_terjual || 0} terjual`;
+
+                // 5. Cek Kalau Stok Habis
+                if(p.stok === 0) {
+                    const btn = document.getElementById('addToCartBtn');
+                    btn.innerHTML = `<span>STOK HABIS</span>`;
+                    btn.disabled = true;
+                    btn.classList.add('bg-slate-300', 'cursor-not-allowed', 'text-slate-500');
+                    btn.classList.remove('bg-[#1e1b4b]', 'hover:bg-orange-500', 'text-white');
+                }
+
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById('product-title').innerText = "Produk Gagal Dimuat";
+                document.getElementById('product-desc').innerText = "Pastikan server Node.js sudah menyala.";
+            }
+        }
 
         function updateQuantity(change) {
             quantity += change;
-            if (quantity < 1) {
-                quantity = 1;
-            }
+            if (quantity < 1) quantity = 1;
             document.getElementById('quantityDisplay').innerText = quantity;
         }
 
+        // ── Varian & teks kustom (diatur kreator per produk) ─────────
+        let selectedVarian = null;
+
+        function renderVarian(p) {
+            // Opsi varian dipisah koma; format tiap opsi: "Nama", "Nama|#hexwarna", atau "Nama|#hexwarna|urlFoto"
+            const opsiRaw = (p.varian_opsi || '').trim();
+            if (opsiRaw) {
+                const opsi = opsiRaw.split(',').map(s => s.trim()).filter(Boolean);
+                if (opsi.length) {
+                    document.getElementById('varianLabel').textContent = p.varian_label || 'Pilih Varian';
+                    const wrap = document.getElementById('varianOptions');
+                    wrap.innerHTML = opsi.map((o, i) => {
+                        const [nama, warna, foto] = o.split('|').map(s => (s || '').trim());
+                        const namaSafe = nama.replace(/'/g, '');
+                        const fotoAttr = foto ? ` data-foto="${foto}"` : '';
+                        if (warna) {
+                            // Swatch warna bulat (seperti "Pilih Warna Glow")
+                            return `
+                                <button type="button" onclick="pilihVarian('${namaSafe}', this)" title="${nama}"${fotoAttr}
+                                    class="varian-btn w-10 h-10 rounded-full cursor-pointer border-2 ${i === 0 ? 'ring-2 ring-offset-2 ring-orange-500 border-white' : 'border-white'} shadow-sm hover:scale-105 transition-transform"
+                                    style="background-color:${warna}"></button>`;
+                        }
+                        // Pill teks biasa (misal ukuran S/M/L)
+                        return `
+                            <button type="button" onclick="pilihVarian('${namaSafe}', this)"${fotoAttr}
+                                class="varian-btn px-4 py-2 rounded-xl text-sm font-bold border transition ${i === 0 ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-orange-500'}">${nama}</button>`;
+                    }).join('');
+                    selectedVarian = (opsi[0].split('|')[0] || '').trim();
+                    document.getElementById('varianSection').classList.remove('hidden');
+                    // Kalau varian pertama punya foto sendiri, langsung tampilkan
+                    const fotoAwal = (opsi[0].split('|')[2] || '').trim();
+                    if (fotoAwal) setMainImage(fotoAwal);
+                }
+            }
+
+            // Teks kustom: tampil hanya jika kreator set maks huruf > 0
+            const maxHuruf = Number(p.teks_kustom_max) || 0;
+            if (maxHuruf > 0) {
+                document.getElementById('teksKustomHint').textContent = `Maks ${maxHuruf} Huruf`;
+                document.getElementById('teksKustomInput').maxLength = maxHuruf;
+                document.getElementById('teksKustomSection').classList.remove('hidden');
+            }
+        }
+
+        // Ganti gambar utama produk (dipakai saat varian dengan foto sendiri dipilih)
+        function setMainImage(url) {
+            const mainContainer = document.getElementById('main-container');
+            mainContainer.innerHTML = `<img src="${url}" class="w-full h-full object-cover" onerror="this.style.display='none'">`;
+        }
+
+        function pilihVarian(nama, btn) {
+            selectedVarian = nama;
+            document.querySelectorAll('.varian-btn').forEach(b => {
+                if (b.classList.contains('rounded-full')) {
+                    b.classList.remove('ring-2', 'ring-offset-2', 'ring-orange-500');
+                } else {
+                    b.className = 'varian-btn px-4 py-2 rounded-xl text-sm font-bold border transition bg-white text-slate-600 border-slate-200 hover:border-orange-500';
+                }
+            });
+            if (btn.classList.contains('rounded-full')) {
+                btn.classList.add('ring-2', 'ring-offset-2', 'ring-orange-500');
+            } else {
+                btn.className = 'varian-btn px-4 py-2 rounded-xl text-sm font-bold border transition bg-slate-900 text-white border-slate-900';
+            }
+
+            // Foto per varian: ganti gambar utama; kalau varian ini tidak punya foto, kembali ke foto utama produk
+            const fotoVarian = btn.dataset.foto;
+            if (fotoVarian) {
+                setMainImage(fotoVarian);
+            } else if (currentProduct && currentProduct.foto_url) {
+                setMainImage(currentProduct.foto_url);
+            }
+        }
+
         function addToCartDetail() {
-            currentCartTotal += quantity;
-            
+            if (!currentProduct) return;
+
+            const userData = JSON.parse(localStorage.getItem('userSession'));
+            if (!userData) {
+                alert("Harap login terlebih dahulu!");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const teksKustom = (document.getElementById('teksKustomInput')?.value || '').trim() || null;
+            // Varian/teks berbeda dihitung sebagai item keranjang terpisah
+            const existing = cart.find(item => item.id === currentProduct.id
+                && (item.varian || null) === (selectedVarian || null)
+                && (item.teks_kustom || null) === teksKustom);
+            if (existing) {
+                existing.quantity += quantity;
+            } else {
+                const imgHtml = currentProduct.foto_url
+                    ? `<img src="${currentProduct.foto_url}" class="w-full h-full object-cover" onerror="this.style.display='none'">`
+                    : `<span class="text-2xl"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><rect x="3" y="8" width="18" height="13" rx="1"/><path d="M3 8h18M12 8v13M12 8c-1.5-3-5-4-6-2s1 3 3 2 3-1 3-3-1.5-3-3-3"/><path d="M12 8c1.5-3 5-4 6-2s-1 3-3 2-3-1-3-3 1.5-3 3-3"/></svg></span>`;
+                const bgClass = currentProduct.foto_url ? 'bg-slate-100' : 'bg-orange-50';
+                cart.push({
+                    id: currentProduct.id,
+                    name: currentProduct.nama_produk,
+                    category: currentProduct.kategori,
+                    price: currentProduct.harga_jual,
+                    mrp: currentProduct.harga_asli || currentProduct.harga_jual,
+                    quantity: quantity,
+                    creator_id: currentProduct.creator_id,
+                    nama_kreator: currentProduct.nama_kreator || 'Uni Gift Studio',
+                    varian: selectedVarian || null,
+                    teks_kustom: teksKustom,
+                    image: `<div class="w-20 h-20 ${bgClass} rounded-xl flex items-center justify-center shrink-0 overflow-hidden">${imgHtml}</div>`
+                });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            currentCartTotal = cart.reduce((sum, i) => sum + i.quantity, 0);
             let badge = document.getElementById('cartBadgeDetail');
             badge.innerText = currentCartTotal;
             badge.classList.remove('hidden');
-            
             badge.classList.add('animate-bounce');
-            setTimeout(() => {
-                badge.classList.remove('animate-bounce');
-            }, 1000);
+            setTimeout(() => badge.classList.remove('animate-bounce'), 1000);
 
             let btn = document.getElementById('addToCartBtn');
-            let originalContent = btn.innerHTML; 
-            
+            let originalContent = btn.innerHTML;
             btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> BERHASIL DITAMBAHKAN`;
             btn.classList.add('bg-green-500');
             btn.classList.remove('bg-[#1e1b4b]', 'hover:bg-orange-500');
-
             setTimeout(() => {
                 btn.innerHTML = originalContent;
                 btn.classList.remove('bg-green-500');
                 btn.classList.add('bg-[#1e1b4b]', 'hover:bg-orange-500');
-                
                 quantity = 1;
                 document.getElementById('quantityDisplay').innerText = quantity;
             }, 2000);
         }
-    </script>
 
+        // Jalankan saat halaman dibuka
+        window.onload = () => { checkLoginStatus(); fetchDetail(); };
+    </script>
 </body>
 </html>

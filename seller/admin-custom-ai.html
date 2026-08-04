@@ -10,6 +10,7 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
+<script>const API_ORIGIN = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? 'http://localhost:3000' : ''; const CONSUMER_BASE = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? '../consumer/' : '../';</script>
 </head>
 
 <body class="bg-slate-50 text-slate-900 flex h-screen overflow-hidden">
@@ -24,22 +25,22 @@
             <div class="p-4 space-y-1">
                 <p class="px-2 text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Menu Utama</p>
                 <a href="dashboard_admin.html" class="flex items-center gap-3 text-slate-300 hover:text-white hover:bg-white/5 px-4 py-3 rounded-xl font-semibold transition">
-                    <span class="text-xl">📊</span> Dashboard
+                    <span class="text-xl"></span> Dashboard
                 </a>
                 <a href="admin-pesanan.html" class="flex items-center gap-3 text-slate-300 hover:text-white hover:bg-white/5 px-4 py-3 rounded-xl font-semibold transition">
-                    <span class="text-xl">📦</span> Pesanan
+                    <span class="text-xl"></span> Pesanan
                 </a>
                 <a href="admin-custom-ai.html" class="flex items-center gap-3 bg-orange-500 text-white px-4 py-3 rounded-xl font-semibold shadow-lg shadow-orange-500/20">
-                    <span class="text-xl">✨</span> Custom AI
+                    <span class="text-xl"></span> Custom AI
                 </a>
                 <a href="admin-katalog.html" class="flex items-center gap-3 text-slate-300 hover:text-white hover:bg-white/5 px-4 py-3 rounded-xl font-semibold transition">
-                    <span class="text-xl">🛍️</span> Katalog Produk
+                    <span class="text-xl"></span> Katalog Produk
                 </a>
                 <a href="admin-pengguna.html" class="flex items-center gap-3 text-slate-300 hover:text-white hover:bg-white/5 px-4 py-3 rounded-xl font-semibold transition">
-                    <span class="text-xl">👥</span> Manajemen Pengguna
+                    <span class="text-xl"></span> Manajemen Pengguna
                 </a>
                 <a href="admin-kontributor.html" class="flex items-center justify-between text-slate-300 hover:text-white hover:bg-white/5 px-4 py-3 rounded-xl font-semibold transition">
-                    <div class="flex items-center gap-3"><span class="text-xl">🤝</span> Kontributor</div>
+                    <div class="flex items-center gap-3"><span class="text-xl"></span> Kontributor</div>
                     <span id="badge-kontributor" class="hidden bg-yellow-400 text-slate-900 text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
                 </a>
             </div>
@@ -85,19 +86,14 @@
                 </div>
             </div>
 
-            <!-- TABS -->
-            <div class="flex gap-2 mb-6">
-                <button id="tab-ai-btn" onclick="switchTab('ai')" class="px-5 py-2 rounded-xl font-bold text-sm bg-slate-900 text-white shadow-sm transition">🤖 AI Studio Requests</button>
-                <button id="tab-sub-btn" onclick="switchTab('sub')" class="px-5 py-2 rounded-xl font-bold text-sm bg-white text-slate-500 border border-slate-200 hover:bg-slate-50 transition">🎨 Design Submissions</button>
-            </div>
 
             <!-- FILTER & SEARCH -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm mb-4 px-5 py-4 flex flex-wrap gap-3 items-center justify-between">
                 <div class="flex gap-2 flex-wrap" id="filterBtns">
                     <button onclick="setFilter('semua')" class="filter-btn active text-xs font-bold px-4 py-1.5 rounded-full bg-slate-900 text-white transition">Semua</button>
                     <button onclick="setFilter('pending')" class="filter-btn text-xs font-bold px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:border-yellow-400 transition">⏳ Pending</button>
-                    <button onclick="setFilter('disetujui')" class="filter-btn text-xs font-bold px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:border-green-400 transition">✅ Disetujui</button>
-                    <button onclick="setFilter('ditolak')" class="filter-btn text-xs font-bold px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:border-red-400 transition">❌ Ditolak</button>
+                    <button onclick="setFilter('disetujui')" class="filter-btn text-xs font-bold px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:border-green-400 transition">Disetujui</button>
+                    <button onclick="setFilter('ditolak')" class="filter-btn text-xs font-bold px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:border-red-400 transition">Ditolak</button>
                 </div>
                 <input id="searchInput" type="text" placeholder="Cari prompt atau nama user..." oninput="renderTable()" class="px-4 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-orange-500 w-64">
             </div>
@@ -122,35 +118,16 @@
                 <div class="px-6 py-3 bg-slate-50 border-t border-slate-100 text-xs text-slate-400 font-semibold" id="ai-footer">—</div>
             </div>
 
-            <!-- TABLE: DESIGN SUBMISSIONS -->
-            <div id="panel-sub" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <table class="w-full text-sm">
-                    <thead class="bg-slate-50 border-b border-slate-200">
-                        <tr>
-                            <th class="text-left px-6 py-4 font-bold text-slate-500 text-xs uppercase tracking-wider">Nama Desain & Info</th>
-                            <th class="text-left px-4 py-4 font-bold text-slate-500 text-xs uppercase tracking-wider">Kategori</th>
-                            <th class="text-left px-4 py-4 font-bold text-slate-500 text-xs uppercase tracking-wider">Kontak</th>
-                            <th class="text-left px-4 py-4 font-bold text-slate-500 text-xs uppercase tracking-wider">Tanggal</th>
-                            <th class="text-left px-4 py-4 font-bold text-slate-500 text-xs uppercase tracking-wider">Status</th>
-                            <th class="text-left px-4 py-4 font-bold text-slate-500 text-xs uppercase tracking-wider">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="subTableBody">
-                        <tr><td colspan="6" class="text-center py-12 text-slate-400 font-medium">Memuat data...</td></tr>
-                    </tbody>
-                </table>
-                <div class="px-6 py-3 bg-slate-50 border-t border-slate-100 text-xs text-slate-400 font-semibold" id="sub-footer">—</div>
-            </div>
 
         </div>
     </main>
 
     <!-- MODAL DETAIL -->
     <div id="detailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between p-6 border-b border-slate-100">
                 <h3 class="text-lg font-black text-slate-800">Detail Request</h3>
-                <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-500 transition font-bold">✕</button>
+                <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-500 transition font-bold"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
             </div>
             <div class="p-6 space-y-4">
                 <div>
@@ -179,19 +156,33 @@
                     <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Status Sekarang</p>
                     <p id="modal-status" class="text-sm font-semibold">—</p>
                 </div>
+                <!-- Preview Gambar (Generated Image / Design File) -->
+                <div id="modal-preview-container" class="space-y-2 hidden">
+                    <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Preview Gambar / Hasil Render</p>
+                    <div class="relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 p-2 flex items-center justify-center max-h-[300px]">
+                        <img id="modal-preview-img" src="" class="max-h-[280px] object-contain rounded-lg">
+                    </div>
+                </div>
+                <!-- Preview Foto Referensi Pengguna -->
+                <div id="modal-ref-container" class="space-y-2 hidden">
+                    <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Foto Referensi Pengguna</p>
+                    <div class="relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 p-2 flex items-center justify-center max-h-[300px]">
+                        <img id="modal-ref-img" src="" class="max-h-[280px] object-contain rounded-lg">
+                    </div>
+                </div>
             </div>
             <div class="p-6 pt-0 flex gap-3" id="modal-actions">
-                <button onclick="updateStatus('disetujui')" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-bold text-sm transition">✅ Setujui</button>
-                <button onclick="updateStatus('ditolak')" class="flex-1 bg-red-100 hover:bg-red-200 text-red-600 py-3 rounded-xl font-bold text-sm transition">❌ Tolak</button>
+                <button onclick="updateStatus('disetujui')" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-bold text-sm transition">Setujui</button>
+                <button onclick="updateStatus('ditolak')" class="flex-1 bg-red-100 hover:bg-red-200 text-red-600 py-3 rounded-xl font-bold text-sm transition">Tolak</button>
                 <button onclick="updateStatus('pending')" class="px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 py-3 rounded-xl font-bold text-sm transition">↩ Reset</button>
             </div>
         </div>
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:3000';
+        const API_BASE = API_ORIGIN + '';
         const token = localStorage.getItem('adminToken');
-        if (!token) window.location.href = '../consumer/login.html?next=admin';
+        if (!token) window.location.href = CONSUMER_BASE + 'login.html?next=admin';
 
         const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
         const initials = (adminUser.nama || 'AU').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
@@ -201,7 +192,7 @@
         function logout() {
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminUser');
-            window.location.href = '../consumer/login.html?next=admin';
+            window.location.href = CONSUMER_BASE + 'login.html?next=admin';
         }
 
         let allAI   = [];
@@ -273,8 +264,8 @@
         // ── Render ────────────────────────────────────────────────────
         function statusBadge(s) {
             if (s === 'pending')   return '<span class="px-2 py-1 rounded-full text-[10px] font-black bg-yellow-100 text-yellow-700">⏳ Pending</span>';
-            if (s === 'disetujui') return '<span class="px-2 py-1 rounded-full text-[10px] font-black bg-green-100 text-green-700">✅ Disetujui</span>';
-            if (s === 'ditolak')   return '<span class="px-2 py-1 rounded-full text-[10px] font-black bg-red-100 text-red-600">❌ Ditolak</span>';
+            if (s === 'disetujui') return '<span class="px-2 py-1 rounded-full text-[10px] font-black bg-green-100 text-green-700">Disetujui</span>';
+            if (s === 'ditolak')   return '<span class="px-2 py-1 rounded-full text-[10px] font-black bg-red-100 text-red-600">Ditolak</span>';
             return `<span class="px-2 py-1 rounded-full text-[10px] font-black bg-slate-100 text-slate-500">${s}</span>`;
         }
 
@@ -363,6 +354,15 @@
             modalId = id;
 
             let prompt = data.prompt_text || '—';
+            
+            // Extract reference image URL if present in prompt_text (e.g. "[Referensi: http://...]")
+            let refUrl = null;
+            const refMatch = prompt.match(/\[Referensi:\s*([^\]]+)\]/);
+            if (refMatch) {
+                refUrl = refMatch[1].trim();
+                prompt = prompt.replace(/\[Referensi:\s*[^\]]+\]/, '').trim();
+            }
+
             if (type === 'sub') {
                 // Bersihkan prefix [DESIGN SUBMISSION]
                 prompt = prompt.replace('[DESIGN SUBMISSION] ', '').replace(/\|/g, '\n').trim();
@@ -374,6 +374,28 @@
             document.getElementById('modal-user').textContent     = type === 'ai' ? (data.nama_user || 'Tamu') : 'Kreator Eksternal';
             document.getElementById('modal-date').textContent     = fmtDate(data.created_at);
             document.getElementById('modal-status').innerHTML     = statusBadge(data.status_approval);
+
+            // Display Generated/Uploaded Image
+            const previewContainer = document.getElementById('modal-preview-container');
+            const previewImg = document.getElementById('modal-preview-img');
+            if (data.image_url) {
+                previewImg.src = data.image_url;
+                previewContainer.classList.remove('hidden');
+            } else {
+                previewImg.src = '';
+                previewContainer.classList.add('hidden');
+            }
+
+            // Display User Reference Image
+            const refContainer = document.getElementById('modal-ref-container');
+            const refImg = document.getElementById('modal-ref-img');
+            if (refUrl) {
+                refImg.src = refUrl;
+                refContainer.classList.remove('hidden');
+            } else {
+                refImg.src = '';
+                refContainer.classList.add('hidden');
+            }
 
             document.getElementById('detailModal').classList.remove('hidden');
             document.getElementById('detailModal').classList.add('flex');

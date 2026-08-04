@@ -35,7 +35,7 @@
                         <div class="absolute inset-0 bg-orange-400 blur-lg opacity-40 rounded-full"></div>
                         <div class="relative inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl text-white font-black text-3xl shadow-xl border-2 border-white ring-4 ring-orange-50/50">U</div>
                     </div>
-                    <h2 class="text-3xl font-extrabold text-slate-900 mb-2 tracking-tight">Buat Akun Baru ✨</h2>
+                    <h2 class="text-3xl font-extrabold text-slate-900 mb-2 tracking-tight">Buat Akun Baru</h2>
                     <p class="text-slate-500 text-sm md:text-base font-medium">
                         Bergabung dengan komunitas <span class="text-orange-500 font-bold">Uni Gift Studio</span>.
                     </p>
@@ -53,13 +53,13 @@
                             <label class="cursor-pointer relative">
                                 <input type="radio" name="role" value="consumer" class="peer sr-only" checked>
                                 <div class="text-center px-4 py-3 rounded-xl border-2 border-slate-200 peer-checked:border-orange-500 peer-checked:bg-orange-50 peer-checked:text-orange-600 font-bold text-slate-500 transition hover:bg-slate-50">
-                                    🛍️ Konsumen
+                                    Konsumen
                                 </div>
                             </label>
                             <label class="cursor-pointer relative">
                                 <input type="radio" name="role" value="creator" class="peer sr-only">
                                 <div class="text-center px-4 py-3 rounded-xl border-2 border-slate-200 peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:text-white font-bold text-slate-500 transition hover:bg-slate-50">
-                                    🎨 Kreator 3D
+                                    Kreator 3D
                                 </div>
                             </label>
                         </div>
@@ -144,12 +144,12 @@
 
             // Validasi client-side dulu
             if (password !== confirm_password) {
-                errEl.textContent = '⚠️ Password dan konfirmasi password tidak sama.';
+                errEl.textContent = 'Password dan konfirmasi password tidak sama.';
                 errEl.classList.remove('hidden');
                 return;
             }
             if (password.length < 6) {
-                errEl.textContent = '⚠️ Password minimal 6 karakter.';
+                errEl.textContent = 'Password minimal 6 karakter.';
                 errEl.classList.remove('hidden');
                 return;
             }
@@ -175,11 +175,11 @@
                 if (!json.success) throw new Error(json.message);
 
                 // Kirim pesan sukses ke login page via sessionStorage
-                sessionStorage.setItem('registerSuccess', `✅ Akun berhasil dibuat! Silakan login, ${nama_lengkap}.`);
+                sessionStorage.setItem('registerSuccess', `Akun berhasil dibuat! Silakan login, ${nama_lengkap}.`);
                 window.location.href = 'login.html';
 
             } catch (err) {
-                errEl.textContent = '⚠️ ' + err.message;
+                errEl.textContent = err.message;
                 errEl.classList.remove('hidden');
                 btn.disabled = false;
                 btn.textContent = 'Daftar Sekarang';

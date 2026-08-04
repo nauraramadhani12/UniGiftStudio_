@@ -1,0 +1,322 @@
+<mxGraphModel dx="3355" dy="2595" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- ═══ USER (base class) ═══ -->
+    <mxCell id="User" parent="1" style="swimlane;startSize=30;fontStyle=1;align=center;fontSize=13;" value="User" vertex="1">
+      <mxGeometry x="530" y="-470" width="240" height="205" as="geometry" />
+    </mxCell>
+    <mxCell id="User_attrs" parent="User" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="- id_user : String&#xa;- nama_lengkap : String&#xa;- email : String&#xa;- password : String&#xa;- role : String&#xa;- status : String&#xa;- created_at : DateTime" vertex="1">
+      <mxGeometry y="30" width="240" height="110" as="geometry" />
+    </mxCell>
+    <mxCell id="User_div" parent="User" style="line;" value="" vertex="1">
+      <mxGeometry y="140" width="240" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="User_methods" parent="User" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="+ login() : void&#xa;+ logout() : void&#xa;+ updateProfil() : void&#xa;+ getRole() : String" vertex="1">
+      <mxGeometry y="150" width="240" height="55" as="geometry" />
+    </mxCell>
+
+    <!-- ═══ PELANGGAN ═══ -->
+    <mxCell id="Pelanggan" parent="1" style="swimlane;startSize=30;fontStyle=1;align=center;fontSize=13;" value="Pelanggan" vertex="1">
+      <mxGeometry x="310" y="0" width="260" height="230" as="geometry" />
+    </mxCell>
+    <mxCell id="Pel_attrs" parent="Pelanggan" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="- daftar_alamat : List(Alamat)&#xa;- riwayat_pesanan : List(Pesanan)" vertex="1">
+      <mxGeometry y="30" width="260" height="40" as="geometry" />
+    </mxCell>
+    <mxCell id="Pel_div" parent="Pelanggan" style="line;" value="" vertex="1">
+      <mxGeometry y="70" width="260" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="Pel_methods" parent="Pelanggan" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="+ buatPesanan() : Pesanan&#xa;+ konfirmasiPenerimaan() : void&#xa;+ tulisReview() : Review&#xa;+ lihatRiwayatPesanan() : List&#xa;+ daftarKontributor() : void&#xa;+ submitDesainCustom() : void" vertex="1">
+      <mxGeometry y="80" width="260" height="145" as="geometry" />
+    </mxCell>
+
+    <!-- ═══ SELLER ═══ -->
+    <mxCell id="Seller" parent="1" style="swimlane;startSize=30;fontStyle=1;align=center;fontSize=13;" value="Seller" vertex="1">
+      <mxGeometry x="630" y="-120" width="240" height="165" as="geometry" />
+    </mxCell>
+    <mxCell id="Sel_attrs" parent="Seller" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="- nama_toko : String&#xa;- daftar_produk : List(Produk)" vertex="1">
+      <mxGeometry y="30" width="240" height="40" as="geometry" />
+    </mxCell>
+    <mxCell id="Sel_div" parent="Seller" style="line;" value="" vertex="1">
+      <mxGeometry y="70" width="240" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="Sel_methods" parent="Seller" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="+ tambahProduk() : void&#xa;+ updateStok() : void&#xa;+ validasiPesanan() : void&#xa;+ inputResiPengiriman() : void" vertex="1">
+      <mxGeometry y="80" width="240" height="80" as="geometry" />
+    </mxCell>
+
+    <!-- ═══ ADMIN ═══ -->
+    <mxCell id="Admin" parent="1" style="swimlane;startSize=30;fontStyle=1;align=center;fontSize=13;" value="Admin" vertex="1">
+      <mxGeometry x="960" y="-470" width="260" height="185" as="geometry" />
+    </mxCell>
+    <mxCell id="Adm_attrs" parent="Admin" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="- level_akses : String" vertex="1">
+      <mxGeometry y="30" width="260" height="25" as="geometry" />
+    </mxCell>
+    <mxCell id="Adm_div" parent="Admin" style="line;" value="" vertex="1">
+      <mxGeometry y="55" width="260" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="Adm_methods" parent="Admin" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="+ updateStatusPesanan() : void&#xa;+ kelolaDataPengguna() : void&#xa;+ kelolaDataProduk() : void&#xa;+ lihatLaporanPesanan() : void&#xa;+ kelolaKontributor() : void&#xa;+ reviewSubmissionDesain() : void" vertex="1">
+      <mxGeometry y="65" width="260" height="115" as="geometry" />
+    </mxCell>
+
+    <!-- ═══ ALAMAT ═══ -->
+    <mxCell id="Alamat" parent="1" style="swimlane;startSize=30;fontStyle=1;align=center;fontSize=13;" value="Alamat" vertex="1">
+      <mxGeometry x="20" y="30" width="240" height="225" as="geometry" />
+    </mxCell>
+    <mxCell id="Ala_attrs" parent="Alamat" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="- id_alamat : String&#xa;- user_id : String&#xa;- nama_penerima : String&#xa;- nomor_telepon : String&#xa;- label_alamat : String&#xa;- wilayah : String&#xa;- detail_alamat : String&#xa;- latitude : String&#xa;- longitude : String&#xa;- is_utama : Boolean" vertex="1">
+      <mxGeometry y="30" width="240" height="165" as="geometry" />
+    </mxCell>
+    <mxCell id="Ala_div" parent="Alamat" style="line;" value="" vertex="1">
+      <mxGeometry y="185" width="240" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="Ala_methods" parent="Alamat" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="+ setAlamatUtama() : void&#xa;+ getAlamatLengkap() : String" vertex="1">
+      <mxGeometry y="195" width="240" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ═══ DESAIN CUSTOM (ganti ProdukCustom) ═══ -->
+    <mxCell id="DesainCustom" parent="1" style="swimlane;startSize=30;fontStyle=1;align=center;fontSize=13;" value="DesainCustom" vertex="1">
+      <mxGeometry x="-310" y="150" width="260" height="250" as="geometry" />
+    </mxCell>
+    <mxCell id="DC_attrs" parent="DesainCustom" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="- id_desain : String&#xa;- user_id : String&#xa;- creator_id : String&#xa;- prompt_text : String&#xa;- visual_style : String&#xa;- kualitas : String&#xa;- material : String&#xa;- image_url : String&#xa;- status_approval : String&#xa;- created_at : DateTime" vertex="1">
+      <mxGeometry y="30" width="260" height="165" as="geometry" />
+    </mxCell>
+    <mxCell id="DC_div" parent="DesainCustom" style="line;" value="" vertex="1">
+      <mxGeometry y="195" width="260" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="DC_methods" parent="DesainCustom" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="+ submitPrompt() : void&#xa;+ generateGambar() : void&#xa;+ updateStatus() : void&#xa;+ getHasilDesain() : String" vertex="1">
+      <mxGeometry y="205" width="260" height="45" as="geometry" />
+    </mxCell>
+
+    <!-- ═══ PRODUK ═══ -->
+    <mxCell id="Produk" parent="1" style="swimlane;startSize=30;fontStyle=1;align=center;fontSize=13;" value="Produk" vertex="1">
+      <mxGeometry x="200" y="540" width="240" height="265" as="geometry" />
+    </mxCell>
+    <mxCell id="Pro_attrs" parent="Produk" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="- id_produk : String&#xa;- seller_id : String&#xa;- kode_produk : String&#xa;- nama_produk : String&#xa;- deskripsi : String&#xa;- harga_asli : Double&#xa;- harga_jual : Double&#xa;- stok : Integer&#xa;- kategori : String&#xa;- foto_url : String&#xa;- status_produk : String&#xa;- created_at : DateTime" vertex="1">
+      <mxGeometry y="30" width="240" height="195" as="geometry" />
+    </mxCell>
+    <mxCell id="Pro_div" parent="Produk" style="line;" value="" vertex="1">
+      <mxGeometry y="210" width="240" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="Pro_methods" parent="Produk" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="+ getDetail() : Produk&#xa;+ updateHarga() : void&#xa;+ updateStatus() : void" vertex="1">
+      <mxGeometry y="220" width="240" height="45" as="geometry" />
+    </mxCell>
+
+    <!-- ═══ PESANAN (fixed - add missing columns) ═══ -->
+    <mxCell id="Pesanan" parent="1" style="swimlane;startSize=30;fontStyle=1;align=center;fontSize=13;" value="Pesanan" vertex="1">
+      <mxGeometry x="800" y="230" width="260" height="400" as="geometry" />
+    </mxCell>
+    <mxCell id="Pes_attrs" parent="Pesanan" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="- id_pesanan : String&#xa;- pelanggan_id : String&#xa;- kode_pesanan : String&#xa;- nama_penerima : String&#xa;- nomor_telepon : String&#xa;- alamat_pengiriman : String&#xa;- pesan_pembeli : String&#xa;- jenis_pengiriman : String&#xa;- metode_pembayaran : String&#xa;- subtotal : Double&#xa;- diskon : Double&#xa;- ongkos_kirim : Double&#xa;- biaya_layanan : Double&#xa;- total_bayar : Double&#xa;- status_pesanan : String&#xa;- kurir : String&#xa;- nomor_resi : String&#xa;- created_at : DateTime" vertex="1">
+      <mxGeometry y="30" width="260" height="290" as="geometry" />
+    </mxCell>
+    <mxCell id="Pes_div" parent="Pesanan" style="line;" value="" vertex="1">
+      <mxGeometry y="310" width="260" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="Pes_methods" parent="Pesanan" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="+ buatPesanan() : void&#xa;+ hitungTotal() : Double&#xa;+ updateStatus() : void&#xa;+ batalkanPesanan() : void&#xa;+ generateKodePesanan() : String" vertex="1">
+      <mxGeometry y="320" width="260" height="80" as="geometry" />
+    </mxCell>
+
+    <!-- ═══ DETAIL PESANAN ═══ -->
+    <mxCell id="DetailPesanan" parent="1" style="swimlane;startSize=30;fontStyle=1;align=center;fontSize=13;" value="DetailPesanan" vertex="1">
+      <mxGeometry x="-370" y="550" width="240" height="185" as="geometry" />
+    </mxCell>
+    <mxCell id="DP_attrs" parent="DetailPesanan" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="- id_detail : String&#xa;- pesanan_id : String&#xa;- produk_id : String&#xa;- varian : String&#xa;- teks_kustom : String&#xa;- harga_satuan : Double&#xa;- kuantitas : Integer" vertex="1">
+      <mxGeometry y="30" width="240" height="120" as="geometry" />
+    </mxCell>
+    <mxCell id="DP_div" parent="DetailPesanan" style="line;" value="" vertex="1">
+      <mxGeometry y="145" width="240" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="DP_methods" parent="DetailPesanan" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="+ hitungSubtotal() : Double&#xa;+ getInfoProduk() : Produk" vertex="1">
+      <mxGeometry y="155" width="240" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ═══ REVIEW ═══ -->
+    <mxCell id="Review" parent="1" style="swimlane;startSize=30;fontStyle=1;align=center;fontSize=13;" value="Review" vertex="1">
+      <mxGeometry x="1130" y="-90" width="240" height="185" as="geometry" />
+    </mxCell>
+    <mxCell id="Rev_attrs" parent="Review" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="- id_review : String&#xa;- user_id : String&#xa;- produk_id : String&#xa;- pesanan_id : String&#xa;- rating : Integer&#xa;- komentar : String&#xa;- created_at : DateTime" vertex="1">
+      <mxGeometry y="30" width="240" height="120" as="geometry" />
+    </mxCell>
+    <mxCell id="Rev_div" parent="Review" style="line;" value="" vertex="1">
+      <mxGeometry y="145" width="240" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="Rev_methods" parent="Review" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="+ buatReview() : void&#xa;+ getRating() : Integer" vertex="1">
+      <mxGeometry y="155" width="240" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ═══ KERANJANG ═══ -->
+    <mxCell id="Keranjang" parent="1" style="swimlane;startSize=30;fontStyle=1;align=center;fontSize=13;" value="Keranjang" vertex="1">
+      <mxGeometry x="1130" y="150" width="240" height="175" as="geometry" />
+    </mxCell>
+    <mxCell id="Ker_attrs" parent="Keranjang" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="- id_cart : String&#xa;- user_id : String&#xa;- produk_id : String&#xa;- kuantitas : Integer" vertex="1">
+      <mxGeometry y="30" width="240" height="70" as="geometry" />
+    </mxCell>
+    <mxCell id="Ker_div" parent="Keranjang" style="line;" value="" vertex="1">
+      <mxGeometry y="95" width="240" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="Ker_methods" parent="Keranjang" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="+ tambahItem() : void&#xa;+ hapusItem() : void&#xa;+ updateKuantitas() : void&#xa;+ hitungTotalKeranjang() : Double" vertex="1">
+      <mxGeometry y="105" width="240" height="70" as="geometry" />
+    </mxCell>
+
+    <!-- ═══ CONTRIBUTORS (NEW) ═══ -->
+    <mxCell id="Contributors" parent="1" style="swimlane;startSize=30;fontStyle=1;align=center;fontSize=13;" value="Contributors" vertex="1">
+      <mxGeometry x="1130" y="390" width="260" height="280" as="geometry" />
+    </mxCell>
+    <mxCell id="Con_attrs" parent="Contributors" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="- id : String&#xa;- nama_organisasi : String&#xa;- tipe_organisasi : String&#xa;- nama_pic : String&#xa;- email : String&#xa;- nomor_wa : String&#xa;- tier : String&#xa;- pesan : String&#xa;- status : String&#xa;- catatan_admin : String&#xa;- created_at : DateTime&#xa;- updated_at : DateTime" vertex="1">
+      <mxGeometry y="30" width="260" height="210" as="geometry" />
+    </mxCell>
+    <mxCell id="Con_div" parent="Contributors" style="line;" value="" vertex="1">
+      <mxGeometry y="235" width="260" height="10" as="geometry" />
+    </mxCell>
+    <mxCell id="Con_methods" parent="Contributors" style="text;align=left;verticalAlign=top;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=11;fontFamily=Arial;" value="+ daftar() : void&#xa;+ getStatus() : String" vertex="1">
+      <mxGeometry y="245" width="260" height="35" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!--              INHERITANCE EDGES              -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <!-- Pelanggan → User -->
+    <mxCell id="inh1" edge="1" parent="1" source="Pelanggan" target="User" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=0;strokeWidth=2;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="440" y="-380" />
+          <mxPoint x="650" y="-380" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Seller → User -->
+    <mxCell id="inh2" edge="1" parent="1" source="Seller" target="User" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=0;strokeWidth=2;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="750" y="-380" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Admin → User -->
+    <mxCell id="inh3" edge="1" parent="1" source="Admin" target="User" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=0;strokeWidth=2;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="960" y="-380" />
+          <mxPoint x="770" y="-380" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!--             ASSOCIATION EDGES               -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <!-- Pelanggan → Pesanan (1 to 0..*) -->
+    <mxCell id="rel1" edge="1" parent="1" source="Pelanggan" target="Pesanan" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;" value="1          0..*">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="790" y="115" />
+          <mxPoint x="790" y="310" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Pesanan → DetailPesanan (1 to 1..*) composition -->
+    <mxCell id="rel2" edge="1" parent="1" source="Pesanan" target="DetailPesanan" style="edgeStyle=orthogonalEdgeStyle;endArrow=diamondThin;endFill=1;" value="1          1..*">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Produk → DetailPesanan (1 to 0..*) -->
+    <mxCell id="rel3" edge="1" parent="1" source="Produk" target="DetailPesanan" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;" value="1          0..*">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Seller → Produk (1 to 0..*) -->
+    <mxCell id="rel7" edge="1" parent="1" source="Seller" target="Produk" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;" value="1          0..*">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="680" y="490" />
+          <mxPoint x="460" y="490" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Pelanggan → Keranjang (1 to 0..*) -->
+    <mxCell id="rel8" edge="1" parent="1" source="Pelanggan" target="Keranjang" style="edgeStyle=orthogonalEdgeStyle;endArrow=diamondThin;endFill=0;" value="1          0..*">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="750" y="100" />
+          <mxPoint x="1250" y="100" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Pelanggan → Alamat (1 to 0..*) -->
+    <mxCell id="rel9" edge="1" parent="1" source="Pelanggan" target="Alamat" style="edgeStyle=orthogonalEdgeStyle;endArrow=diamondThin;endFill=0;" value="1          0..*">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Pelanggan → Review (1 to 0..*) -->
+    <mxCell id="rel10" edge="1" parent="1" source="Pelanggan" target="Review" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;" value="1          0..*">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="750" y="-30" />
+          <mxPoint x="1130" y="-30" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Admin → Pesanan (1 to 0..*) kelola -->
+    <mxCell id="rel11" edge="1" parent="1" source="Admin" target="Pesanan" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;dashed=1;" value="kelola">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1090" y="-200" />
+          <mxPoint x="1090" y="310" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Pelanggan → DesainCustom (1 to 0..*) -->
+    <mxCell id="rel12" edge="1" parent="1" source="Pelanggan" target="DesainCustom" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;" value="1          0..*">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="310" y="200" />
+          <mxPoint x="-50" y="200" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Seller → DesainCustom (1 to 0..*) as creator -->
+    <mxCell id="rel13" edge="1" parent="1" source="Seller" target="DesainCustom" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;" value="1          0..*">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="630" y="50" />
+          <mxPoint x="-180" y="50" />
+          <mxPoint x="-180" y="270" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Produk → Keranjang (1 to 0..*) -->
+    <mxCell id="rel14" edge="1" parent="1" source="Produk" target="Keranjang" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;" value="1          0..*">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="440" y="600" />
+          <mxPoint x="440" y="750" />
+          <mxPoint x="1380" y="750" />
+          <mxPoint x="1380" y="325" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Produk → Review (1 to 0..*) -->
+    <mxCell id="rel15" edge="1" parent="1" source="Produk" target="Review" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;" value="1          0..*">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="440" y="570" />
+          <mxPoint x="440" y="490" />
+          <mxPoint x="1250" y="490" />
+          <mxPoint x="1250" y="95" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+  </root>
+</mxGraphModel>

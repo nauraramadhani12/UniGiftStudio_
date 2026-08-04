@@ -36,7 +36,7 @@
                         <div class="relative inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl text-white font-black text-4xl shadow-xl border-2 border-white ring-4 ring-orange-50/50">U</div>
                     </div>
                     <h2 class="text-3xl font-extrabold text-slate-900 mb-3 tracking-tight">
-                        Selamat Datang! <span class="inline-block hover:rotate-12 transition-transform cursor-default origin-bottom-right">👋</span>
+                        Selamat Datang!
                     </h2>
                     <p class="text-slate-500 text-sm md:text-base font-medium px-2">
                         Senang melihatmu lagi. Yuk masuk ke akun <span class="text-orange-500 font-bold">Uni Gift Studio</span>.
@@ -100,19 +100,19 @@
     <script>
         const API_BASE = 'http://localhost:3000';
 
-        // Kalau sudah login, langsung redirect
-        // Auto-redirect HANYA kalau adminToken valid → langsung ke dashboard admin
-        // Kalau cuma userToken pelanggan, JANGAN auto-redirect supaya admin bisa login
-        const adminToken = localStorage.getItem('adminToken');
-        const adminUser = JSON.parse(localStorage.getItem('adminUser') || 'null');
+        // Auto-redirect jika sudah login
+        const adminToken  = localStorage.getItem('adminToken');
+        const adminUser   = JSON.parse(localStorage.getItem('adminUser') || 'null');
+        const userToken   = localStorage.getItem('userToken');
+        const userSession = JSON.parse(localStorage.getItem('userSession') || 'null');
+
         if (adminToken && adminUser && adminUser.role === 'admin') {
             window.location.href = '../seller/dashboard_admin.html';
+        } else if (userToken && userSession && userSession.role === 'kreator') {
+            window.location.href = '../seller/dashboard.html';
         }
+        // Pelanggan tidak di-redirect agar tidak loop index ↔ login
 
-        // Pelanggan yang sudah login TIDAK di-redirect otomatis dari sini
-        // supaya tidak loop dengan index.html → login.html → index.html
-
-        // Cek apakah datang dari halaman admin (?next=admin)
         const nextParam = new URLSearchParams(window.location.search).get('next');
         if (nextParam === 'admin') {
             // Kasih hint visual bahwa ini login admin
@@ -173,7 +173,7 @@
                 redirectByRole(user.role);
 
             } catch (err) {
-                errEl.textContent = '⚠️ ' + err.message;
+                errEl.textContent = err.message;
                 errEl.classList.remove('hidden');
                 btn.disabled = false;
                 btn.textContent = 'Masuk Sekarang';

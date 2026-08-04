@@ -4,12 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Alamat | Uniinside Media</title>
+    <title>Tambah Alamat | Uni Gift Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -20,8 +18,8 @@
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
         }
-        /* Fix z-index Leaflet biar gak nutupin navbar pas di-scroll */
         
+        /* Fix z-index Leaflet biar gak nutupin navbar pas di-scroll */
         .leaflet-container {
             z-index: 10 !important;
         }
@@ -41,7 +39,7 @@
         <div class="hidden md:flex max-w-3xl mx-auto justify-between items-center p-4">
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-md">U</div>
-                <h1 class="text-xl font-extrabold tracking-tight">Uniinside <span class="text-orange-500">Media</span></h1>
+                <h1 class="text-xl font-extrabold tracking-tight">Uni Gift <span class="text-orange-500">Studio</span></h1>
             </div>
             <h2 class="text-lg font-bold text-slate-800">Tambah Alamat Baru</h2>
         </div>
@@ -51,25 +49,26 @@
 
         <div class="hidden md:block mb-4 ml-1">
             <a href="checkout.html" class="text-slate-500 hover:text-orange-500 font-bold flex items-center gap-2 transition w-max">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> Kembali ke Checkout
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> 
+                Kembali ke Checkout
             </a>
         </div>
 
         <div class="bg-white md:rounded-2xl shadow-sm border-t border-b md:border border-slate-200 p-5 md:p-8">
             <h3 class="text-lg font-bold text-slate-800 mb-6 hidden md:block">Detail Alamat Pengiriman</h3>
 
-            <form action="checkout.html" method="GET" class="space-y-5">
+            <form id="formAlamat" class="space-y-5">
 
                 <div>
                     <h4 class="text-sm font-bold text-slate-800 mb-3">Kontak</h4>
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-slate-600 mb-1">Nama Lengkap Penerima</label>
-                            <input type="text" placeholder="Masukkan nama penerima" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:bg-white outline-none text-slate-800 placeholder-slate-400 transition" required>
+                            <input type="text" id="namaPenerima" placeholder="Masukkan nama penerima" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:bg-white outline-none text-slate-800 placeholder-slate-400 transition" required>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-600 mb-1">Nomor Telepon / WhatsApp</label>
-                            <input type="tel" placeholder="Contoh: 081234567890" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:bg-white outline-none text-slate-800 placeholder-slate-400 transition" required>
+                            <input type="tel" id="noTelp" placeholder="Contoh: 081234567890" class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:bg-white outline-none text-slate-800 placeholder-slate-400 transition" required>
                         </div>
                     </div>
                 </div>
@@ -86,7 +85,8 @@
 
                         <div id="map" class="h-56 md:h-72 w-full rounded-xl border border-slate-200 shadow-inner overflow-hidden relative"></div>
                         <p class="text-xs text-slate-500 flex items-start gap-1">
-                            <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>                            Geser peta atau klik pada area peta untuk menyesuaikan titik lokasi rumah/gedung yang lebih akurat.
+                            <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 
+                            Geser peta atau klik pada area peta untuk menyesuaikan titik lokasi rumah/gedung yang lebih akurat.
                         </p>
 
                         <input type="hidden" id="latitude" name="latitude" value="-6.917464">
@@ -101,13 +101,11 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-slate-600 mb-1">Provinsi, Kota, Kecamatan, Kode Pos</label>
-                            <input type="text" placeholder="Ketik provinsi atau kota..." class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:bg-white outline-none text-slate-800 placeholder-slate-400 transition"
-                                required>
+                            <input type="text" id="kota" placeholder="Ketik provinsi atau kota..." class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:bg-white outline-none text-slate-800 placeholder-slate-400 transition" required>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-600 mb-1">Detail Alamat</label>
-                            <textarea rows="3" placeholder="Nama jalan, gedung, no. rumah, blok, patokan..." class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:bg-white outline-none text-slate-800 placeholder-slate-400 transition resize-none"
-                                required></textarea>
+                            <textarea id="detailAlamat" rows="3" placeholder="Nama jalan, gedung, no. rumah, blok, patokan..." class="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:bg-white outline-none text-slate-800 placeholder-slate-400 transition resize-none" required></textarea>
                         </div>
                     </div>
                 </div>
@@ -136,14 +134,14 @@
                         </div>
 
                         <label class="flex items-center gap-3 mt-4 cursor-pointer">
-                            <input type="checkbox" class="w-5 h-5 text-orange-500 rounded border-slate-300 focus:ring-orange-500">
+                            <input type="checkbox" id="isUtama" checked class="w-5 h-5 text-orange-500 rounded border-slate-300 focus:ring-orange-500">
                             <span class="text-sm text-slate-700 font-medium">Jadikan sebagai alamat utama</span>
                         </label>
                     </div>
                 </div>
 
                 <div class="hidden md:block pt-4">
-                    <button type="button" onclick="window.location.href='checkout.html'" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3.5 rounded-xl font-bold text-base transition shadow-lg shadow-orange-500/30">
+                    <button type="submit" id="btnSubmitDesktop" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3.5 rounded-xl font-bold text-base transition shadow-lg shadow-orange-500/30">
                         Simpan & Gunakan Alamat
                     </button>
                 </div>
@@ -153,7 +151,7 @@
     </main>
 
     <div class="fixed bottom-0 w-full md:hidden bg-white border-t border-slate-200 z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] p-4">
-        <button onclick="window.location.href='checkout.html'" class="w-full h-12 bg-orange-500 hover:bg-orange-600 transition text-white rounded-xl font-bold text-sm shadow-lg shadow-orange-500/30">
+        <button type="button" onclick="document.getElementById('formAlamat').requestSubmit()" class="w-full h-12 bg-orange-500 hover:bg-orange-600 transition text-white rounded-xl font-bold text-sm shadow-lg shadow-orange-500/30">
             Simpan Alamat
         </button>
     </div>
@@ -161,43 +159,33 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Inisialisasi Titik Awal
+            // --- LOGIKA PETA (Leaflet.js) ---
             let initialLat = -6.917464;
             let initialLng = 107.619123;
-
-            // Inisialisasi Peta Leaflet
             const map = L.map('map').setView([initialLat, initialLng], 14);
 
-            // Pasang Tile Layer (Peta dari OpenStreetMap)
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '© OpenStreetMap'
             }).addTo(map);
 
-            // Buat Marker yang bisa di drag/geser
-            let marker = L.marker([initialLat, initialLng], {
-                draggable: true
-            }).addTo(map);
+            let marker = L.marker([initialLat, initialLng], { draggable: true }).addTo(map);
 
-            // Fungsi untuk update input hidden saat marker pindah
             function updateCoordinates(lat, lng) {
                 document.getElementById('latitude').value = lat;
                 document.getElementById('longitude').value = lng;
             }
 
-            // Event listener pas marker digeser manual
             marker.on('dragend', function(e) {
                 const position = marker.getLatLng();
                 updateCoordinates(position.lat, position.lng);
             });
 
-            // Event listener pas sembarang tempat di peta diklik
             map.on('click', function(e) {
                 marker.setLatLng(e.latlng);
                 updateCoordinates(e.latlng.lat, e.latlng.lng);
             });
 
-            // Logika untuk Tombol Geolocation (Dapatkan lokasi device saat ini)
             document.getElementById('btn-lokasi').addEventListener('click', function() {
                 const btn = this;
                 const originalText = btn.innerHTML;
@@ -208,33 +196,99 @@
                         function(position) {
                             const lat = position.coords.latitude;
                             const lng = position.coords.longitude;
-
-                            // Pindahkan peta dan marker ke lokasi baru
                             map.flyTo([lat, lng], 16);
                             marker.setLatLng([lat, lng]);
                             updateCoordinates(lat, lng);
 
                             btn.innerHTML = '<span class="text-green-600 flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Lokasi Ditemukan</span>';
-
-                            // Kembalikan teks tombol setelah 3 detik
-                            setTimeout(() => {
-                                btn.innerHTML = originalText;
-                            }, 3000);
+                            setTimeout(() => { btn.innerHTML = originalText; }, 3000);
                         },
                         function(error) {
-                            alert("Gagal mendapatkan lokasi. Pastikan izin akses lokasi dinyalakan di browser kamu.");
+                            alert("Gagal mendapatkan lokasi. Pastikan izin akses lokasi dinyalakan.");
                             btn.innerHTML = originalText;
-                        }, {
-                            enableHighAccuracy: true
-                        }
+                        }, { enableHighAccuracy: true }
                     );
                 } else {
                     alert("Browser kamu tidak mendukung fitur lokasi GPS.");
                     btn.innerHTML = originalText;
                 }
             });
+
+            // --- LOGIKA SIMPAN ALAMAT KE DATABASE & LOCALSTORAGE ---
+            document.getElementById('formAlamat').addEventListener('submit', async function(e) {
+                e.preventDefault(); // Cegah halaman reload
+
+                const btn = document.getElementById('btnSubmitDesktop');
+                btn.innerHTML = "Menyimpan ke Database...";
+                btn.disabled = true;
+
+                // 1. Cek User Login
+                const userData = JSON.parse(localStorage.getItem('userSession'));
+                if (!userData) {
+                    alert("Kamu harus login dulu!");
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // 2. Ambil data dari form HTML
+                const nama = document.getElementById('namaPenerima').value;
+                const telepon = document.getElementById('noTelp').value;
+                const kota = document.getElementById('kota').value;
+                const detail = document.getElementById('detailAlamat').value;
+                const lat = document.getElementById('latitude').value;
+                const lng = document.getElementById('longitude').value;
+                
+                const label = document.querySelector('input[name="label_alamat"]:checked').value;
+                const isUtama = document.getElementById('isUtama').checked ? 1 : 0;
+
+                // 3. Siapkan paket data yang mau dikirim ke Backend
+                const dataKirim = {
+                    pic_id: userData.id, 
+                    nama_penerima: nama,
+                    nomor_telepon: telepon,
+                    label_alamat: label,
+                    wilayah: kota,
+                    detail_alamat: detail,
+                    latitude: lat,
+                    longitude: lng,
+                    is_utama: isUtama
+                };
+
+                try {
+                    // 4. Tembak data ke API Backend (Node.js)
+                    const response = await fetch('http://localhost:3000/api/addresses', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dataKirim)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        // 5. Kalau sukses masuk database MySQL, simpan juga di browser
+                        const alamatLengkap = `${detail}<br>${kota}`;
+                        localStorage.setItem('userAddress', JSON.stringify({
+                            id: result.insertId, // ID alamat dari database
+                            nama: nama,
+                            telepon: telepon,
+                            alamatLengkap: alamatLengkap
+                        }));
+
+                        alert(result.pesan);
+                        window.location.href = 'checkout.html';
+                    } else {
+                        alert("Gagal: " + result.pesan);
+                        btn.innerHTML = "Simpan & Gunakan Alamat";
+                        btn.disabled = false;
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    alert("Server Backend sepertinya sedang mati! Pastikan nodemon jalan.");
+                    btn.innerHTML = "Simpan & Gunakan Alamat";
+                    btn.disabled = false;
+                }
+            });
         });
     </script>
 </body>
-
 </html>

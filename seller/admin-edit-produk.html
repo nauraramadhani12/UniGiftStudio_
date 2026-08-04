@@ -12,6 +12,7 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
     </style>
+<script>const API_ORIGIN = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? 'http://localhost:3000' : ''; const CONSUMER_BASE = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? '../consumer/' : '../';</script>
 </head>
 
 <body class="bg-slate-50 text-slate-900 flex h-screen overflow-hidden">
@@ -25,14 +26,14 @@
             <div class="p-4">
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 px-2">Menu Utama</p>
                 <nav class="space-y-1">
-                    <a href="dashboard_admin.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold"><span class="text-xl">📊</span> Dashboard</a>
-                    <a href="admin-pesanan.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold"><span class="text-xl">📦</span> Pesanan</a>
+                    <a href="dashboard_admin.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold"><span class="text-xl"></span> Dashboard</a>
+                    <a href="admin-pesanan.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold"><span class="text-xl"></span> Pesanan</a>
                     <a href="admin-custom-ai.html" class="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold">
-                        <div class="flex items-center gap-3"><span class="text-xl">✨</span> Custom AI</div>
+                        <div class="flex items-center gap-3"><span class="text-xl"></span> Custom AI</div>
                         <span class="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3 Baru</span>
                     </a>
-                    <a href="admin-katalog.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-500 text-white font-semibold shadow-lg shadow-orange-500/20"><span class="text-xl">🛍️</span> Katalog Produk</a>
-                    <a href="admin-pengguna.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold"><span class="text-xl">👥</span> Manajemen Pengguna</a>
+                    <a href="admin-katalog.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-500 text-white font-semibold shadow-lg shadow-orange-500/20"><span class="text-xl"></span> Katalog Produk</a>
+                    <a href="admin-pengguna.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold"><span class="text-xl"></span> Manajemen Pengguna</a>
                 </nav>
             </div>
         </div>
@@ -70,7 +71,7 @@
                     <div class="lg:col-span-1 space-y-4">
                         <label class="block text-xs font-extrabold text-slate-400 uppercase tracking-widest">Foto Produk (URL)</label>
                         <div id="fotoPreview" class="aspect-square bg-slate-100 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-slate-200 overflow-hidden">
-                            <span class="text-5xl text-slate-300">🛍️</span>
+                            <span class="text-5xl text-slate-300"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-12 h-12"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
                             <p class="text-xs text-slate-400 mt-2">Preview foto</p>
                         </div>
                         <input id="inputFotoUrl" type="url" oninput="previewFoto()" placeholder="https://contoh.com/gambar.jpg" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 font-medium text-slate-700">
@@ -149,11 +150,11 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:3000';
+        const API_BASE = API_ORIGIN + '';
 
         // ── Auth ──────────────────────────────────────────────────────
         const token = localStorage.getItem('adminToken');
-        if (!token) window.location.href = '../consumer/login.html';
+        if (!token) window.location.href = CONSUMER_BASE + 'login.html';
 
         function authHeader() {
             return {
@@ -165,7 +166,7 @@
         function logout() {
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminUser');
-            window.location.href = '../consumer/login.html';
+            window.location.href = CONSUMER_BASE + 'login.html';
         }
 
         const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
@@ -192,9 +193,9 @@
             const url = document.getElementById('inputFotoUrl').value.trim();
             const wrap = document.getElementById('fotoPreview');
             if (url) {
-                wrap.innerHTML = `<img src="${url}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=text-5xl>❌</span><p class=text-xs text-red-400 mt-2>URL tidak valid</p>'">`;
+                wrap.innerHTML = `<img src="${url}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=text-5xl><svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.75\\' stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' class=\\'w-12 h-12\\'><circle cx=\\'12\\' cy=\\'12\\' r=\\'10\\'/><path d=\\'m15 9-6 6m0-6 6 6\\'/></svg></span><p class=text-xs text-red-400 mt-2>URL tidak valid</p>'">`;
             } else {
-                wrap.innerHTML = `<span class="text-5xl text-slate-300">🛍️</span><p class="text-xs text-slate-400 mt-2">Preview foto</p>`;
+                wrap.innerHTML = `<span class="text-5xl text-slate-300"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-12 h-12"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span><p class="text-xs text-slate-400 mt-2">Preview foto</p>`;
             }
         }
 
@@ -208,7 +209,7 @@
                 });
                 if (res.status === 401 || res.status === 403) {
                     localStorage.removeItem('adminToken');
-                    window.location.href = '../consumer/login.html';
+                    window.location.href = CONSUMER_BASE + 'login.html';
                     return;
                 }
                 const json = await res.json();
@@ -245,7 +246,7 @@
                 if (p.foto_url) previewFoto();
 
             } catch (err) {
-                showMsg('❌ Gagal memuat data produk: ' + err.message, 'red');
+                showMsg('Gagal memuat data produk: ' + err.message, 'red');
             }
         }
 
@@ -282,11 +283,11 @@
                 const json = await res.json();
                 if (!json.success) throw new Error(json.message);
 
-                showMsg(isEditMode ? '✅ Produk berhasil diperbarui!' : '✅ Produk berhasil ditambahkan!', 'green');
+                showMsg(isEditMode ? 'Produk berhasil diperbarui!' : 'Produk berhasil ditambahkan!', 'green');
                 setTimeout(() => window.location.href = 'admin-katalog.html', 1200);
 
             } catch (err) {
-                showMsg('❌ Gagal: ' + err.message, 'red');
+                showMsg('Gagal: ' + err.message, 'red');
                 btn.disabled = false;
                 document.getElementById('btnLabel').textContent = isEditMode ? 'Simpan Perubahan' : 'Tambah Produk';
             }

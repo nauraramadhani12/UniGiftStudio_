@@ -10,6 +10,7 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .tab-active { background-color: #0f172a; color: #fff; }
     </style>
+<script>const API_ORIGIN = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? 'http://localhost:3000' : ''; const CONSUMER_BASE = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? '../consumer/' : '../';</script>
 </head>
 <body class="bg-slate-50 text-slate-900 flex h-screen overflow-hidden">
 
@@ -22,14 +23,14 @@
             <div class="p-4">
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 px-2">Menu Utama</p>
                 <nav class="space-y-1">
-                    <a href="dashboard_admin.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold"><span class="text-xl">📊</span> Dashboard</a>
-                    <a href="admin-pesanan.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold"><span class="text-xl">📦</span> Pesanan</a>
+                    <a href="dashboard_admin.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold"><span class="text-xl"></span> Dashboard</a>
+                    <a href="admin-pesanan.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold"><span class="text-xl"></span> Pesanan</a>
                     <a href="admin-custom-ai.html" class="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold">
-                        <div class="flex items-center gap-3"><span class="text-xl">✨</span> Custom AI</div>
+                        <div class="flex items-center gap-3"><span class="text-xl"></span> Custom AI</div>
                         <span class="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">...</span>
                     </a>
-                    <a href="admin-katalog.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-500 text-white font-semibold shadow-lg shadow-orange-500/20"><span class="text-xl">🛍️</span> Katalog Produk</a>
-                    <a href="admin-pengguna.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold"><span class="text-xl">👥</span> Manajemen Pengguna</a>
+                    <a href="admin-katalog.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-500 text-white font-semibold shadow-lg shadow-orange-500/20"><span class="text-xl"></span> Katalog Produk</a>
+                    <a href="admin-pengguna.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold"><span class="text-xl"></span> Manajemen Pengguna</a>
                 </nav>
             </div>
         </div>
@@ -42,7 +43,6 @@
         <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
             <h2 class="text-xl font-bold text-slate-800">Katalog Produk</h2>
             <div class="flex items-center gap-4">
-                <button onclick="openModal()" class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-orange-200 transition">+ Tambah Produk</button>
                 <div id="avatar-admin" class="w-10 h-10 bg-orange-100 text-orange-600 font-bold rounded-full flex items-center justify-center border border-orange-200">AU</div>
             </div>
         </header>
@@ -121,7 +121,7 @@
         <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-8 transform scale-95 transition-all max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
                 <h3 id="modal-title" class="text-2xl font-extrabold text-slate-900">Tambah Produk</h3>
-                <button onclick="closeModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 hover:text-red-500 font-bold transition text-lg">✕</button>
+                <button onclick="closeModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 hover:text-red-500 font-bold transition text-lg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
             </div>
 
             <input type="hidden" id="edit-id">
@@ -168,12 +168,60 @@
                     </select>
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">URL Foto</label>
-                    <input id="f-foto" type="url" placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Foto Produk</label>
+                    <div id="f-foto-preview-wrap" class="hidden mb-2">
+                        <img id="f-foto-preview" src="" alt="preview" class="w-full h-40 object-contain rounded-xl border border-slate-200 bg-slate-50">
+                    </div>
+                    <label class="flex items-center gap-3 cursor-pointer w-full px-4 py-3 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 hover:border-orange-400 transition text-sm font-medium text-slate-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 shrink-0"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+                        <span id="f-foto-label">Klik untuk pilih foto (JPG/PNG, maks 5MB)</span>
+                        <input id="f-foto-file" type="file" accept="image/*" class="hidden" onchange="previewFotoAdmin(this)">
+                    </label>
+                    <input id="f-foto" type="hidden">
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Deskripsi</label>
                     <textarea id="f-deskripsi" rows="3" placeholder="Deskripsi singkat produk..." class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium resize-none"></textarea>
+                </div>
+
+                <!-- Pengaturan varian (tampil di halaman detail produk pembeli) -->
+                <div class="md:col-span-2 border border-slate-200 rounded-2xl p-4 space-y-3 bg-slate-50/50">
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Opsi Varian Produk <span class="text-slate-300 normal-case font-semibold">(opsional)</span></p>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Judul Varian</label>
+                        <input id="f-varian-label" type="text" placeholder="Contoh: Pilih Warna Glow / Ukuran" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Tambah Varian Warna <span class="text-slate-300 normal-case font-semibold">(klik warna)</span></label>
+                        <div id="f-warna-palet" class="flex flex-wrap gap-2 mb-2"></div>
+                        <div class="flex items-center gap-2">
+                            <input id="f-warna-custom" type="color" value="#f97316" class="w-9 h-9 rounded-lg border border-slate-200 cursor-pointer bg-white p-0.5">
+                            <input id="f-warna-custom-nama" type="text" placeholder="Nama warna custom, misal: Tosca" class="flex-1 px-3 py-2 rounded-lg border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-orange-500 text-xs font-medium">
+                            <button type="button" onclick="tambahWarnaCustom()" class="px-3 py-2 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-slate-700 transition shrink-0">+ Warna</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Tambah Varian Teks <span class="text-slate-300 normal-case font-semibold">(misal ukuran)</span></label>
+                        <div class="flex items-center gap-2">
+                            <input id="f-varian-teks" type="text" placeholder="Contoh: S / M / L / XL" class="flex-1 px-3 py-2 rounded-lg border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-orange-500 text-xs font-medium" onkeydown="if(event.key==='Enter'){event.preventDefault();tambahVarianTeks();}">
+                            <button type="button" onclick="tambahVarianTeks()" class="px-3 py-2 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-slate-700 transition shrink-0">+ Tambah</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Varian Terpilih</label>
+                        <div id="f-varian-list" class="space-y-2">
+                            <p class="text-xs text-slate-400 italic">Belum ada varian. Klik warna atau tambah teks di atas.</p>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-1 ml-1">Tiap varian bisa diberi foto sendiri — foto utama produk akan berganti saat pembeli memilih varian itu.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Maks Huruf Teks Kustom</label>
+                        <input id="f-teks-kustom-max" type="number" min="0" placeholder="0 = fitur teks kustom tidak aktif" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium">
+                    </div>
                 </div>
             </div>
 
@@ -187,10 +235,10 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:3000';
+        const API_BASE = API_ORIGIN + '';
 
         const token = localStorage.getItem('adminToken');
-        if (!token) window.location.href = '../consumer/login.html?next=admin';
+        if (!token) window.location.href = CONSUMER_BASE + 'login.html?next=admin';
 
         function authHeader() {
             return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
@@ -199,7 +247,7 @@
         function logout() {
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminUser');
-            window.location.href = '../consumer/login.html?next=admin';
+            window.location.href = CONSUMER_BASE + 'login.html?next=admin';
         }
 
         const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
@@ -261,7 +309,10 @@
 
             const filtered = allProducts.filter(p => {
                 const matchKat    = activeKategori === 'semua' || (p.kategori || '') === activeKategori;
-                const matchStatus = !statusFil || p.status_produk === statusFil;
+                const matchStatus = !statusFil
+                    || (statusFil === 'habis'
+                        ? (p.status_produk === 'habis' || p.stok === 0)
+                        : p.status_produk === statusFil);
                 const matchSearch = !search
                     || (p.nama_produk || '').toLowerCase().includes(search)
                     || (p.kode_produk || '').toLowerCase().includes(search);
@@ -283,10 +334,10 @@
                 const stokColor = p.stok === 0 ? 'text-red-600 font-extrabold'
                     : p.stok < 5 ? 'text-orange-500 font-extrabold'
                     : 'text-slate-700';
-                const stokIcon = p.stok === 0 ? ' 🚫' : p.stok < 5 ? ' ⚠️' : '';
+                const stokIcon = '';
                 const fotoEl = p.foto_url
-                    ? `<img src="${p.foto_url}" class="w-12 h-12 rounded-lg object-cover border border-slate-100" onerror="this.outerHTML='<div class=\'w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-xl\'>🛍️</div>'">`
-                    : `<div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-xl">🛍️</div>`;
+                    ? `<img src="${p.foto_url}" class="w-12 h-12 rounded-lg object-cover border border-slate-100" onerror="this.outerHTML='<div class=\'w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-xl\'><svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1.75\' stroke-linecap=\'round\' stroke-linejoin=\'round\' class=\'w-5 h-5\'><path d=\'M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z\'/><path d=\'M3 6h18\'/><path d=\'M16 10a4 4 0 0 1-8 0\'/></svg></div>'">`
+                    : `<div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-xl"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>`;
                 return `
                 <tr class="hover:bg-slate-50 transition">
                     <td class="p-5">${fotoEl}</td>
@@ -311,18 +362,156 @@
                 `Menampilkan ${filtered.length} dari ${allProducts.length} produk`;
         }
 
+        // ── Foto upload (preview & reset) ─────────────────────────────
+        function previewFotoAdmin(input) {
+            const file = input.files[0];
+            if (!file) return;
+            document.getElementById('f-foto-label').textContent = file.name;
+            document.getElementById('f-foto-preview').src = URL.createObjectURL(file);
+            document.getElementById('f-foto-preview-wrap').classList.remove('hidden');
+        }
+
+        function resetFotoAdmin() {
+            document.getElementById('f-foto-file').value = '';
+            document.getElementById('f-foto').value = '';
+            document.getElementById('f-foto-label').textContent = 'Klik untuk pilih foto (JPG/PNG, maks 5MB)';
+            document.getElementById('f-foto-preview-wrap').classList.add('hidden');
+            document.getElementById('f-foto-preview').src = '';
+        }
+
+        // ── Varian builder (palet warna + foto per varian) ────────────
+        // Disimpan ke kolom varian_opsi dengan format: Nama|#hex|urlFoto (segmen 2 & 3 opsional)
+        const WARNA_PRESET = [
+            ['Merah', '#ef4444'], ['Oranye', '#f97316'], ['Kuning', '#eab308'], ['Hijau', '#22c55e'],
+            ['Biru', '#3b82f6'], ['Ungu', '#a855f7'], ['Pink', '#ec4899'], ['Hitam', '#1e293b'],
+            ['Putih', '#f1f5f9'], ['Abu', '#94a3b8'], ['Emas', '#d4af37'], ['Perak', '#c0c0c0'],
+        ];
+        let varianItems = []; // {nama, warna, fotoUrl, file}
+
+        function renderWarnaPalet() {
+            document.getElementById('f-warna-palet').innerHTML = WARNA_PRESET.map(([nama, hex]) => `
+                <button type="button" onclick="tambahVarianWarna('${nama}', '${hex}')" title="${nama}"
+                    class="w-8 h-8 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform ring-1 ring-slate-200"
+                    style="background-color:${hex}"></button>`).join('');
+        }
+
+        function bersihkanNamaVarian(nama) {
+            return (nama || '').replace(/[,|]/g, '').trim();
+        }
+
+        function tambahVarianWarna(nama, hex) {
+            nama = bersihkanNamaVarian(nama);
+            if (!nama || varianItems.some(v => v.nama.toLowerCase() === nama.toLowerCase())) return;
+            varianItems.push({ nama, warna: hex, fotoUrl: null, file: null });
+            renderVarianList();
+        }
+
+        function tambahWarnaCustom() {
+            const nama = bersihkanNamaVarian(document.getElementById('f-warna-custom-nama').value);
+            const hex = document.getElementById('f-warna-custom').value;
+            if (!nama) { alert('Isi dulu nama warnanya, misal: Tosca'); return; }
+            tambahVarianWarna(nama, hex);
+            document.getElementById('f-warna-custom-nama').value = '';
+        }
+
+        function tambahVarianTeks() {
+            const nama = bersihkanNamaVarian(document.getElementById('f-varian-teks').value);
+            if (!nama) return;
+            if (varianItems.some(v => v.nama.toLowerCase() === nama.toLowerCase())) return;
+            varianItems.push({ nama, warna: null, fotoUrl: null, file: null });
+            document.getElementById('f-varian-teks').value = '';
+            renderVarianList();
+        }
+
+        function hapusVarianItem(i) {
+            varianItems.splice(i, 1);
+            renderVarianList();
+        }
+
+        function pilihFotoVarian(i, input) {
+            const file = input.files[0];
+            if (!file) return;
+            varianItems[i].file = file;
+            varianItems[i].fotoUrl = null;
+            renderVarianList();
+        }
+
+        function renderVarianList() {
+            const wrap = document.getElementById('f-varian-list');
+            if (!varianItems.length) {
+                wrap.innerHTML = '<p class="text-xs text-slate-400 italic">Belum ada varian. Klik warna atau tambah teks di atas.</p>';
+                return;
+            }
+            wrap.innerHTML = varianItems.map((v, i) => {
+                const dot = v.warna
+                    ? `<span class="w-5 h-5 rounded-full border border-slate-200 shrink-0" style="background-color:${v.warna}"></span>`
+                    : `<span class="px-2 py-0.5 bg-slate-800 text-white rounded text-[10px] font-bold shrink-0">${v.nama}</span>`;
+                const fotoStatus = v.file
+                    ? `<span class="text-[10px] text-green-600 font-bold truncate max-w-[90px]">${v.file.name}</span>`
+                    : v.fotoUrl
+                        ? `<img src="${v.fotoUrl}" class="w-6 h-6 rounded object-cover border border-slate-200">`
+                        : '';
+                return `
+                <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2">
+                    ${dot}
+                    ${v.warna ? `<span class="text-xs font-bold text-slate-700 flex-1">${v.nama}</span>` : '<span class="flex-1"></span>'}
+                    ${fotoStatus}
+                    <label class="text-[10px] font-bold text-orange-500 border border-orange-200 px-2 py-1 rounded-lg cursor-pointer hover:bg-orange-50 transition shrink-0">
+                        ${v.file || v.fotoUrl ? 'Ganti Foto' : '+ Foto'}
+                        <input type="file" accept="image/*" class="hidden" onchange="pilihFotoVarian(${i}, this)">
+                    </label>
+                    <button type="button" onclick="hapusVarianItem(${i})" class="text-slate-300 hover:text-red-500 transition shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-4 h-4"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>`;
+            }).join('');
+        }
+
+        function parseVarianOpsi(str) {
+            return (str || '').split(',').map(s => s.trim()).filter(Boolean).map(o => {
+                const [nama, warna, foto] = o.split('|').map(x => (x || '').trim());
+                return { nama, warna: warna || null, fotoUrl: foto || null, file: null };
+            }).filter(v => v.nama);
+        }
+
+        async function serializeVarianOpsi() {
+            for (const v of varianItems) {
+                if (v.file) {
+                    const dataUrl = await kompresGambar(v.file);
+                    const res = await fetch(`${API_BASE}/api/upload`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data: dataUrl })
+                    });
+                    const json = await res.json();
+                    if (!json.success) throw new Error(`Upload foto varian "${v.nama}" gagal.`);
+                    v.fotoUrl = json.fileUrl;
+                    v.file = null;
+                }
+            }
+            return varianItems.map(v => {
+                if (v.fotoUrl) return `${v.nama}|${v.warna || ''}|${v.fotoUrl}`;
+                if (v.warna) return `${v.nama}|${v.warna}`;
+                return v.nama;
+            }).join(', ') || null;
+        }
+
         // ── Modal ─────────────────────────────────────────────────────
         function openModal(id = null) {
             editMode = !!id;
             document.getElementById('modal-title').textContent = id ? 'Edit Produk' : 'Tambah Produk';
             document.getElementById('modal-err').classList.add('hidden');
             if (!id) {
-                ['f-nama','f-kode','f-foto','f-deskripsi'].forEach(x => document.getElementById(x).value = '');
-                ['f-harga-asli','f-harga-jual','f-stok'].forEach(x => document.getElementById(x).value = '');
+                ['f-nama','f-kode','f-deskripsi','f-varian-label'].forEach(x => document.getElementById(x).value = '');
+                ['f-harga-asli','f-harga-jual','f-stok','f-teks-kustom-max'].forEach(x => document.getElementById(x).value = '');
                 document.getElementById('f-kategori').value = '';
                 document.getElementById('f-status').value = 'aktif';
                 document.getElementById('edit-id').value = '';
+                varianItems = [];
+                renderVarianList();
+                resetFotoAdmin();
             }
+            renderWarnaPalet();
             const m = document.getElementById('modal-produk');
             m.classList.remove('opacity-0', 'pointer-events-none');
             m.querySelector('div').classList.remove('scale-95');
@@ -345,8 +534,19 @@
             document.getElementById('f-harga-jual').value     = p.harga_jual || '';
             document.getElementById('f-stok').value           = p.stok ?? 0;
             document.getElementById('f-status').value         = p.status_produk || 'aktif';
-            document.getElementById('f-foto').value           = p.foto_url || '';
             document.getElementById('f-deskripsi').value      = p.deskripsi || '';
+            document.getElementById('f-varian-label').value   = p.varian_label || '';
+            varianItems = parseVarianOpsi(p.varian_opsi);
+            renderVarianList();
+            document.getElementById('f-teks-kustom-max').value = p.teks_kustom_max || '';
+            // Tampilkan foto existing
+            resetFotoAdmin();
+            if (p.foto_url) {
+                document.getElementById('f-foto').value = p.foto_url;
+                document.getElementById('f-foto-preview').src = p.foto_url;
+                document.getElementById('f-foto-preview-wrap').classList.remove('hidden');
+                document.getElementById('f-foto-label').textContent = 'Foto saat ini (pilih baru untuk mengganti)';
+            }
             openModal(id);
         }
 
@@ -359,18 +559,6 @@
             if (!nama) { showErr('Nama produk wajib diisi.'); return; }
             if (!hargaJual) { showErr('Harga jual wajib diisi.'); return; }
 
-            const body = {
-                nama_produk:  nama,
-                kode_produk:  document.getElementById('f-kode').value.trim() || null,
-                kategori:     document.getElementById('f-kategori').value || null,
-                harga_asli:   Number(document.getElementById('f-harga-asli').value) || null,
-                harga_jual:   hargaJual,
-                stok:         Number(document.getElementById('f-stok').value) || 0,
-                status_produk: document.getElementById('f-status').value,
-                foto_url:     document.getElementById('f-foto').value.trim() || null,
-                deskripsi:    document.getElementById('f-deskripsi').value.trim() || null,
-            };
-
             const editId = document.getElementById('edit-id').value;
             const url    = editId ? `${API_BASE}/api/admin/products/${editId}` : `${API_BASE}/api/admin/products`;
             const method = editId ? 'PUT' : 'POST';
@@ -378,6 +566,44 @@
             try {
                 btnEl.disabled = true; btnEl.textContent = 'Menyimpan...';
                 errEl.classList.add('hidden');
+
+                // Upload foto baru jika ada file dipilih
+                let foto_url = document.getElementById('f-foto').value || null;
+                const fileInput = document.getElementById('f-foto-file');
+                if (fileInput.files.length > 0) {
+                    btnEl.textContent = 'Mengupload foto...';
+                    const file = fileInput.files[0];
+                    const dataUrl = await kompresGambar(file);
+                    const uploadRes = await fetch(`${API_BASE}/api/upload`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data: dataUrl })
+                    });
+                    const uploadJson = await uploadRes.json();
+                    if (!uploadJson.success) throw new Error('Upload foto gagal.');
+                    foto_url = uploadJson.fileUrl;
+                    btnEl.textContent = 'Menyimpan...';
+                }
+
+                // Upload foto varian (jika ada) & susun string varian_opsi
+                btnEl.textContent = 'Menyimpan varian...';
+                const varian_opsi = await serializeVarianOpsi();
+                btnEl.textContent = 'Menyimpan...';
+
+                const body = {
+                    nama_produk:  nama,
+                    kode_produk:  document.getElementById('f-kode').value.trim() || null,
+                    kategori:     document.getElementById('f-kategori').value || null,
+                    harga_asli:   Number(document.getElementById('f-harga-asli').value) || null,
+                    harga_jual:   hargaJual,
+                    stok:         Number(document.getElementById('f-stok').value) || 0,
+                    status_produk: document.getElementById('f-status').value,
+                    foto_url,
+                    deskripsi:    document.getElementById('f-deskripsi').value.trim() || null,
+                    varian_label: document.getElementById('f-varian-label').value.trim() || null,
+                    varian_opsi,
+                    teks_kustom_max: Number(document.getElementById('f-teks-kustom-max').value) || 0,
+                };
                 const res  = await fetch(url, { method, headers: authHeader(), body: JSON.stringify(body) });
                 const json = await res.json();
                 if (!json.success) throw new Error(json.message);
@@ -410,5 +636,39 @@
 
         window.onload = loadProducts;
     </script>
+<script>
+// Kompres & perkecil gambar di browser sebelum upload — output biasanya < 500KB
+// File non-gambar (mis. .stl/.obj) dibaca apa adanya.
+function kompresGambar(file, maxDim = 1280, quality = 0.85) {
+    return new Promise((resolve, reject) => {
+        if (!file || !file.type || !file.type.startsWith('image/')) {
+            const r = new FileReader();
+            r.onload = () => resolve(r.result);
+            r.onerror = reject;
+            r.readAsDataURL(file);
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                let w = img.width, h = img.height;
+                if (w > maxDim || h > maxDim) {
+                    if (w >= h) { h = Math.round(h * maxDim / w); w = maxDim; }
+                    else { w = Math.round(w * maxDim / h); h = maxDim; }
+                }
+                const c = document.createElement('canvas');
+                c.width = w; c.height = h;
+                c.getContext('2d').drawImage(img, 0, 0, w, h);
+                resolve(c.toDataURL('image/jpeg', quality));
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+</script>
 </body>
 </html>

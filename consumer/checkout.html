@@ -11,25 +11,22 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #f1f5f9;
-            /* bg-slate-100 */
         }
         
         .glass {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
         }
-        
+
         .address-border {
             background-image: repeating-linear-gradient(45deg, #f97316 0, #f97316 33px, transparent 0, transparent 41px, #3b82f6 0, #3b82f6 74px, transparent 0, transparent 82px);
             height: 3px;
             width: 100%;
         }
-        /* Sembunyikan scrollbar untuk modal tapi tetap bisa di-scroll */
-        
+
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
-        
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -57,7 +54,7 @@
     </nav>
 
     <main class="flex-grow w-full max-w-7xl mx-auto mt-2 md:mt-6 px-0 md:px-4">
-
+        
         <div class="hidden md:flex items-center justify-center max-w-3xl mx-auto mb-10 mt-4 text-sm font-bold text-slate-400">
             <a href="cart.html" class="flex items-center gap-2 text-slate-400 hover:text-orange-500 transition">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
@@ -68,81 +65,32 @@
                 <span class="border-b-2 border-orange-500 pb-1">Pengiriman & Pembayaran</span>
             </div>
             <div class="flex items-center gap-1 text-green-600 ml-8 bg-green-50 px-3 py-1 rounded-full text-xs">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>                100% Aman
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                100% Aman
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 md:gap-6">
-
+            
             <div class="lg:col-span-8 space-y-2 md:space-y-4">
-
                 <div class="hidden md:block mb-2 ml-1">
                     <a href="cart.html" class="text-slate-500 hover:text-orange-500 font-bold flex items-center gap-2 transition w-max">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> Kembali ke Keranjang
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> 
+                        Kembali ke Keranjang
                     </a>
                 </div>
-
-                <div onclick="toggleAddressModal()" class="bg-white md:rounded-2xl shadow-sm border-t border-b md:border border-slate-200 overflow-hidden cursor-pointer hover:bg-slate-50 transition relative group">
-                    <div class="address-border"></div>
-                    <div class="p-5 flex items-start gap-4">
-                        <svg class="w-6 h-6 text-orange-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        <div class="flex-grow">
-                            <h3 class="text-sm font-bold text-slate-800 mb-2">Alamat Pengiriman</h3>
-                            <div class="flex flex-wrap items-center gap-2 text-sm">
-                                <span class="font-bold text-slate-800">Naura Ramadhani</span>
-                                <span class="text-slate-500">(+62) 858-8109-7543</span>
-                                <span class="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full">Utama</span>
-                            </div>
-                            <p class="text-sm text-slate-600 mt-1 leading-relaxed">
-                                Asrama Putri Gedung 11, Jalan Radio Palasari Road Blok C No. 3, Dayeuhkolot, Dayeuhkolot (Bandung Jawa Barat)<br> DAYEUHKOLOT, KAB. BANDUNG, JAWA BARAT, ID 40256
-                            </p>
-                        </div>
-                        <div class="hidden md:flex items-center gap-1 text-orange-500 font-semibold text-sm opacity-0 group-hover:opacity-100 transition">
-                            Ubah
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </div>
-                        <svg class="md:hidden w-5 h-5 text-slate-400 shrink-0 self-center" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </div>
-                </div>
-
-                <div class="bg-white md:rounded-2xl shadow-sm border-t border-b md:border border-slate-200">
-                    <div class="p-4 border-b border-slate-100 flex items-center gap-2">
-                        <span class="bg-slate-900 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">Mall</span>
-                        <span class="bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">ORI</span>
-                        <span class="font-bold text-sm text-slate-800">Uni Gift Official Store</span>
+                
+                <div id="addressBox" class="bg-white md:rounded-2xl shadow-sm border-t border-b md:border border-slate-200 overflow-hidden relative group">
                     </div>
 
-                    <div class="p-4 flex gap-4 border-b border-slate-100">
-                        <div class="w-24 h-24 bg-slate-200 rounded-lg shrink-0 overflow-hidden border border-slate-200">
-                            <img src="https://via.placeholder.com/150/FFEDD5/F97316?text=Gift" alt="Product" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex flex-col justify-between flex-grow">
-                            <div>
-                                <h3 class="text-base font-semibold text-slate-800 line-clamp-2">SPECIAL PROMOTION! CUSTOM AI GIFT - Eternal Memories Premium Box</h3>
-                                <p class="text-sm text-slate-500 mt-1">Variasi: Premium + AI Greeting</p>
-                            </div>
-                            <div class="flex justify-between items-end mt-2">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-orange-500 font-bold text-base">Rp145.000</span>
-                                    <span class="text-slate-400 line-through text-sm">Rp160.000</span>
-                                </div>
-                                <span class="text-sm text-slate-600 font-medium">x1</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <span class="text-sm font-medium text-slate-800 shrink-0">Pesan:</span>
-                        <input type="text" placeholder="(Opsional) Tinggalkan pesan ke penjual" class="text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none w-full text-slate-700 placeholder-slate-400">
-                    </div>
-                </div>
+                <div id="checkoutItemsContainer"></div>
 
                 <div class="bg-white md:rounded-2xl shadow-sm border-t border-b md:border border-slate-200 p-5">
                     <h3 class="text-base font-bold text-slate-800 mb-4">Pilih Opsi Pengiriman</h3>
-
+                    
                     <div class="space-y-3">
                         <label class="flex items-start gap-3 p-3 border border-orange-500 bg-orange-50/30 rounded-xl cursor-pointer transition">
-                            <input type="radio" name="shipping" checked class="w-5 h-5 mt-0.5 text-orange-500 focus:ring-orange-500 border-slate-300">
+                            <input type="radio" name="shipping" value="Reguler" checked class="w-5 h-5 mt-0.5 text-orange-500 focus:ring-orange-500 border-slate-300">
                             <div class="flex-grow">
                                 <div class="flex justify-between items-center mb-1">
                                     <span class="font-bold text-sm text-slate-800">Reguler</span>
@@ -153,7 +101,7 @@
                         </label>
 
                         <label class="flex items-start gap-3 p-3 border border-slate-200 hover:border-orange-300 rounded-xl cursor-pointer transition">
-                            <input type="radio" name="shipping" class="w-5 h-5 mt-0.5 text-orange-500 focus:ring-orange-500 border-slate-300">
+                            <input type="radio" name="shipping" value="Kargo" class="w-5 h-5 mt-0.5 text-orange-500 focus:ring-orange-500 border-slate-300">
                             <div class="flex-grow">
                                 <div class="flex justify-between items-center mb-1">
                                     <span class="font-bold text-sm text-slate-800">Kargo</span>
@@ -164,7 +112,7 @@
                         </label>
 
                         <label class="flex items-start gap-3 p-3 border border-slate-200 hover:border-orange-300 rounded-xl cursor-pointer transition">
-                            <input type="radio" name="shipping" class="w-5 h-5 mt-0.5 text-orange-500 focus:ring-orange-500 border-slate-300">
+                            <input type="radio" name="shipping" value="Next Day" class="w-5 h-5 mt-0.5 text-orange-500 focus:ring-orange-500 border-slate-300">
                             <div class="flex-grow">
                                 <div class="flex justify-between items-center mb-1">
                                     <span class="font-bold text-sm text-slate-800">Next Day</span>
@@ -177,31 +125,13 @@
                 </div>
 
                 <div class="bg-white md:rounded-2xl shadow-sm border-t border-b md:border border-slate-200 p-5 mb-6 md:mb-0">
-                    <h3 class="text-base font-bold text-slate-800 mb-4">Pilih Metode Pembayaran</h3>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <label class="flex items-center gap-3 p-3 border border-orange-500 bg-orange-50/30 rounded-xl cursor-pointer transition">
-                            <input type="radio" name="payment" checked class="w-4 h-4 text-orange-500 focus:ring-orange-500">
+                    <h3 class="text-base font-bold text-slate-800 mb-4">Metode Pembayaran</h3>
+                    
+                    <div class="grid grid-cols-1 gap-3">
+                        <label class="flex items-center gap-3 p-3.5 border-2 border-orange-500 bg-orange-50/30 rounded-xl cursor-pointer transition">
+                            <input type="radio" name="payment" value="QRIS" checked class="w-4 h-4 text-orange-500 focus:ring-orange-500">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" alt="QRIS" class="h-5">
-                            <span class="font-semibold text-sm text-slate-800">QRIS</span>
-                        </label>
-
-                        <label class="flex items-center gap-3 p-3 border border-slate-200 hover:border-orange-300 rounded-xl cursor-pointer transition">
-                            <input type="radio" name="payment" class="w-4 h-4 text-orange-500 focus:ring-orange-500">
-                            <span class="text-lg">🏦</span>
-                            <span class="font-semibold text-sm text-slate-800">Transfer Bank (VA)</span>
-                        </label>
-
-                        <label class="flex items-center gap-3 p-3 border border-slate-200 hover:border-orange-300 rounded-xl cursor-pointer transition">
-                            <input type="radio" name="payment" class="w-4 h-4 text-orange-500 focus:ring-orange-500">
-                            <span class="text-lg">📱</span>
-                            <span class="font-semibold text-sm text-slate-800">GoPay / Dana / OVO</span>
-                        </label>
-
-                        <label class="flex items-center gap-3 p-3 border border-slate-200 hover:border-orange-300 rounded-xl cursor-pointer transition opacity-50 cursor-not-allowed">
-                            <input type="radio" name="payment" disabled class="w-4 h-4 text-slate-400">
-                            <span class="text-lg">💳</span>
-                            <span class="font-semibold text-sm text-slate-500">Kartu Kredit/Debit</span>
+                            <span class="font-semibold text-sm text-slate-800">QRIS (Otomatis)</span>
                         </label>
                     </div>
                 </div>
@@ -211,19 +141,18 @@
             <div class="lg:col-span-4 hidden md:block">
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sticky top-24">
                     <h3 class="text-lg font-bold text-slate-800 mb-4">Ringkasan Belanja</h3>
-
                     <div class="space-y-3 mb-4 pb-4 border-b border-slate-100">
                         <div class="flex justify-between text-sm text-slate-600">
-                            <span>Total Harga (1 Barang)</span>
-                            <span>Rp160.000</span>
+                            <span id="summaryTextCount">Total Harga (0 Barang)</span>
+                            <span id="summaryTotalHarga">Rp0</span>
                         </div>
                         <div class="flex justify-between text-sm text-green-600">
                             <span>Diskon Produk</span>
-                            <span>-Rp15.000</span>
+                            <span id="summaryDiskon">-Rp0</span>
                         </div>
                         <div class="flex justify-between text-sm text-slate-600">
                             <span>Total Ongkos Kirim</span>
-                            <span>Rp15.000</span>
+                            <span id="ongkirDesktop">Rp15.000</span>
                         </div>
                         <div class="flex justify-between text-sm text-slate-600">
                             <span>Biaya Layanan</span>
@@ -233,15 +162,16 @@
 
                     <div class="flex justify-between items-center mb-6">
                         <span class="text-base font-bold text-slate-800">Total Tagihan</span>
-                        <span class="text-2xl font-black text-orange-500">Rp161.000</span>
+                        <span id="summaryTotalTagihan" class="text-2xl font-black text-orange-500">Rp0</span>
                     </div>
 
-                    <button onclick="alert('Pesanan Berhasil Dibuat!'); window.location.href='order-history.html';" class="w-full bg-[#1e1b4b] hover:bg-orange-500 text-white py-3.5 rounded-xl font-bold text-base transition shadow-lg shadow-slate-200/50">
+                    <button id="btnBuatPesananDesktop" onclick="processOrder()" class="w-full bg-[#1e1b4b] hover:bg-orange-500 text-white py-3.5 rounded-xl font-bold text-base transition shadow-lg shadow-slate-200/50">
                         Buat Pesanan
                     </button>
-
+                    
                     <p class="text-xs text-center text-slate-400 mt-4 flex justify-center items-center gap-1">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>                        Pembayaran aman & terenkripsi
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        Pembayaran aman & terenkripsi
                     </p>
                 </div>
             </div>
@@ -251,11 +181,7 @@
 
     <footer class="bg-white border-t border-slate-200 py-6 mt-12 hidden md:block">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-semibold text-slate-400">
-            <div class="flex gap-4">
-                <a href="#" class="hover:text-slate-800 transition">Policies : Returns Policy</a>
-                <a href="#" class="hover:text-slate-800 transition">Terms of use</a>
-                <a href="#" class="hover:text-slate-800 transition">Privacy</a>
-            </div>
+            <div class="flex gap-4"><a href="#" class="hover:text-slate-800 transition">Policies : Returns Policy</a><a href="#" class="hover:text-slate-800 transition">Terms of use</a><a href="#" class="hover:text-slate-800 transition">Privacy</a></div>
             <p>&copy; 2024-2026 Uni Gift Studio.</p>
         </div>
     </footer>
@@ -265,69 +191,34 @@
             <div class="flex flex-col flex-grow text-right pr-4">
                 <div class="flex items-center justify-end gap-1">
                     <span class="text-sm font-medium text-slate-600">Total</span>
-                    <span class="text-lg font-bold text-orange-500">Rp161.000</span>
+                    <span id="summaryTotalTagihanMobile" class="text-lg font-bold text-orange-500">Rp0</span>
                 </div>
             </div>
-
-            <button onclick="alert('Pesanan Berhasil Dibuat!'); window.location.href='order-history.html';" class="h-full px-8 bg-[#1e1b4b] hover:bg-orange-500 transition text-white font-bold text-sm">
+            <button id="btnBuatPesananMobile" onclick="processOrder()" class="h-full px-8 bg-[#1e1b4b] hover:bg-orange-500 transition text-white font-bold text-sm">
                 Buat Pesanan
             </button>
         </div>
     </div>
 
     <div id="addressModal" class="fixed inset-0 bg-slate-900/50 z-50 hidden transition-opacity">
-        <div class="fixed inset-y-0 right-0 w-full md:w-[500px] bg-white shadow-2xl flex flex-col transform transition-transform">
+        <div class="fixed inset-y-0 right-0 w-full md:w-[450px] bg-white shadow-2xl flex flex-col transform transition-transform">
+            
+            <div class="flex items-center gap-3 p-4 border-b border-slate-200 bg-white">
+                <button onclick="toggleAddressModal()" class="p-1 hover:bg-slate-100 rounded-full transition">
+                    <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <h2 class="text-base font-bold text-slate-800">Pilih Alamat Pengiriman</h2>
+            </div>
 
-            <div class="flex items-center justify-between p-4 border-b border-slate-200 bg-white">
-                <div class="flex items-center gap-3">
-                    <button onclick="toggleAddressModal()" class="p-1 hover:bg-slate-100 rounded-full transition">
-                        <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                    </button>
-                    <h2 class="text-lg font-bold text-slate-800">Pilih Alamat Pengiriman</h2>
+            <div class="flex-grow overflow-y-auto p-4 space-y-4 bg-slate-50" id="addressModalList">
                 </div>
-            </div>
 
-            <div class="flex-grow overflow-y-auto p-4 space-y-4 bg-slate-50">
-
-                <label class="block bg-white p-4 rounded-xl border-2 border-orange-500 cursor-pointer shadow-sm relative">
-                    <input type="radio" name="address_selection" checked class="absolute top-5 right-4 w-5 h-5 text-orange-500 focus:ring-orange-500">
-                    <div class="pr-8">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="font-bold text-slate-800 text-base">Naura Ramadhani</span>
-                            <span class="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full">Utama</span>
-                        </div>
-                        <span class="text-sm text-slate-500 block mb-2">(+62) 858-8109-7543</span>
-                        <p class="text-sm text-slate-600 leading-relaxed">
-                            Asrama Putri Gedung 11, Jalan Radio Palasari Road Blok C No. 3<br>
-                            DAYEUHKOLOT, KAB. BANDUNG, JAWA BARAT, ID 40256
-                        </p>
-                    </div>
-                    <button class="text-orange-500 text-sm font-semibold mt-3 hover:underline">Ubah Alamat</button>
-                </label>
-
-                <label class="block bg-white p-4 rounded-xl border border-slate-200 cursor-pointer shadow-sm hover:border-orange-300 relative transition">
-                    <input type="radio" name="address_selection" class="absolute top-5 right-4 w-5 h-5 text-orange-500 focus:ring-orange-500">
-                    <div class="pr-8">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="font-bold text-slate-800 text-base">Rumah Orang Tua</span>
-                        </div>
-                        <span class="text-sm text-slate-500 block mb-2">(+62) 812-3456-7890</span>
-                        <p class="text-sm text-slate-600 leading-relaxed">
-                            Jl. Merdeka No. 45, RT 01 / RW 02, Kec. Sumur Bandung<br>
-                            KOTA BANDUNG, JAWA BARAT, ID 40111
-                        </p>
-                    </div>
-                    <button class="text-orange-500 text-sm font-semibold mt-3 hover:underline">Ubah Alamat</button>
-                </label>
-
-            </div>
-
-            <div class="p-4 bg-white border-t border-slate-200">
-                <button onclick="window.location.href='tambah_alamat.html'" class="w-full py-3.5 border-2 border-orange-500 text-orange-500 rounded-xl font-bold hover:bg-orange-50 transition flex justify-center items-center gap-2 mb-3">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-    Tambah Alamat Baru
-</button>
-                <button onclick="toggleAddressModal()" class="w-full py-3.5 bg-orange-500 text-white rounded-xl font-bold hover:bg-orange-600 transition shadow-lg shadow-orange-500/30">
+            <div class="p-4 bg-white border-t border-slate-200 flex flex-col gap-3">
+               <button onclick="window.location.href='tambah_alamat.html'" class="w-full py-3 border border-orange-500 text-orange-500 rounded-xl font-bold hover:bg-orange-50 transition flex justify-center items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Tambah Alamat Baru
+                </button>
+                <button onclick="confirmAddressSelection()" class="w-full py-3 bg-orange-500 text-white rounded-xl font-bold hover:bg-orange-600 transition shadow-lg shadow-orange-500/30">
                     Konfirmasi
                 </button>
             </div>
@@ -340,7 +231,271 @@
             const modal = document.getElementById('addressModal');
             modal.classList.toggle('hidden');
         }
+
+        const userData = JSON.parse(localStorage.getItem('userSession'));
+        const cartData = JSON.parse(localStorage.getItem('cart')) || [];
+        let userAddress = JSON.parse(localStorage.getItem('userAddress'));
+        let addressList = [];
+        let selectedAddressId = userAddress ? userAddress.id : null;
+
+        let isAddressComplete = false;
+        let totalTagihanGlobal = 0;
+
+        window.onload = async function() {
+            if (!userData) {
+                alert("Harap login terlebih dahulu!");
+                window.location.href = 'login.html';
+                return;
+            }
+            if (cartData.length === 0) {
+                alert("Keranjangmu masih kosong!");
+                window.location.href = 'products.html';
+                return;
+            }
+
+            await loadAddresses();
+            renderAddress();
+            renderCheckoutItems();
+
+            document.querySelectorAll('input[name="shipping"]').forEach((elem) => {
+                elem.addEventListener("change", renderCheckoutItems);
+            });
+        };
+
+        async function loadAddresses() {
+            try {
+                const response = await fetch(`http://localhost:3000/api/addresses/${userData.id}`);
+                const json = await response.json();
+                addressList = json.data || [];
+                if (addressList.length) {
+                    const active = addressList.find(a => a.id === selectedAddressId) ||
+                        addressList.find(a => a.is_utama) || addressList[0];
+                    selectedAddressId = active.id;
+                    userAddress = {
+                        id: active.id,
+                        nama: active.nama_penerima,
+                        telepon: active.nomor_telepon,
+                        alamatLengkap: `${active.detail_alamat}<br>${active.wilayah}`
+                    };
+                    localStorage.setItem('userAddress', JSON.stringify(userAddress));
+                }
+            } catch (error) {
+                console.error('Gagal memuat daftar alamat:', error);
+            }
+        }
+
+        function selectAddressInModal(id) {
+            selectedAddressId = id;
+        }
+
+        function confirmAddressSelection() {
+            const chosen = addressList.find(a => a.id === selectedAddressId);
+            if (chosen) {
+                userAddress = {
+                    id: chosen.id,
+                    nama: chosen.nama_penerima,
+                    telepon: chosen.nomor_telepon,
+                    alamatLengkap: `${chosen.detail_alamat}<br>${chosen.wilayah}`
+                };
+                localStorage.setItem('userAddress', JSON.stringify(userAddress));
+                renderAddress();
+            }
+            toggleAddressModal();
+        }
+
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+        }
+
+        function renderAddress() {
+            const addressBox = document.getElementById('addressBox');
+            const modalList = document.getElementById('addressModalList');
+            
+            if (!userAddress) {
+                isAddressComplete = false;
+                addressBox.innerHTML = `
+                    <div class="address-border"></div>
+                    <div onclick="window.location.href='tambah_alamat.html'" class="p-6 flex flex-col items-center justify-center text-center bg-red-50 hover:bg-red-100 transition cursor-pointer">
+                        <h3 class="text-base font-bold text-red-600 mb-1">Alamat Belum Diisi!</h3>
+                        <p class="text-sm text-red-500 mb-4">Kamu harus mengisi alamat pengiriman sebelum bisa membuat pesanan.</p>
+                        <button class="bg-red-500 text-white font-bold px-6 py-2 rounded-full shadow-md">Isi Alamat Sekarang</button>
+                    </div>
+                `;
+                document.getElementById('btnBuatPesananDesktop').disabled = true;
+                document.getElementById('btnBuatPesananDesktop').classList.add('opacity-50', 'cursor-not-allowed');
+                document.getElementById('btnBuatPesananMobile').disabled = true;
+                document.getElementById('btnBuatPesananMobile').classList.add('opacity-50', 'cursor-not-allowed');
+                
+                // Modal List kalau belum punya alamat
+                modalList.innerHTML = `<p class="text-center text-slate-500 text-sm mt-4">Belum ada alamat tersimpan.</p>`;
+
+            } else {
+                isAddressComplete = true;
+                
+                // Kotak Alamat Utama dengan tombol "Ubah >"
+                addressBox.innerHTML = `
+                    <div class="address-border"></div>
+                    <div class="p-5 flex items-start gap-4">
+                        <svg class="w-6 h-6 text-orange-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-sm font-bold text-slate-800">Alamat Pengiriman</h3>
+                                <div class="flex items-center gap-1 text-orange-500 font-semibold text-sm cursor-pointer hover:text-orange-600 transition" onclick="toggleAddressModal()">
+                                    Ubah <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 text-sm mb-1">
+                                <span class="font-bold text-slate-800">${userAddress.nama}</span>
+                                <span class="text-slate-500">${userAddress.telepon}</span>
+                                <span class="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full">Utama</span>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed">${userAddress.alamatLengkap}</p>
+                        </div>
+                    </div>
+                `;
+
+                // Isi Modal List dari daftar alamat asli (user_addresses)
+                modalList.innerHTML = addressList.map(addr => `
+                    <label class="block bg-white p-4 rounded-xl border-2 ${addr.id === selectedAddressId ? 'border-orange-500' : 'border-slate-200 hover:border-orange-300'} cursor-pointer shadow-sm relative transition">
+                        <input type="radio" name="address_selection" ${addr.id === selectedAddressId ? 'checked' : ''} onchange="selectAddressInModal(${addr.id})" class="absolute top-5 right-4 w-5 h-5 text-orange-500 focus:ring-orange-500 border-slate-300">
+                        <div class="pr-8">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-bold text-slate-800 text-base">${addr.nama_penerima}</span>
+                                ${addr.is_utama ? '<span class="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full">Utama</span>' : ''}
+                            </div>
+                            <span class="text-sm text-slate-500 block mb-2">${addr.nomor_telepon}</span>
+                            <p class="text-sm text-slate-600 leading-relaxed">${addr.detail_alamat}<br>${addr.wilayah}</p>
+                        </div>
+                    </label>
+                `).join('');
+            }
+        }
+
+        function renderCheckoutItems() {
+            const container = document.getElementById('checkoutItemsContainer');
+            container.innerHTML = '';
+
+            let totalPrice = 0;
+            let totalMRP = 0;
+            let totalItems = 0;
+
+            const ongkirVal = document.querySelector('input[name="shipping"]:checked').value;
+            const ongkirPerSeller = ongkirVal === "Next Day" ? 35000 : ongkirVal === "Kargo" ? 25000 : 15000;
+            const layanan = 1000;
+
+            // Group by seller
+            const sellerMap = {};
+            cartData.forEach(item => {
+                const key = item.creator_id || 'unknown';
+                if (!sellerMap[key]) sellerMap[key] = { nama_kreator: item.nama_kreator || 'Uni Gift Studio', items: [] };
+                sellerMap[key].items.push(item);
+            });
+
+            const numSellers = Object.keys(sellerMap).length;
+
+            Object.values(sellerMap).forEach(group => {
+                let groupSubtotal = 0;
+                const itemsHtml = group.items.map(item => {
+                    const itemTotal = item.price * item.quantity;
+                    const itemOriginalTotal = (item.mrp || item.price) * item.quantity;
+                    totalPrice += itemTotal;
+                    totalMRP += itemOriginalTotal;
+                    totalItems += item.quantity;
+                    groupSubtotal += itemTotal;
+                    return `
+                        <div class="p-4 flex gap-4 border-b border-slate-50 last:border-0">
+                            ${item.image}
+                            <div class="flex flex-col justify-between flex-grow">
+                                <h3 class="text-sm font-semibold text-slate-800 line-clamp-2">${item.name}</h3>
+                                <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mt-1">${item.category} ${item.varian ? `| Warna: ${item.varian}` : ''}</p>
+                                <div class="flex justify-between items-end mt-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-orange-500 font-bold">${formatRupiah(item.price)}</span>
+                                        ${(item.mrp||0) > item.price ? `<span class="text-slate-400 line-through text-sm">${formatRupiah(item.mrp)}</span>` : ''}
+                                    </div>
+                                    <span class="text-sm text-slate-600 font-medium">x${item.quantity}</span>
+                                </div>
+                            </div>
+                        </div>`;
+                }).join('');
+
+                container.innerHTML += `
+                    <div class="bg-white md:rounded-2xl shadow-sm border-t border-b md:border border-slate-200 mb-3">
+                        <div class="p-4 border-b border-slate-100 flex items-center gap-2">
+                            <div class="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs font-black shrink-0">
+                                ${group.nama_kreator.charAt(0).toUpperCase()}
+                            </div>
+                            <span class="font-bold text-sm text-slate-800">${group.nama_kreator}</span>
+                            <span class="ml-auto text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">Pesanan Terpisah</span>
+                        </div>
+                        ${itemsHtml}
+                        <div class="px-4 py-3 flex justify-between items-center bg-orange-50/50 border-t border-orange-100">
+                            <span class="text-xs text-slate-500">Ongkir ${group.nama_kreator}: ${formatRupiah(ongkirPerSeller)}</span>
+                            <span class="text-sm font-black text-orange-600">${formatRupiah(groupSubtotal + ongkirPerSeller + layanan)}</span>
+                        </div>
+                    </div>`;
+            });
+
+            // Ongkir total = per seller × jumlah seller
+            const totalOngkir = ongkirPerSeller * numSellers;
+            const totalLayanan = layanan * numSellers;
+            totalTagihanGlobal = totalPrice + totalOngkir + totalLayanan;
+
+            document.getElementById('summaryTextCount').innerText = `Total Harga (${totalItems} Barang)`;
+            document.getElementById('summaryTotalHarga').innerText = formatRupiah(totalMRP);
+            document.getElementById('summaryDiskon').innerText = `- ${formatRupiah(totalMRP - totalPrice)}`;
+            document.getElementById('ongkirDesktop').innerText = formatRupiah(totalOngkir) + (numSellers > 1 ? ` (${numSellers} seller)` : '');
+            document.getElementById('summaryTotalTagihan').innerText = formatRupiah(totalTagihanGlobal);
+            document.getElementById('summaryTotalTagihanMobile').innerText = formatRupiah(totalTagihanGlobal);
+        }
+
+        async function processOrder() {
+            if(!isAddressComplete) {
+                alert("Hei! Alamat pengirimannya diisi dulu ya supaya kurirnya nggak nyasar.");
+                return;
+            }
+
+            const btnDesktop = document.getElementById('btnBuatPesananDesktop');
+            const btnMobile = document.getElementById('btnBuatPesananMobile');
+            
+            btnDesktop.innerHTML = "Memproses Pesanan..."; btnDesktop.disabled = true;
+            btnMobile.innerHTML = "Memproses..."; btnMobile.disabled = true;
+
+            const metode_pengiriman = document.querySelector('input[name="shipping"]:checked').value;
+            const metode_pembayaran = document.querySelector('input[name="payment"]:checked').value;
+
+            const orderData = {
+                pic_id: userData.id, 
+                total_tagihan: totalTagihanGlobal,
+                metode_pembayaran: metode_pembayaran,
+                metode_pengiriman: metode_pengiriman,
+                order_items: cartData
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+                
+                const result = await response.json();
+
+                if (response.ok) {
+                    localStorage.removeItem('cart');
+                    window.location.href = `multi-invoice.html?group=${result.payment_group}`;
+                } else {
+                    alert('Gagal membuat pesanan: ' + result.pesan);
+                    btnDesktop.innerHTML = "Buat Pesanan"; btnDesktop.disabled = false;
+                    btnMobile.innerHTML = "Buat Pesanan"; btnMobile.disabled = false;
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert('Server mati! Pastikan nodemon menyala.');
+                btnDesktop.innerHTML = "Buat Pesanan"; btnDesktop.disabled = false;
+                btnMobile.innerHTML = "Buat Pesanan"; btnMobile.disabled = false;
+            }
+        }
     </script>
 </body>
-
 </html>
