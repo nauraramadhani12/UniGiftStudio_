@@ -86,42 +86,10 @@
                 <div id="checkoutItemsContainer"></div>
 
                 <div class="bg-white md:rounded-2xl shadow-sm border-t border-b md:border border-slate-200 p-5">
-                    <h3 class="text-base font-bold text-slate-800 mb-4">Pilih Opsi Pengiriman</h3>
-                    
-                    <div class="space-y-3">
-                        <label class="flex items-start gap-3 p-3 border border-orange-500 bg-orange-50/30 rounded-xl cursor-pointer transition">
-                            <input type="radio" name="shipping" value="Reguler" checked class="w-5 h-5 mt-0.5 text-orange-500 focus:ring-orange-500 border-slate-300">
-                            <div class="flex-grow">
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="font-bold text-sm text-slate-800">Reguler</span>
-                                    <span class="font-bold text-sm text-slate-800">Rp15.000</span>
-                                </div>
-                                <p class="text-xs text-slate-600">Estimasi tiba: 17 - 18 Apr</p>
-                            </div>
-                        </label>
+                    <h3 class="text-base font-bold text-slate-800 mb-1">Pilih Opsi Pengiriman</h3>
+                    <p id="shippingZoneInfo" class="text-xs text-slate-500 mb-4 hidden"></p>
 
-                        <label class="flex items-start gap-3 p-3 border border-slate-200 hover:border-orange-300 rounded-xl cursor-pointer transition">
-                            <input type="radio" name="shipping" value="Kargo" class="w-5 h-5 mt-0.5 text-orange-500 focus:ring-orange-500 border-slate-300">
-                            <div class="flex-grow">
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="font-bold text-sm text-slate-800">Kargo</span>
-                                    <span class="font-bold text-sm text-slate-800">Rp25.000</span>
-                                </div>
-                                <p class="text-xs text-slate-600">Estimasi tiba: 19 - 21 Apr</p>
-                            </div>
-                        </label>
-
-                        <label class="flex items-start gap-3 p-3 border border-slate-200 hover:border-orange-300 rounded-xl cursor-pointer transition">
-                            <input type="radio" name="shipping" value="Next Day" class="w-5 h-5 mt-0.5 text-orange-500 focus:ring-orange-500 border-slate-300">
-                            <div class="flex-grow">
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="font-bold text-sm text-slate-800">Next Day</span>
-                                    <span class="font-bold text-sm text-slate-800">Rp35.000</span>
-                                </div>
-                                <p class="text-xs text-slate-600">Estimasi tiba: 16 Apr</p>
-                            </div>
-                        </label>
-                    </div>
+                    <div id="shippingOptionsContainer" class="space-y-3"></div>
                 </div>
 
                 <div class="bg-white md:rounded-2xl shadow-sm border-t border-b md:border border-slate-200 p-5 mb-6 md:mb-0">
@@ -255,11 +223,7 @@
 
             await loadAddresses();
             renderAddress();
-            renderCheckoutItems();
-
-            document.querySelectorAll('input[name="shipping"]').forEach((elem) => {
-                elem.addEventListener("change", renderCheckoutItems);
-            });
+            renderShippingOptions();
         };
 
         async function loadAddresses() {
@@ -275,6 +239,7 @@
                         id: active.id,
                         nama: active.nama_penerima,
                         telepon: active.nomor_telepon,
+                        wilayah: active.wilayah,
                         alamatLengkap: `${active.detail_alamat}<br>${active.wilayah}`
                     };
                     localStorage.setItem('userAddress', JSON.stringify(userAddress));
@@ -295,10 +260,12 @@
                     id: chosen.id,
                     nama: chosen.nama_penerima,
                     telepon: chosen.nomor_telepon,
+                    wilayah: chosen.wilayah,
                     alamatLengkap: `${chosen.detail_alamat}<br>${chosen.wilayah}`
                 };
                 localStorage.setItem('userAddress', JSON.stringify(userAddress));
                 renderAddress();
+                renderShippingOptions();
             }
             toggleAddressModal();
         }
@@ -371,6 +338,100 @@
             }
         }
 
+        // ====== Pengiriman berbasis jarak (zona) & tanggal dinamis ======
+        // Titik asal toko (Uni Gift Studio) ada di Bandung.
+        const STORE_ORIGIN = 'Bandung, Jawa Barat';
+
+        // Konfigurasi metode kirim: harga dasar (zona Pulau Jawa) & estimasi hari [min, maks] per zona.
+        const shippingMethods = {
+            'Reguler':  { base: 15000, lead: { 1: [2, 3], 2: [3, 4], 3: [5, 7] } },
+            'Kargo':    { base: 25000, lead: { 1: [3, 4], 2: [4, 6], 3: [7, 10] } },
+            'Next Day': { base: 35000, lead: { 1: [1, 1], 2: [1, 2], 3: [2, 3] } }
+        };
+
+        // Semakin jauh, semakin mahal ongkirnya.
+        const zoneFactor = { 1: 0.7, 2: 1.0, 3: 1.8 };
+        const zoneLabel  = { 1: 'Dalam kota (sekitar Bandung)', 2: 'Pulau Jawa', 3: 'Luar Pulau Jawa' };
+
+        // Tentukan zona jarak dari teks wilayah alamat tujuan.
+        function getShippingZone(wilayah) {
+            const w = (wilayah || '').toLowerCase();
+            if (!w) return 2; // default aman: Pulau Jawa
+
+            const zone1 = ['bandung', 'cimahi'];
+            const zone2 = [
+                'jakarta', 'jabodetabek', 'bogor', 'depok', 'tangerang', 'bekasi', 'banten',
+                'jawa barat', 'jabar', 'cirebon', 'sukabumi', 'garut', 'tasik', 'tasikmalaya',
+                'purwakarta', 'subang', 'indramayu', 'majalengka', 'kuningan', 'ciamis', 'banjar',
+                'jawa tengah', 'jateng', 'semarang', 'solo', 'surakarta', 'magelang', 'tegal',
+                'pekalongan', 'purwokerto', 'kudus', 'salatiga',
+                'yogyakarta', 'jogja', 'diy', 'sleman', 'bantul',
+                'jawa timur', 'jatim', 'surabaya', 'malang', 'sidoarjo', 'gresik', 'kediri',
+                'madiun', 'jember', 'banyuwangi', 'probolinggo', 'mojokerto'
+            ];
+
+            if (zone1.some(k => w.includes(k))) return 1;
+            if (zone2.some(k => w.includes(k))) return 2;
+            return 3; // di luar daftar dianggap luar Pulau Jawa
+        }
+
+        function calcShippingPrice(method, zone) {
+            const raw = shippingMethods[method].base * zoneFactor[zone];
+            return Math.round(raw / 500) * 500; // bulatkan ke Rp500 terdekat
+        }
+
+        function formatTanggal(date) {
+            return new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short' }).format(date);
+        }
+
+        // Estimasi tiba dihitung dari tanggal order (hari ini) + lead time metode/zona.
+        function estimasiTiba(method, zone) {
+            const [minD, maxD] = shippingMethods[method].lead[zone];
+            const now = new Date();
+            const d1 = new Date(now); d1.setDate(now.getDate() + minD);
+            const d2 = new Date(now); d2.setDate(now.getDate() + maxD);
+            if (minD === maxD) return `Estimasi tiba: ${formatTanggal(d2)}`;
+            return `Estimasi tiba: ${formatTanggal(d1)} - ${formatTanggal(d2)}`;
+        }
+
+        function renderShippingOptions() {
+            const container = document.getElementById('shippingOptionsContainer');
+            const info = document.getElementById('shippingZoneInfo');
+            const zone = getShippingZone(userAddress ? userAddress.wilayah : null);
+
+            info.classList.remove('hidden');
+            info.innerHTML = `Ongkir & estimasi dihitung dari <b>${STORE_ORIGIN}</b> menuju <b>${zoneLabel[zone]}</b>.`;
+
+            // Pertahankan metode yang sudah dipilih user (default: Reguler).
+            const prev = document.querySelector('input[name="shipping"]:checked');
+            const selectedMethod = prev ? prev.value : 'Reguler';
+
+            container.innerHTML = Object.keys(shippingMethods).map(method => {
+                const price = calcShippingPrice(method, zone);
+                const isChecked = method === selectedMethod;
+                return `
+                    <label class="flex items-start gap-3 p-3 border ${isChecked ? 'border-orange-500 bg-orange-50/30' : 'border-slate-200 hover:border-orange-300'} rounded-xl cursor-pointer transition">
+                        <input type="radio" name="shipping" value="${method}" data-price="${price}" ${isChecked ? 'checked' : ''} class="w-5 h-5 mt-0.5 text-orange-500 focus:ring-orange-500 border-slate-300">
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-sm text-slate-800">${method}</span>
+                                <span class="font-bold text-sm text-slate-800">${formatRupiah(price)}</span>
+                            </div>
+                            <p class="text-xs text-slate-600">${estimasiTiba(method, zone)}</p>
+                        </div>
+                    </label>`;
+            }).join('');
+
+            document.querySelectorAll('input[name="shipping"]').forEach((elem) => {
+                elem.addEventListener('change', () => {
+                    renderShippingOptions();
+                    renderCheckoutItems();
+                });
+            });
+
+            renderCheckoutItems();
+        }
+
         function renderCheckoutItems() {
             const container = document.getElementById('checkoutItemsContainer');
             container.innerHTML = '';
@@ -379,8 +440,8 @@
             let totalMRP = 0;
             let totalItems = 0;
 
-            const ongkirVal = document.querySelector('input[name="shipping"]:checked').value;
-            const ongkirPerSeller = ongkirVal === "Next Day" ? 35000 : ongkirVal === "Kargo" ? 25000 : 15000;
+            const checkedShipping = document.querySelector('input[name="shipping"]:checked');
+            const ongkirPerSeller = checkedShipping ? parseInt(checkedShipping.dataset.price, 10) : 15000;
             const layanan = 1000;
 
             // Group by seller
