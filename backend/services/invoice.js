@@ -1,0 +1,277 @@
+/**
+ * Logika invoice untuk jalur MANUAL (Fase 2).
+ * Jalur custom (Fase 3) dan reguler (Fase 4) memakai fungsi snapshot yang sama.
+ *
+ * Harga SELALU dihitung ulang di sini dari master harga. Nilai harga dari request
+ * diabaikan, kecuali untuk item lain-lain (harga bebas, memang diinput admin).
+ */
+
+const crypto = require('crypto');
+const pricing = require('./pricing');
+
+const STATUS_TERBUKA_EDIT = ['menunggu_persetujuan', 'revisi_diminta', 'menunggu_pembayaran'];
+
+// Alur status invoice. Setiap status hanya boleh pindah ke status di daftar ini.
+const TRANSISI = {
+    menunggu_persetujuan: ['batal'],
+    revisi_diminta: ['batal'],
+    menunggu_pembayaran: ['lunas', 'batal'],
+    lunas: ['diproduksi'],
+    diproduksi: ['dikirim'],
+    dikirim: ['selesai'],
+    selesai: [],
+    batal: [],
+};
+
+const SUMBER = ['website_reguler', 'website_custom', 'manual'];
+
+function httpError(status, message) {
+    const err = new Error(message);
+    err.status = status;
+    return err;
+}
+
+function periodeDari(date) {
+    return `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
+/** Nomor INV/UGS/YYYYMM/0001, reset tiap bulan. Dipanggil di dalam transaksi. */
+async function buatNomorInvoice(conn, date = new Date()) {
+    const periode = periodeDari(date);
+    await conn.query(
+        'INSERT INTO invoice_sequences (periode, last_no) VALUES (?, 1) ON DUPLICATE KEY UPDATE last_no = last_no + 1',
+        [periode]
+    );
+    const [[row]] = await conn.query('SELECT last_no FROM invoice_sequences WHERE periode = ?', [periode]);
+    return `INV/UGS/${periode}/${String(row.last_no).padStart(4, '0')}`;
+}
+
+function buatTokenPublik() {
+    return crypto.randomBytes(32).toString('hex');
+}
+
+/**
+ * Ubah daftar item dari request menjadi item siap-snapshot.
+ * item.tipe: 'reguler' (product_id, qty) | 'custom' (field custom) | 'lain_lain' (nama, harga_satuan, qty)
+ */
+async function bangunItem(conn, daftar, rates) {
+    if (!Array.isArray(daftar) || daftar.length === 0) {
+        throw httpError(400, 'Invoice harus punya minimal satu item.');
+    }
+    const hasil = [];
+    for (const [i, raw] of daftar.entries()) {
+        const nomor = i + 1;
+        if (raw.tipe === 'reguler') {
+            const [[produk]] = await conn.query(
+                'SELECT id, nama_produk, harga_jual FROM products WHERE id = ?', [raw.product_id]
+            );
+            if (!produk) throw httpError(400, `Item ${nomor}: produk tidak ditemukan.`);
+            const item = pricing.hitungItemReguler({ harga_satuan: produk.harga_jual, qty: raw.qty });
+            hasil.push({ ...item, product_id: produk.id, nama_item: produk.nama_produk });
+        } else if (raw.tipe === 'custom') {
+            const item = pricing.hitungItemCustom(raw, rates);
+            const nama = (raw.nama_item || '').trim() || 'Cetak 3D Custom';
+            hasil.push({ ...item, nama_item: nama });
+        } else if (raw.tipe === 'lain_lain') {
+            const nama = (raw.nama_item || '').trim();
+            if (!nama) throw httpError(400, `Item ${nomor}: nama item wajib diisi.`);
+            const item = pricing.hitungItemLain({ harga_satuan: raw.harga_satuan, qty: raw.qty });
+            hasil.push({ ...item, nama_item: nama });
+        } else {
+            throw httpError(400, `Item ${nomor}: tipe tidak dikenal (reguler, custom, lain_lain).`);
+        }
+    }
+    return hasil;
+}
+
+function validasiHeader(body) {
+    const nama = (body.nama_pemesan || '').trim();
+    if (!nama) throw httpError(400, 'Nama pemesan wajib diisi.');
+    return {
+        nama_pemesan: nama,
+        nomor_wa: (body.nomor_wa || '').trim() || null,
+        alamat: (body.alamat || '').trim() || null,
+        catatan: (body.catatan || '').trim() || null,
+        ongkir: body.ongkir ?? 0,
+        diskon: body.diskon ?? 0,
+    };
+}
+
+/** Hitung tanpa menyimpan — dipakai untuk preview live di form admin. */
+async function previewInvoice(pool, body) {
+    const header = validasiHeader(body);
+    const rates = await pricing.loadPricingRates(pool);
+    const items = await bangunItem(pool, body.items, rates);
+    const total = pricing.hitungTotalInvoice(items, { ongkir: header.ongkir, diskon: header.diskon });
+    return { items, ...total };
+}
+
+async function simpanItem(conn, invoiceId, items) {
+    for (const item of items) {
+        await conn.query(
+            `INSERT INTO invoice_items
+             (invoice_id, tipe_item, product_id, nama_item, qty, harga_satuan,
+              berat_gram, tier_cetak, tarif_cetak_per_gram, biaya_cetak,
+              paket_desain, biaya_desain, pakai_cat, jumlah_warna, tarif_warna, biaya_warna,
+              tingkat_kerumitan, biaya_kerumitan, biaya_cat, subtotal)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+                invoiceId, item.tipe_item, item.product_id ?? null, item.nama_item, item.qty,
+                item.harga_satuan ?? 0,
+                item.berat_gram ?? null, item.tier_cetak ?? null, item.tarif_cetak_per_gram ?? null, item.biaya_cetak ?? null,
+                item.paket_desain ?? null, item.biaya_desain ?? null,
+                item.pakai_cat ?? 0, item.jumlah_warna ?? null, item.tarif_warna ?? null, item.biaya_warna ?? null,
+                item.tingkat_kerumitan ?? null, item.biaya_kerumitan ?? null, item.biaya_cat ?? null,
+                item.subtotal,
+            ]
+        );
+    }
+}
+
+/** Buat invoice manual baru. Mengembalikan id, nomor, dan token publik. */
+async function buatInvoiceManual(pool, body) {
+    const header = validasiHeader(body);
+    const rates = await pricing.loadPricingRates(pool);
+    const conn = await pool.getConnection();
+    try {
+        await conn.beginTransaction();
+        const items = await bangunItem(conn, body.items, rates);
+        const total = pricing.hitungTotalInvoice(items, { ongkir: header.ongkir, diskon: header.diskon });
+        const nomor = await buatNomorInvoice(conn);
+        const token = buatTokenPublik();
+
+        const [res] = await conn.query(
+            `INSERT INTO invoices
+             (nomor_invoice, sumber_pesanan, nama_pemesan, nomor_wa, alamat, catatan,
+              subtotal, ongkir, diskon, total, status, public_token)
+             VALUES (?, 'manual', ?, ?, ?, ?, ?, ?, ?, ?, 'menunggu_pembayaran', ?)`,
+            [nomor, header.nama_pemesan, header.nomor_wa, header.alamat, header.catatan,
+             total.subtotal, total.ongkir, total.diskon, total.total, token]
+        );
+        await simpanItem(conn, res.insertId, items);
+        await conn.commit();
+        return { id: res.insertId, nomor_invoice: nomor, public_token: token, total: total.total };
+    } catch (err) {
+        await conn.rollback();
+        throw err;
+    } finally {
+        conn.release();
+    }
+}
+
+/** Edit invoice manual. Hanya boleh sebelum status Lunas. Item di-snapshot ulang. */
+async function ubahInvoiceManual(pool, id, body) {
+    const header = validasiHeader(body);
+    const rates = await pricing.loadPricingRates(pool);
+    const conn = await pool.getConnection();
+    try {
+        await conn.beginTransaction();
+        const [[inv]] = await conn.query(
+            'SELECT id, status, sumber_pesanan FROM invoices WHERE id = ? FOR UPDATE', [id]
+        );
+        if (!inv) throw httpError(404, 'Invoice tidak ditemukan.');
+        if (inv.sumber_pesanan !== 'manual') throw httpError(400, 'Invoice ini tidak bisa diedit dari halaman manual.');
+        if (!STATUS_TERBUKA_EDIT.includes(inv.status)) {
+            throw httpError(400, 'Invoice yang sudah Lunas atau sesudahnya tidak bisa diedit.');
+        }
+
+        const items = await bangunItem(conn, body.items, rates);
+        const total = pricing.hitungTotalInvoice(items, { ongkir: header.ongkir, diskon: header.diskon });
+
+        await conn.query('DELETE FROM invoice_items WHERE invoice_id = ?', [id]);
+        await conn.query(
+            `UPDATE invoices SET nama_pemesan = ?, nomor_wa = ?, alamat = ?, catatan = ?,
+             subtotal = ?, ongkir = ?, diskon = ?, total = ? WHERE id = ?`,
+            [header.nama_pemesan, header.nomor_wa, header.alamat, header.catatan,
+             total.subtotal, total.ongkir, total.diskon, total.total, id]
+        );
+        await simpanItem(conn, id, items);
+        await conn.commit();
+        return { id, total: total.total };
+    } catch (err) {
+        await conn.rollback();
+        throw err;
+    } finally {
+        conn.release();
+    }
+}
+
+async function ambilInvoice(pool, where, value) {
+    const [[inv]] = await pool.query(`SELECT * FROM invoices WHERE ${where} = ?`, [value]);
+    if (!inv) return null;
+    const [items] = await pool.query(
+        'SELECT * FROM invoice_items WHERE invoice_id = ? ORDER BY id ASC', [inv.id]
+    );
+    return { ...inv, items };
+}
+
+function ambilInvoiceById(pool, id) {
+    return ambilInvoice(pool, 'id', id);
+}
+
+/** Dipakai link publik. Token 64 karakter hex, tidak bisa ditebak. */
+function ambilInvoiceByToken(pool, token) {
+    if (!/^[a-f0-9]{64}$/.test(token || '')) return Promise.resolve(null);
+    return ambilInvoice(pool, 'public_token', token);
+}
+
+async function daftarInvoice(pool, { status, sumber, dari, sampai, cari } = {}) {
+    let sql = `SELECT id, nomor_invoice, sumber_pesanan, nama_pemesan, nomor_wa, total,
+                      status, kurir, nomor_resi, created_at
+               FROM invoices WHERE 1=1`;
+    const params = [];
+    if (status) { sql += ' AND status = ?'; params.push(status); }
+    if (sumber && SUMBER.includes(sumber)) { sql += ' AND sumber_pesanan = ?'; params.push(sumber); }
+    if (dari) { sql += ' AND created_at >= ?'; params.push(dari); }
+    if (sampai) { sql += ' AND created_at < DATE_ADD(?, INTERVAL 1 DAY)'; params.push(sampai); }
+    if (cari) {
+        sql += ' AND (nomor_invoice LIKE ? OR nama_pemesan LIKE ?)';
+        params.push(`%${cari}%`, `%${cari}%`);
+    }
+    sql += ' ORDER BY created_at DESC, id DESC';
+    const [rows] = await pool.query(sql, params);
+    return rows;
+}
+
+/** Ubah status sesuai alur. Dikirim wajib kurir. Lunas menyimpan waktu bayar. */
+async function ubahStatus(pool, id, { status, kurir, nomor_resi }) {
+    const conn = await pool.getConnection();
+    try {
+        await conn.beginTransaction();
+        const [[inv]] = await conn.query('SELECT id, status FROM invoices WHERE id = ? FOR UPDATE', [id]);
+        if (!inv) throw httpError(404, 'Invoice tidak ditemukan.');
+        if (!(TRANSISI[inv.status] || []).includes(status)) {
+            throw httpError(400, `Status tidak bisa diubah dari "${inv.status}" ke "${status}".`);
+        }
+        if (status === 'dikirim' && !(kurir || '').trim()) {
+            throw httpError(400, 'Nama kurir wajib diisi untuk status dikirim.');
+        }
+        await conn.query(
+            `UPDATE invoices SET status = ?,
+               kurir = COALESCE(?, kurir), nomor_resi = COALESCE(?, nomor_resi),
+               paid_at = CASE WHEN ? = 'lunas' THEN NOW() ELSE paid_at END
+             WHERE id = ?`,
+            [status, kurir || null, nomor_resi || null, status, id]
+        );
+        await conn.commit();
+        return { id, status };
+    } catch (err) {
+        await conn.rollback();
+        throw err;
+    } finally {
+        conn.release();
+    }
+}
+
+module.exports = {
+    SUMBER,
+    TRANSISI,
+    STATUS_TERBUKA_EDIT,
+    previewInvoice,
+    buatInvoiceManual,
+    ubahInvoiceManual,
+    ambilInvoiceById,
+    ambilInvoiceByToken,
+    daftarInvoice,
+    ubahStatus,
+};

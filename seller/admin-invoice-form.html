@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Invoice Manual | Uni Gift Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+<script>const API_ORIGIN = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? 'http://localhost:3000' : ''; const CONSUMER_BASE = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? '../consumer/' : '../';</script>
+<script src="../shared/invoice-common.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+
+    <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-6 md:px-8">
+        <div class="flex items-center gap-4">
+            <a href="admin-invoice.html" class="text-slate-400 hover:text-orange-500 font-bold text-sm">← Invoice</a>
+            <h1 id="judul" class="text-xl font-bold text-slate-800">Buat Invoice Manual</h1>
+        </div>
+        <button onclick="logout()" class="text-sm font-bold text-slate-400 hover:text-red-500">Keluar</button>
+    </header>
+
+    <main class="max-w-6xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Data pemesan -->
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <h2 class="font-bold text-slate-800">Data Pemesan</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="text-sm font-bold text-slate-600">Nama *
+                        <input id="nama_pemesan" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    </label>
+                    <label class="text-sm font-bold text-slate-600">No. WhatsApp
+                        <input id="nomor_wa" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="08xxxxxxxxxx">
+                    </label>
+                </div>
+                <label class="text-sm font-bold text-slate-600 block">Alamat
+                    <textarea id="alamat" rows="2" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500"></textarea>
+                </label>
+            </section>
+
+            <!-- Item -->
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="font-bold text-slate-800">Item</h2>
+                    <div class="flex gap-2">
+                        <button onclick="tambahItem('reguler')" class="text-xs font-bold px-3 py-2 rounded-lg border border-slate-200 hover:border-orange-500 hover:text-orange-500">+ Reguler</button>
+                        <button onclick="tambahItem('custom')" class="text-xs font-bold px-3 py-2 rounded-lg border border-slate-200 hover:border-orange-500 hover:text-orange-500">+ Custom</button>
+                        <button onclick="tambahItem('lain_lain')" class="text-xs font-bold px-3 py-2 rounded-lg border border-slate-200 hover:border-orange-500 hover:text-orange-500">+ Lain-lain</button>
+                    </div>
+                </div>
+                <div id="daftarItem" class="space-y-3"></div>
+            </section>
+
+            <!-- Biaya tambahan -->
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label class="text-sm font-bold text-slate-600">Ongkir (Rp)
+                    <input id="ongkir" type="number" min="0" value="0" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500">
+                </label>
+                <label class="text-sm font-bold text-slate-600">Diskon (Rp)
+                    <input id="diskon" type="number" min="0" value="0" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500">
+                </label>
+                <label class="text-sm font-bold text-slate-600 md:col-span-2">Catatan
+                    <textarea id="catatan" rows="2" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500"></textarea>
+                </label>
+            </section>
+        </div>
+
+        <!-- Ringkasan & simpan -->
+        <aside class="space-y-6">
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sticky top-6">
+                <h2 class="font-bold text-slate-800 mb-4">Ringkasan</h2>
+                <div id="ringkasanError" class="hidden mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3"></div>
+                <dl class="space-y-2 text-sm">
+                    <div class="flex justify-between"><dt class="text-slate-500">Subtotal</dt><dd id="rSubtotal" class="font-bold">Rp0</dd></div>
+                    <div class="flex justify-between"><dt class="text-slate-500">Ongkir</dt><dd id="rOngkir" class="font-bold">Rp0</dd></div>
+                    <div class="flex justify-between"><dt class="text-slate-500">Diskon</dt><dd id="rDiskon" class="font-bold">Rp0</dd></div>
+                    <div class="flex justify-between border-t border-slate-100 pt-3 text-base"><dt class="font-bold">Total</dt><dd id="rTotal" class="font-extrabold text-orange-600">Rp0</dd></div>
+                </dl>
+                <p class="text-[11px] text-slate-400 mt-3">Total dihitung ulang di server saat disimpan. Angka di sini hanya preview.</p>
+                <button id="btnSimpan" onclick="simpan()" class="mt-6 w-full bg-orange-500 hover:bg-orange-600 disabled:bg-slate-300 text-white font-bold py-3 rounded-xl shadow transition">Simpan Invoice</button>
+            </section>
+        </aside>
+    </main>
+
+    <script>
+        const API_BASE = API_ORIGIN + '';
+        const token = localStorage.getItem('adminToken');
+        if (!token) window.location.href = CONSUMER_BASE + 'login.html?next=admin';
+        function authHeader() { return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }; }
+        function logout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = CONSUMER_BASE + 'login.html?next=admin';
+        }
+
+        const params = new URLSearchParams(location.search);
+        const editId = params.get('id');
+        let produkList = [];
+        let items = [];
+        let previewTimer = null;
+        let previewItems = [];
+
+        const BARU = {
+            reguler:   () => ({ tipe: 'reguler', product_id: '', qty: 1 }),
+            custom:    () => ({ tipe: 'custom', nama_item: '', berat_gram: '', qty: 1, paket_desain: 'tanpa', pakai_cat: false, jumlah_warna: 1, tingkat_kerumitan: 'basic' }),
+            lain_lain: () => ({ tipe: 'lain_lain', nama_item: '', harga_satuan: '', qty: 1 }),
+        };
+
+        function tambahItem(tipe) {
+            items.push(BARU[tipe]());
+            renderItems();
+            schedulePreview();
+        }
+        function hapusItem(i) {
+            items.splice(i, 1);
+            renderItems();
+            schedulePreview();
+        }
+
+        const inputCls = 'w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500';
+
+        function renderItems() {
+            const box = document.getElementById('daftarItem');
+            if (items.length === 0) {
+                box.innerHTML = '<p class="text-sm text-slate-400 text-center py-6">Belum ada item. Tambahkan dengan tombol di atas.</p>';
+                return;
+            }
+            box.innerHTML = items.map((it, i) => {
+                const sub = `<span data-sub="${i}" class="text-xs font-bold text-slate-700"></span>`;
+                let isi = '';
+                if (it.tipe === 'reguler') {
+                    const opsi = produkList.map(p => `<option value="${p.id}" ${String(p.id) === String(it.product_id) ? 'selected' : ''}>${esc(p.nama_produk)} — ${rupiah(p.harga_jual)}</option>`).join('');
+                    isi = `<select data-f="product_id" class="${inputCls} md:col-span-3"><option value="">-- Pilih produk --</option>${opsi}</select>`;
+                } else if (it.tipe === 'lain_lain') {
+                    isi = `
+                        <input data-f="nama_item" value="${esc(it.nama_item)}" placeholder="Nama item" class="${inputCls} md:col-span-2">
+                        <input data-f="harga_satuan" type="number" min="0" value="${it.harga_satuan}" placeholder="Harga (Rp)" class="${inputCls}">`;
+                } else {
+                    isi = `
+                        <input data-f="nama_item" value="${esc(it.nama_item)}" placeholder="Nama (opsional)" class="${inputCls} md:col-span-2">
+                        <input data-f="berat_gram" type="number" min="0" step="0.01" value="${it.berat_gram}" placeholder="Berat (gr)" class="${inputCls}">
+                        <select data-f="paket_desain" class="${inputCls}">
+                            ${paketOpsi(it.paket_desain)}
+                        </select>
+                        <label class="flex items-center gap-2 text-sm font-semibold text-slate-600 md:col-span-2">
+                            <input data-f="pakai_cat" type="checkbox" ${it.pakai_cat ? 'checked' : ''} class="w-4 h-4 accent-orange-500"> Pakai cat
+                        </label>
+                        ${it.pakai_cat ? `
+                        <input data-f="jumlah_warna" type="number" min="1" max="10" value="${it.jumlah_warna}" placeholder="Jumlah warna (1–10)" class="${inputCls}">
+                        <select data-f="tingkat_kerumitan" class="${inputCls}">
+                            ${kerumitanOpsi(it.tingkat_kerumitan)}
+                        </select>` : ''}`;
+                }
+                return `
+                <div class="border border-slate-200 rounded-xl p-4 grid grid-cols-1 md:grid-cols-4 gap-3 items-center" data-idx="${i}">
+                    <div class="flex items-center justify-between md:col-span-4 gap-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-extrabold text-slate-400">#${i + 1}</span>
+                            <select data-f="tipe" class="${inputCls} w-auto">
+                                <option value="reguler" ${it.tipe === 'reguler' ? 'selected' : ''}>Reguler (katalog)</option>
+                                <option value="custom" ${it.tipe === 'custom' ? 'selected' : ''}>Custom (cetak 3D)</option>
+                                <option value="lain_lain" ${it.tipe === 'lain_lain' ? 'selected' : ''}>Lain-lain</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            ${sub}
+                            <button onclick="hapusItem(${i})" class="text-xs font-bold text-red-500 hover:text-red-600">Hapus</button>
+                        </div>
+                    </div>
+                    ${isi}
+                    <input data-f="qty" type="number" min="1" value="${it.qty}" placeholder="Qty" class="${inputCls}">
+                </div>`;
+            }).join('');
+        }
+
+        function paketOpsi(sel) {
+            return Object.entries(INVOICE_PAKET_LABEL).map(([k, v]) => `<option value="${k}" ${k === sel ? 'selected' : ''}>${v}</option>`).join('');
+        }
+        function kerumitanOpsi(sel) {
+            return Object.entries(INVOICE_KERUMITAN_LABEL).map(([k, v]) => `<option value="${k}" ${k === sel ? 'selected' : ''}>${v}</option>`).join('');
+        }
+
+        // Update subtotal per baris tanpa render ulang (supaya fokus input tidak hilang)
+        function updateSubtotal() {
+            document.querySelectorAll('[data-sub]').forEach(el => {
+                const p = previewItems[Number(el.dataset.sub)];
+                el.textContent = p ? rupiah(p.subtotal) : '';
+            });
+        }
+
+        // Baca perubahan input ke state. Ganti tipe → render ulang baris itu.
+        document.getElementById('daftarItem').addEventListener('input', onItemChange);
+        document.getElementById('daftarItem').addEventListener('change', onItemChange);
+        function onItemChange(e) {
+            const row = e.target.closest('[data-idx]');
+            if (!row) return;
+            const it = items[Number(row.dataset.idx)];
+            const f = e.target.dataset.f;
+            if (!f) return;
+            if (f === 'tipe') {
+                items[Number(row.dataset.idx)] = { ...BARU[e.target.value](), qty: it.qty };
+                renderItems();
+            } else if (f === 'pakai_cat') {
+                it.pakai_cat = e.target.checked;
+                renderItems();
+            } else {
+                it[f] = e.target.value;
+            }
+            schedulePreview();
+        }
+
+        ['nama_pemesan', 'ongkir', 'diskon'].forEach(id =>
+            document.getElementById(id).addEventListener('input', schedulePreview));
+
+        function schedulePreview() {
+            clearTimeout(previewTimer);
+            previewTimer = setTimeout(runPreview, 350);
+        }
+
+        function bodyForm() {
+            const angka = v => (v === '' || v === null) ? 0 : Number(v);
+            return {
+                nama_pemesan: document.getElementById('nama_pemesan').value,
+                nomor_wa: document.getElementById('nomor_wa').value,
+                alamat: document.getElementById('alamat').value,
+                catatan: document.getElementById('catatan').value,
+                ongkir: angka(document.getElementById('ongkir').value),
+                diskon: angka(document.getElementById('diskon').value),
+                items: items.map(it => ({ ...it, qty: angka(it.qty) })),
+            };
+        }
+
+        async function runPreview() {
+            const err = document.getElementById('ringkasanError');
+            if (items.length === 0) {
+                previewItems = [];
+                tampilRingkasan({ subtotal: 0, ongkir: 0, diskon: 0, total: 0 });
+                err.classList.add('hidden');
+                updateSubtotal();
+                return;
+            }
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/invoices/preview`, {
+                    method: 'POST', headers: authHeader(), body: JSON.stringify(bodyForm()),
+                });
+                const json = await res.json();
+                if (!json.success) throw new Error(json.message);
+                previewItems = json.data.items;
+                tampilRingkasan(json.data);
+                err.classList.add('hidden');
+            } catch (e) {
+                previewItems = [];
+                err.textContent = e.message;
+                err.classList.remove('hidden');
+            }
+            updateSubtotal();
+        }
+
+        function tampilRingkasan(t) {
+            document.getElementById('rSubtotal').textContent = rupiah(t.subtotal);
+            document.getElementById('rOngkir').textContent = rupiah(t.ongkir);
+            document.getElementById('rDiskon').textContent = rupiah(t.diskon);
+            document.getElementById('rTotal').textContent = rupiah(t.total);
+        }
+
+        async function simpan() {
+            const btn = document.getElementById('btnSimpan');
+            if (!document.getElementById('nama_pemesan').value.trim()) return alert('Nama pemesan wajib diisi.');
+            if (items.length === 0) return alert('Tambahkan minimal satu item.');
+            btn.disabled = true;
+            btn.textContent = 'Menyimpan...';
+            try {
+                const res = await fetch(editId ? `${API_BASE}/api/admin/invoices/${editId}` : `${API_BASE}/api/admin/invoices`, {
+                    method: editId ? 'PUT' : 'POST', headers: authHeader(), body: JSON.stringify(bodyForm()),
+                });
+                const json = await res.json();
+                if (!json.success) throw new Error(json.message);
+                window.location.href = `admin-invoice-detail.html?id=${editId || json.data.id}`;
+            } catch (e) {
+                alert('Gagal menyimpan: ' + e.message);
+                btn.disabled = false;
+                btn.textContent = 'Simpan Invoice';
+            }
+        }
+
+        // Mode edit: isi form dari snapshot item invoice
+        async function muatUntukEdit() {
+            document.getElementById('judul').textContent = 'Edit Invoice Manual';
+            const res = await fetch(`${API_BASE}/api/admin/invoices/${editId}`, { headers: authHeader() });
+            const json = await res.json();
+            if (!json.success) return alert(json.message);
+            const inv = json.data;
+            if (!INVOICE_EDITABLE.includes(inv.status) || inv.sumber_pesanan !== 'manual') {
+                alert('Invoice ini tidak bisa diedit (sudah Lunas atau bukan invoice manual).');
+                window.location.href = `admin-invoice-detail.html?id=${editId}`;
+                return;
+            }
+            document.getElementById('nama_pemesan').value = inv.nama_pemesan || '';
+            document.getElementById('nomor_wa').value = inv.nomor_wa || '';
+            document.getElementById('alamat').value = inv.alamat || '';
+            document.getElementById('catatan').value = inv.catatan || '';
+            document.getElementById('ongkir').value = inv.ongkir;
+            document.getElementById('diskon').value = inv.diskon;
+            items = inv.items.map(s => {
+                if (s.tipe_item === 'reguler') return { tipe: 'reguler', product_id: String(s.product_id || ''), qty: s.qty };
+                if (s.tipe_item === 'lain_lain') return { tipe: 'lain_lain', nama_item: s.nama_item, harga_satuan: s.harga_satuan, qty: s.qty };
+                return {
+                    tipe: 'custom', nama_item: s.nama_item, berat_gram: s.berat_gram, qty: s.qty,
+                    paket_desain: s.paket_desain, pakai_cat: !!s.pakai_cat,
+                    jumlah_warna: s.jumlah_warna || 1, tingkat_kerumitan: s.tingkat_kerumitan || 'basic',
+                };
+            });
+        }
+
+        async function init() {
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/products`, { headers: authHeader() });
+                const json = await res.json();
+                produkList = json.data || [];
+            } catch (e) { produkList = []; }
+            if (editId) await muatUntukEdit();
+            renderItems();
+            runPreview();
+        }
+        init();
+    </script>
+</body>
+</html>

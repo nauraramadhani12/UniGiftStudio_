@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Invoice | Uni Gift Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+<script>const API_ORIGIN = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? 'http://localhost:3000' : ''; const CONSUMER_BASE = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? '../consumer/' : '../';</script>
+<script src="../shared/invoice-common.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+
+    <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-6 md:px-8">
+        <div class="flex items-center gap-4">
+            <a href="admin-invoice.html" class="text-slate-400 hover:text-orange-500 font-bold text-sm">← Invoice</a>
+            <h1 class="text-xl font-bold text-slate-800">Detail Invoice</h1>
+        </div>
+        <button onclick="logout()" class="text-sm font-bold text-slate-400 hover:text-red-500">Keluar</button>
+    </header>
+
+    <main id="konten" class="max-w-5xl mx-auto p-4 md:p-8">
+        <p class="text-center text-slate-400 py-20">Memuat invoice...</p>
+    </main>
+
+    <script>
+        const API_BASE = API_ORIGIN + '';
+        const token = localStorage.getItem('adminToken');
+        if (!token) window.location.href = CONSUMER_BASE + 'login.html?next=admin';
+        function authHeader() { return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }; }
+        function logout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = CONSUMER_BASE + 'login.html?next=admin';
+        }
+
+        const id = new URLSearchParams(location.search).get('id');
+        let inv = null;
+
+        async function muat() {
+            const konten = document.getElementById('konten');
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/invoices/${id}`, { headers: authHeader() });
+                if (res.status === 401 || res.status === 403) return logout();
+                const json = await res.json();
+                if (!json.success) throw new Error(json.message);
+                inv = json.data;
+                render();
+            } catch (e) {
+                konten.innerHTML = `<p class="text-center text-red-500 py-20">Gagal memuat: ${esc(e.message)}</p>`;
+            }
+        }
+
+        function linkPublik() {
+            return new URL(`${CONSUMER_BASE}invoice-view.html?token=${inv.public_token}`, location.href).href;
+        }
+
+        function keteranganItem(s) {
+            if (s.tipe_item === 'custom') {
+                const cat = s.pakai_cat
+                    ? `${s.jumlah_warna} warna × ${rupiah(s.tarif_warna)} = ${rupiah(s.biaya_warna)}; kerumitan ${INVOICE_KERUMITAN_LABEL[s.tingkat_kerumitan] || s.tingkat_kerumitan} ${rupiah(s.biaya_kerumitan)}`
+                    : 'Tanpa cat';
+                return `
+                    <div>Berat ${Number(s.berat_gram)} gr · ${INVOICE_TIER_LABEL[s.tier_cetak] || s.tier_cetak} × ${rupiah(s.tarif_cetak_per_gram)}/gr = ${rupiah(s.biaya_cetak)}</div>
+                    <div>Desain ${INVOICE_PAKET_LABEL[s.paket_desain] || s.paket_desain}: ${rupiah(s.biaya_desain)}</div>
+                    <div>Cat: ${cat}</div>`;
+            }
+            return '';
+        }
+
+        function render() {
+            const sumberLabel = INVOICE_SUMBER[inv.sumber_pesanan] || inv.sumber_pesanan;
+            const bisaEdit = inv.sumber_pesanan === 'manual' && INVOICE_EDITABLE.includes(inv.status);
+            const nextStatus = INVOICE_NEXT[inv.status] || [];
+            const wa = nomorWaInternasional(inv.nomor_wa);
+            const waText = encodeURIComponent(`Halo ${inv.nama_pemesan}, berikut invoice pesanan kamu (${inv.nomor_invoice}):\n${linkPublik()}`);
+            const waLink = wa ? `https://wa.me/${wa}?text=${waText}` : `https://wa.me/?text=${waText}`;
+
+            const tombolStatus = nextStatus.map(s => {
+                const warna = s === 'batal' ? 'bg-white border border-red-300 text-red-600 hover:bg-red-50' : 'bg-slate-900 text-white hover:bg-orange-500';
+                return `<button onclick="ubahStatus('${s}')" class="${warna} px-4 py-2 rounded-xl font-bold text-sm transition">${INVOICE_STATUS[s].label}</button>`;
+            }).join('');
+
+            const kirimForm = nextStatus.includes('dikirim') ? `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                    <input id="kurir" placeholder="Nama kurir (wajib saat Dikirim)" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm">
+                    <input id="resi" placeholder="Nomor resi (opsional)" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm">
+                </div>` : '';
+
+            document.getElementById('konten').innerHTML = `
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 space-y-6">
+                    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                        <div class="flex flex-wrap items-start justify-between gap-4">
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Nomor Invoice</p>
+                                <h2 class="text-lg font-extrabold font-mono">${esc(inv.nomor_invoice)}</h2>
+                                <p class="text-xs text-slate-500 mt-1">${tanggalInvoice(inv.created_at)} · ${esc(sumberLabel)}</p>
+                            </div>
+                            ${badgeStatus(inv.status)}
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 text-sm">
+                            <div><p class="text-xs font-bold text-slate-400 uppercase">Pemesan</p><p class="font-bold">${esc(inv.nama_pemesan)}</p><p class="text-slate-500">${esc(inv.nomor_wa || '—')}</p></div>
+                            <div><p class="text-xs font-bold text-slate-400 uppercase">Alamat</p><p class="text-slate-600">${esc(inv.alamat || '—')}</p></div>
+                        </div>
+                        ${inv.catatan ? `<p class="mt-4 text-sm bg-slate-50 rounded-lg p-3 text-slate-600"><b>Catatan:</b> ${esc(inv.catatan)}</p>` : ''}
+                    </section>
+
+                    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50 text-slate-400 text-xs uppercase tracking-widest">
+                                <tr><th class="p-4">Item</th><th class="p-4">Qty</th><th class="p-4 text-right">Subtotal</th></tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                ${inv.items.map(s => `
+                                <tr>
+                                    <td class="p-4 align-top">
+                                        <div class="font-bold text-slate-900">${esc(s.nama_item)}</div>
+                                        <div class="text-xs text-slate-500 mt-1 space-y-0.5">
+                                            ${s.tipe_item === 'custom' ? keteranganItem(s) : `<div>Harga satuan ${rupiah(s.harga_satuan)}</div>`}
+                                        </div>
+                                    </td>
+                                    <td class="p-4 align-top">${s.qty}</td>
+                                    <td class="p-4 align-top text-right font-bold">${rupiah(s.subtotal)}</td>
+                                </tr>`).join('')}
+                            </tbody>
+                        </table>
+                        <div class="p-4 bg-slate-50 space-y-1 text-sm">
+                            <div class="flex justify-between"><span class="text-slate-500">Subtotal</span><span>${rupiah(inv.subtotal)}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Ongkir</span><span>${rupiah(inv.ongkir)}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Diskon</span><span>- ${rupiah(inv.diskon)}</span></div>
+                            <div class="flex justify-between border-t border-slate-200 pt-2 text-base font-extrabold"><span>TOTAL</span><span class="text-orange-600">${rupiah(inv.total)}</span></div>
+                        </div>
+                    </section>
+                </div>
+
+                <aside class="space-y-6">
+                    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                        <h3 class="font-bold text-slate-800">Ubah Status</h3>
+                        ${nextStatus.length ? `<div class="flex flex-wrap gap-2">${tombolStatus}</div>${kirimForm}` : '<p class="text-sm text-slate-400">Tidak ada aksi lanjutan untuk status ini.</p>'}
+                        ${inv.kurir ? `<p class="text-xs text-slate-500">Kurir: ${esc(inv.kurir)} ${inv.nomor_resi ? '· Resi: ' + esc(inv.nomor_resi) : ''}</p>` : ''}
+                        ${bisaEdit ? `<a href="admin-invoice-form.html?id=${inv.id}" class="block text-center border border-slate-200 hover:border-orange-500 hover:text-orange-500 font-bold text-sm py-2.5 rounded-xl transition">Edit Invoice</a>` : ''}
+                    </section>
+
+                    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-3">
+                        <h3 class="font-bold text-slate-800">Bagikan ke Pemesan</h3>
+                        <input readonly value="${linkPublik()}" onclick="this.select()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-mono">
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="salinLink(this)" class="border border-slate-200 hover:border-orange-500 font-bold text-sm py-2 rounded-xl">Salin Link</button>
+                            <a href="${waLink}" target="_blank" rel="noopener" class="text-center bg-green-500 hover:bg-green-600 text-white font-bold text-sm py-2 rounded-xl">Kirim WA</a>
+                        </div>
+                        <a href="${linkPublik()}&print=1" target="_blank" rel="noopener" class="block text-center bg-slate-900 hover:bg-orange-500 text-white font-bold text-sm py-2 rounded-xl transition">Cetak / Simpan PDF</a>
+                    </section>
+                </aside>
+            </div>`;
+        }
+
+        async function ubahStatus(status) {
+            const body = { status };
+            if (status === 'dikirim') {
+                body.kurir = document.getElementById('kurir').value.trim();
+                body.nomor_resi = document.getElementById('resi').value.trim();
+                if (!body.kurir) return alert('Isi nama kurir dulu.');
+            }
+            if (status === 'batal' && !confirm('Batalkan invoice ini?')) return;
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/invoices/${id}/status`, {
+                    method: 'PATCH', headers: authHeader(), body: JSON.stringify(body),
+                });
+                const json = await res.json();
+                if (!json.success) throw new Error(json.message);
+                await muat();
+            } catch (e) {
+                alert('Gagal: ' + e.message);
+            }
+        }
+
+        async function salinLink(btn) {
+            try {
+                await navigator.clipboard.writeText(linkPublik());
+                btn.textContent = 'Tersalin ✓';
+                setTimeout(() => btn.textContent = 'Salin Link', 1500);
+            } catch (e) {
+                alert('Gagal menyalin. Salin manual dari kotak link.');
+            }
+        }
+
+        if (!id) {
+            document.getElementById('konten').innerHTML = '<p class="text-center text-red-500 py-20">ID invoice tidak ada.</p>';
+        } else {
+            muat();
+        }
+    </script>
+</body>
+</html>

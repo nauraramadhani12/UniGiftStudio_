@@ -41,6 +41,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const fs = require('fs');
+const invoiceService = require('./services/invoice');
 
 // Baca file .env secara manual (tanpa dependency dotenv) —
 // dipakai di hosting untuk kredensial database (DB_HOST, DB_USER, dst.)
@@ -1699,6 +1700,67 @@ app.get('/api/admin/design-submissions', verifyAdmin, asyncHandler(async(req, re
          ORDER BY created_at DESC`
     );
     res.json({ success: true, data: rows });
+}));
+
+/* ==========================================================
+ * 9b. INVOICE (jalur manual — Fase 2)
+ * ========================================================== */
+
+// Error bisnis (status 400/404) dikirim apa adanya; error lain diteruskan ke handler global.
+const invoiceRoute = (fn) => asyncHandler(async (req, res) => {
+    try {
+        await fn(req, res);
+    } catch (err) {
+        if (err.status) return res.status(err.status).json({ success: false, message: err.message });
+        throw err;
+    }
+});
+
+// Info rekening/QRIS untuk ditampilkan di invoice. Diisi lewat .env, boleh kosong.
+const INVOICE_INFO_PEMBAYARAN = process.env.INVOICE_INFO_PEMBAYARAN || null;
+
+// POST /api/admin/invoices/preview — hitung total tanpa menyimpan (untuk preview live)
+app.post('/api/admin/invoices/preview', verifyAdmin, invoiceRoute(async (req, res) => {
+    const hasil = await invoiceService.previewInvoice(pool, req.body || {});
+    res.json({ success: true, data: hasil });
+}));
+
+// GET /api/admin/invoices?status=&sumber=&dari=&sampai=&cari=
+app.get('/api/admin/invoices', verifyAdmin, asyncHandler(async (req, res) => {
+    const rows = await invoiceService.daftarInvoice(pool, req.query);
+    res.json({ success: true, data: rows });
+}));
+
+// POST /api/admin/invoices — buat invoice manual
+app.post('/api/admin/invoices', verifyAdmin, invoiceRoute(async (req, res) => {
+    const hasil = await invoiceService.buatInvoiceManual(pool, req.body || {});
+    res.status(201).json({ success: true, message: 'Invoice berhasil dibuat.', data: hasil });
+}));
+
+// GET /api/admin/invoices/:id — detail + item snapshot
+app.get('/api/admin/invoices/:id', verifyAdmin, invoiceRoute(async (req, res) => {
+    const inv = await invoiceService.ambilInvoiceById(pool, req.params.id);
+    if (!inv) return res.status(404).json({ success: false, message: 'Invoice tidak ditemukan.' });
+    res.json({ success: true, data: inv });
+}));
+
+// PUT /api/admin/invoices/:id — edit invoice manual (sebelum Lunas)
+app.put('/api/admin/invoices/:id', verifyAdmin, invoiceRoute(async (req, res) => {
+    const hasil = await invoiceService.ubahInvoiceManual(pool, req.params.id, req.body || {});
+    res.json({ success: true, message: 'Invoice berhasil diperbarui.', data: hasil });
+}));
+
+// PATCH /api/admin/invoices/:id/status — alur status (lunas, diproduksi, dikirim, selesai, batal)
+app.patch('/api/admin/invoices/:id/status', verifyAdmin, invoiceRoute(async (req, res) => {
+    const hasil = await invoiceService.ubahStatus(pool, req.params.id, req.body || {});
+    res.json({ success: true, message: `Status invoice diubah ke "${hasil.status}".`, data: hasil });
+}));
+
+// GET /api/invoices/token/:token — link publik (tanpa login), dipakai customer & WA
+app.get('/api/invoices/token/:token', invoiceRoute(async (req, res) => {
+    const inv = await invoiceService.ambilInvoiceByToken(pool, req.params.token);
+    if (!inv) return res.status(404).json({ success: false, message: 'Invoice tidak ditemukan.' });
+    res.json({ success: true, data: { ...inv, info_pembayaran: INVOICE_INFO_PEMBAYARAN } });
 }));
 
 /* ==========================================================
