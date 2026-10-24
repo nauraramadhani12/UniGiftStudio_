@@ -172,6 +172,9 @@
                     </div>
                 </div>
             </div>
+            <div class="px-6 pb-0">
+                <a id="modal-penawaran" href="#" class="hidden block text-center mb-3 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-bold text-sm transition">Buat Penawaran →</a>
+            </div>
             <div class="p-6 pt-0 flex gap-3" id="modal-actions">
                 <button onclick="updateStatus('disetujui')" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-bold text-sm transition">Setujui</button>
                 <button onclick="updateStatus('ditolak')" class="flex-1 bg-red-100 hover:bg-red-200 text-red-600 py-3 rounded-xl font-bold text-sm transition">Tolak</button>
@@ -353,6 +356,11 @@
                 : allSub.find(r => r.id === id);
             if (!data) return;
             modalId = id;
+
+            // Penawaran hanya untuk request custom yang sudah Siap Produksi
+            const btnPenawaran = document.getElementById('modal-penawaran');
+            btnPenawaran.href = `penawaran-custom.html?id=${id}`;
+            btnPenawaran.classList.toggle('hidden', type !== 'ai' || data.status_approval !== 'disetujui');
 
             let prompt = data.prompt_text || '—';
             

@@ -1764,6 +1764,72 @@ app.get('/api/invoices/token/:token', invoiceRoute(async (req, res) => {
 }));
 
 /* ==========================================================
+ * 9c. CUSTOM AI — PENAWARAN & PERSETUJUAN (Fase 3)
+ * ========================================================== */
+
+// Customer hanya boleh mengakses data miliknya sendiri (id di token = userId di URL)
+const verifyPelangganSendiri = (req, res, next) => {
+    const token = (req.headers['authorization'] || '').split(' ')[1];
+    if (!token) return res.status(401).json({ success: false, message: 'Token tidak ditemukan.' });
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        if (String(decoded.id) !== String(req.params.userId)) {
+            return res.status(403).json({ success: false, message: 'Akses ditolak.' });
+        }
+        req.user = decoded;
+        next();
+    } catch {
+        return res.status(403).json({ success: false, message: 'Token tidak valid.' });
+    }
+};
+
+// Seller (kreator) atau admin: preview penawaran tanpa menyimpan
+app.post('/api/seller/ai-requests/:id/invoice/preview', verifyKreator, invoiceRoute(async (req, res) => {
+    const hasil = await invoiceService.previewPenawaranCustom(pool, req.body || {});
+    res.json({ success: true, data: hasil });
+}));
+
+// Seller/admin: lihat penawaran terakhir untuk satu request (termasuk catatan revisi customer)
+app.get('/api/seller/ai-requests/:id/invoice', verifyKreator, invoiceRoute(async (req, res) => {
+    const inv = await invoiceService.ambilPenawaranDesain(pool, req.params.id, req.user);
+    res.json({ success: true, data: inv });
+}));
+
+// Seller/admin: buat penawaran, atau kirim ulang setelah customer minta revisi
+app.post('/api/seller/ai-requests/:id/invoice', verifyKreator, invoiceRoute(async (req, res) => {
+    const hasil = await invoiceService.buatAtauRevisiPenawaran(pool, req.params.id, req.body || {}, req.user);
+    res.status(201).json({
+        success: true,
+        message: hasil.revisi ? 'Penawaran direvisi, menunggu persetujuan customer.' : 'Penawaran dibuat, menunggu persetujuan customer.',
+        data: hasil,
+    });
+}));
+
+// Customer: daftar request custom + penawaran terakhirnya
+app.get('/api/user/:userId/custom-orders', verifyPelangganSendiri, invoiceRoute(async (req, res) => {
+    const rows = await invoiceService.daftarCustomPelanggan(pool, req.params.userId);
+    res.json({ success: true, data: rows });
+}));
+
+// Customer: setuju → Menunggu Pembayaran
+app.patch('/api/user/:userId/invoices/:id/setuju', verifyPelangganSendiri, invoiceRoute(async (req, res) => {
+    const hasil = await invoiceService.setujuiPenawaran(pool, req.params.id, req.params.userId);
+    res.json({ success: true, message: 'Penawaran disetujui. Silakan lakukan pembayaran.', data: hasil });
+}));
+
+// Customer: minta revisi (catatan wajib)
+app.patch('/api/user/:userId/invoices/:id/revisi', verifyPelangganSendiri, invoiceRoute(async (req, res) => {
+    const hasil = await invoiceService.mintaRevisiPenawaran(pool, req.params.id, req.params.userId, (req.body || {}).catatan);
+    res.json({ success: true, message: 'Permintaan revisi terkirim ke seller.', data: hasil });
+}));
+
+// Customer: upload bukti transfer (URL dari /api/upload)
+app.patch('/api/user/:userId/invoices/:id/bayar', verifyPelangganSendiri, invoiceRoute(async (req, res) => {
+    const hasil = await invoiceService.kirimBuktiBayar(pool, req.params.id, req.params.userId, (req.body || {}).bukti_pembayaran);
+    res.json({ success: true, message: 'Bukti pembayaran terkirim. Menunggu verifikasi admin.', data: hasil });
+}));
+
+/* ==========================================================
  * 10. 404 + ERROR HANDLER
  * ========================================================== */
 app.use((req, res) => {

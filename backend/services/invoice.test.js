@@ -15,9 +15,20 @@ const RATES = {
  * Fake pool minimal: menjawab query yang dipakai service invoice.
  * `state.invoices` menyimpan baris invoice (dipakai untuk tes status/edit).
  */
-function fakePool({ products = {}, seq = {}, invoices = {} } = {}) {
+function fakePool({ products = {}, seq = {}, invoices = {}, designs = {} } = {}) {
     const state = { inserts: [], updates: [], seq, invoices, lastId: 0 };
     const query = async (sql, params = []) => {
+        if (sql.startsWith('SELECT id, user_id, creator_id, status_approval FROM ai_custom_designs')) {
+            const d = designs[params[0]];
+            return [d ? [d] : []];
+        }
+        if (sql.startsWith('SELECT COUNT(*) AS n FROM invoice_revisions')) {
+            return [[{ n: 0 }]];
+        }
+        if (sql.startsWith('SELECT id, status, total, user_id, sumber_pesanan FROM invoices')) {
+            const inv = invoices[params[0]];
+            return [inv ? [inv] : []];
+        }
         if (sql.startsWith('SELECT kode, nilai FROM pricing_master')) {
             return [Object.entries(RATES).map(([kode, nilai]) => ({ kode, nilai }))];
         }
@@ -172,4 +183,75 @@ test('token publik harus format hex 64 karakter, selain itu tidak dicari', async
     const pool = fakePool({});
     assert.equal(await invoice.ambilInvoiceByToken(pool, 'abc'), null);
     assert.equal(await invoice.ambilInvoiceByToken(pool, 'Z'.repeat(64)), null);
+});
+
+// ---------- Jalur custom (Fase 3) ----------
+
+const CUSTOM_CONTOH_1 = {
+    berat_gram: 35, qty: 1, paket_desain: 'basic',
+    pakai_cat: true, jumlah_warna: 3, tingkat_kerumitan: 'menengah',
+};
+
+const SELLER = { id: 2, role: 'kreator' };
+
+test('preview penawaran custom: contoh 1 → Rp86.500', async () => {
+    const pool = fakePool({});
+    const hasil = await invoice.previewPenawaranCustom(pool, CUSTOM_CONTOH_1);
+    assert.equal(hasil.total, 86500);
+});
+
+test('penawaran baru: hanya untuk desain Siap Produksi milik seller', async () => {
+    const pool = fakePool({ designs: { 9: { id: 9, user_id: 3, creator_id: 2, status_approval: 'disetujui' } } });
+    const hasil = await invoice.buatAtauRevisiPenawaran(pool, 9, CUSTOM_CONTOH_1, SELLER);
+    assert.equal(hasil.total, 86500);
+    assert.equal(hasil.revisi, false);
+    const header = pool.state.inserts.find(i => i.table === 'invoices');
+    // Parameter ke-2 adalah custom_design_id (sumber 'website_custom' ditulis literal di SQL)
+    assert.equal(header.params[1], 9);
+});
+
+test('penawaran ditolak kalau desain belum Siap Produksi', async () => {
+    const pool = fakePool({ designs: { 9: { id: 9, user_id: 3, creator_id: 2, status_approval: 'pending' } } });
+    await assert.rejects(() => invoice.buatAtauRevisiPenawaran(pool, 9, CUSTOM_CONTOH_1, SELLER), { status: 400 });
+});
+
+test('penawaran ditolak kalau seller bukan pemilik desain', async () => {
+    const pool = fakePool({ designs: { 9: { id: 9, user_id: 3, creator_id: 7, status_approval: 'disetujui' } } });
+    await assert.rejects(() => invoice.buatAtauRevisiPenawaran(pool, 9, CUSTOM_CONTOH_1, SELLER), { status: 403 });
+});
+
+test('admin boleh membuat penawaran untuk desain siapa pun', async () => {
+    const pool = fakePool({ designs: { 9: { id: 9, user_id: 3, creator_id: 7, status_approval: 'disetujui' } } });
+    const hasil = await invoice.buatAtauRevisiPenawaran(pool, 9, CUSTOM_CONTOH_1, { id: 1, role: 'admin' });
+    assert.equal(hasil.total, 86500);
+});
+
+test('customer setuju: menunggu_persetujuan → menunggu_pembayaran', async () => {
+    const pool = fakePool({ invoices: { 5: { id: 5, status: 'menunggu_persetujuan', total: 86500, user_id: 3, sumber_pesanan: 'website_custom' } } });
+    const hasil = await invoice.setujuiPenawaran(pool, 5, 3);
+    assert.equal(hasil.status, 'menunggu_pembayaran');
+});
+
+test('customer lain tidak bisa menyetujui penawaran orang', async () => {
+    const pool = fakePool({ invoices: { 5: { id: 5, status: 'menunggu_persetujuan', total: 86500, user_id: 3, sumber_pesanan: 'website_custom' } } });
+    await assert.rejects(() => invoice.setujuiPenawaran(pool, 5, 4), { status: 404 });
+});
+
+test('minta revisi wajib catatan dan mengubah status ke revisi_diminta', async () => {
+    const pool = fakePool({ invoices: { 5: { id: 5, status: 'menunggu_persetujuan', total: 86500, user_id: 3, sumber_pesanan: 'website_custom' } } });
+    await assert.rejects(() => invoice.mintaRevisiPenawaran(pool, 5, 3, '  '), { status: 400, message: /catatan/ });
+    const hasil = await invoice.mintaRevisiPenawaran(pool, 5, 3, 'Tolong kurangi paket desain');
+    assert.equal(hasil.status, 'revisi_diminta');
+});
+
+test('setelah Menunggu Pembayaran, penawaran tidak bisa direvisi', async () => {
+    const pool = fakePool({ invoices: { 5: { id: 5, status: 'menunggu_pembayaran', total: 86500, user_id: 3, sumber_pesanan: 'website_custom' } } });
+    await assert.rejects(() => invoice.mintaRevisiPenawaran(pool, 5, 3, 'ubah'), { status: 400 });
+});
+
+test('bayar: bukti wajib, dan hanya saat Menunggu Pembayaran', async () => {
+    const pool = fakePool({ invoices: { 5: { id: 5, status: 'menunggu_pembayaran', total: 86500, user_id: 3, sumber_pesanan: 'website_custom' } } });
+    await assert.rejects(() => invoice.kirimBuktiBayar(pool, 5, 3, ''), { status: 400 });
+    const hasil = await invoice.kirimBuktiBayar(pool, 5, 3, '/uploads/bukti.jpg');
+    assert.equal(hasil.id, 5);
 });

@@ -244,6 +244,7 @@
                             <button onclick="updateAiStatus('ditolak')" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-red-50 hover:text-red-500 transition">Tolak Desain</button>
                             <button onclick="updateAiStatus('siap_produksi')" class="flex-1 py-3 bg-orange-500 text-white rounded-xl font-bold shadow-lg shadow-orange-200 hover:bg-orange-600 transition">Validasi → Siap Produksi</button>
                         </div>
+                        <a id="ai-d-penawaran" href="penawaran-custom.html" class="hidden block text-center mt-4 py-3 bg-orange-500 text-white rounded-xl font-bold shadow-lg shadow-orange-200 hover:bg-orange-600 transition">Buat Penawaran →</a>
                         <p id="ai-d-done" class="hidden text-center text-sm font-bold text-slate-400 mt-4 pt-4 border-t border-slate-100">Request ini sudah divalidasi.</p>
                     </div>
                 </div>
@@ -1162,6 +1163,10 @@
             const isPending = r.status_approval === 'pending';
             document.getElementById('ai-d-actions').classList.toggle('hidden', !isPending);
             document.getElementById('ai-d-done').classList.toggle('hidden', isPending);
+
+            const btnPenawaran = document.getElementById('ai-d-penawaran');
+            btnPenawaran.href = `penawaran-custom.html?id=${r.id}`;
+            btnPenawaran.classList.toggle('hidden', r.status_approval !== 'disetujui');
 
             document.getElementById('ai-detail-empty').classList.add('hidden');
             document.getElementById('ai-detail').classList.remove('hidden');
