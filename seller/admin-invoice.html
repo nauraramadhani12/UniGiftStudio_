@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice | Uni Gift Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+<script>const API_ORIGIN = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? 'http://localhost:3000' : ''; const CONSUMER_BASE = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? '../consumer/' : '../';</script>
+<script src="../shared/invoice-common.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 flex h-screen overflow-hidden">
+
+    <aside class="w-64 bg-[#161d31] text-slate-300 flex flex-col justify-between shrink-0">
+        <div>
+            <div class="h-20 flex items-center px-6 gap-3 border-b border-white/5">
+                <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white font-bold text-lg">U</div>
+                <h1 class="text-xl font-bold text-white">Uni Gift <span class="text-orange-500">Admin</span></h1>
+            </div>
+            <div class="p-4">
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 px-2">Menu Utama</p>
+                <nav class="space-y-1">
+                    <a href="dashboard_admin.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold">
+                        <span class="text-xl"></span> Dashboard
+                    </a>
+                    <a href="admin-pesanan.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold">
+                        <span class="text-xl"></span> Pesanan
+                    </a>
+                    <a href="admin-invoice.html" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-500 text-white font-semibold shadow-lg shadow-orange-500/20">
+                        <span class="text-xl"></span> Invoice
+                    </a>
+                    <a href="admin-custom-ai.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold">
+                        <span class="text-xl"></span> Custom AI
+                    </a>
+                    <a href="admin-katalog.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold">
+                        <span class="text-xl"></span> Katalog Produk
+                    </a>
+                    <a href="admin-pengguna.html" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold">
+                        <span class="text-xl"></span> Manajemen Pengguna
+                    </a>
+                </nav>
+            </div>
+        </div>
+        <div class="p-4 border-t border-white/5">
+            <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition font-semibold text-slate-400 hover:text-red-400 text-left">Keluar</button>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
+            <h2 class="text-xl font-bold text-slate-800">Daftar Invoice</h2>
+            <a href="admin-invoice-form.html" class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow transition">+ Buat Invoice Manual</a>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-8">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-slate-100 grid grid-cols-1 md:grid-cols-5 gap-3">
+                    <input type="text" id="fCari" placeholder="Cari nomor invoice / nama..." class="bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 md:col-span-2">
+                    <select id="fStatus" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="">Semua status</option>
+                    </select>
+                    <select id="fSumber" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="">Semua sumber</option>
+                    </select>
+                    <div class="flex gap-2">
+                        <input type="date" id="fDari" class="bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-orange-500" title="Dari tanggal">
+                        <input type="date" id="fSampai" class="bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-orange-500" title="Sampai tanggal">
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-400 text-xs uppercase tracking-widest border-b border-slate-200">
+                                <th class="p-6 font-bold">Nomor Invoice</th>
+                                <th class="p-6 font-bold">Tanggal</th>
+                                <th class="p-6 font-bold">Pemesan</th>
+                                <th class="p-6 font-bold">Sumber</th>
+                                <th class="p-6 font-bold">Total</th>
+                                <th class="p-6 font-bold">Status</th>
+                                <th class="p-6 font-bold text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody" class="text-sm font-semibold text-slate-700 divide-y divide-slate-100">
+                            <tr><td colspan="7" class="p-8 text-center text-slate-400">Memuat invoice...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-6 border-t border-slate-100 text-center text-sm text-slate-400 font-semibold" id="footer"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE = API_ORIGIN + '';
+        const token = localStorage.getItem('adminToken');
+        if (!token) window.location.href = CONSUMER_BASE + 'login.html?next=admin';
+
+        function authHeader() {
+            return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
+        }
+        function logout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = CONSUMER_BASE + 'login.html?next=admin';
+        }
+
+        // Isi dropdown dari helper bersama
+        const selStatus = document.getElementById('fStatus');
+        Object.entries(INVOICE_STATUS).forEach(([k, v]) => selStatus.insertAdjacentHTML('beforeend', `<option value="${k}">${v.label}</option>`));
+        const selSumber = document.getElementById('fSumber');
+        Object.entries(INVOICE_SUMBER).forEach(([k, v]) => selSumber.insertAdjacentHTML('beforeend', `<option value="${k}">${v}</option>`));
+
+        let debounceTimer = null;
+        function muatUlang() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(loadInvoices, 250);
+        }
+        ['fCari', 'fStatus', 'fSumber', 'fDari', 'fSampai'].forEach(id =>
+            document.getElementById(id).addEventListener(id === 'fCari' ? 'input' : 'change', muatUlang));
+
+        async function loadInvoices() {
+            const params = new URLSearchParams();
+            const map = { status: 'fStatus', sumber: 'fSumber', dari: 'fDari', sampai: 'fSampai', cari: 'fCari' };
+            Object.entries(map).forEach(([key, id]) => {
+                const v = document.getElementById(id).value.trim();
+                if (v) params.set(key, v);
+            });
+            const tbody = document.getElementById('tbody');
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/invoices?${params}`, { headers: authHeader() });
+                if (res.status === 401 || res.status === 403) return logout();
+                const json = await res.json();
+                if (!json.success) throw new Error(json.message);
+                render(json.data);
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-red-500">Gagal memuat: ${err.message}</td></tr>`;
+            }
+        }
+
+        function render(rows) {
+            const tbody = document.getElementById('tbody');
+            if (rows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400">Belum ada invoice.</td></tr>`;
+                document.getElementById('footer').textContent = 'Tidak ada data';
+                return;
+            }
+            tbody.innerHTML = rows.map(r => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="p-6 font-bold text-slate-900 font-mono text-xs">${esc(r.nomor_invoice)}</td>
+                    <td class="p-6 text-slate-500 text-xs whitespace-nowrap">${tanggalInvoice(r.created_at)}</td>
+                    <td class="p-6">
+                        <div class="font-bold text-slate-900 text-sm">${esc(r.nama_pemesan)}</div>
+                        <div class="text-[10px] text-slate-400">${esc(r.nomor_wa || '')}</div>
+                    </td>
+                    <td class="p-6 text-xs">${INVOICE_SUMBER[r.sumber_pesanan] || r.sumber_pesanan}</td>
+                    <td class="p-6 font-bold">${rupiah(r.total)}</td>
+                    <td class="p-6">${badgeStatus(r.status)}</td>
+                    <td class="p-6 text-right">
+                        <a href="admin-invoice-detail.html?id=${r.id}" class="text-orange-500 hover:text-orange-600 font-bold text-sm">Detail</a>
+                    </td>
+                </tr>`).join('');
+            document.getElementById('footer').textContent = `Menampilkan ${rows.length} invoice`;
+        }
+
+        loadInvoices();
+    </script>
+</body>
+</html>

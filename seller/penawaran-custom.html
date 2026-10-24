@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Penawaran Custom | Uni Gift</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+<script>const API_ORIGIN = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? 'http://localhost:3000' : ''; const CONSUMER_BASE = (['localhost','127.0.0.1'].indexOf(location.hostname) !== -1) ? '../consumer/' : '../';</script>
+<script src="../shared/invoice-common.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+
+    <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-6 md:px-8">
+        <div class="flex items-center gap-4">
+            <a id="kembali" href="dashboard.html" class="text-slate-400 hover:text-orange-500 font-bold text-sm">← Kembali</a>
+            <h1 class="text-xl font-bold text-slate-800">Buat Penawaran Custom</h1>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Request dari customer -->
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                <h2 class="font-bold text-slate-800 mb-4">Request Customer</h2>
+                <div id="infoDesain" class="text-sm text-slate-500">Memuat...</div>
+            </section>
+
+            <!-- Catatan revisi dari customer -->
+            <section id="kotakRevisi" class="hidden bg-purple-50 border border-purple-200 rounded-2xl p-6">
+                <h2 class="font-bold text-purple-800 mb-2">Customer minta revisi</h2>
+                <p id="teksRevisi" class="text-sm text-purple-900 whitespace-pre-line"></p>
+            </section>
+
+            <!-- Form penawaran -->
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <h2 class="font-bold text-slate-800">Rincian Cetak</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="text-sm font-bold text-slate-600">Berat hasil slicing (gr) *
+                        <input id="berat" type="number" min="0" step="0.01" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    </label>
+                    <label class="text-sm font-bold text-slate-600">Qty *
+                        <input id="qty" type="number" min="1" value="1" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    </label>
+                    <label class="text-sm font-bold text-slate-600">Paket desain *
+                        <select id="paket" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500"></select>
+                    </label>
+                    <label class="flex items-center gap-2 text-sm font-bold text-slate-600 mt-6">
+                        <input id="pakaiCat" type="checkbox" class="w-4 h-4 accent-orange-500"> Pakai cat
+                    </label>
+                    <div id="blokCat" class="hidden md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="text-sm font-bold text-slate-600">Jumlah warna (1–10) *
+                            <input id="warna" type="number" min="1" max="10" value="1" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        </label>
+                        <label class="text-sm font-bold text-slate-600">Tingkat kerumitan *
+                            <select id="kerumitan" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500"></select>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label class="text-sm font-bold text-slate-600">Ongkir (Rp)
+                    <input id="ongkir" type="number" min="0" value="0" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500">
+                </label>
+                <label class="text-sm font-bold text-slate-600">Diskon (Rp)
+                    <input id="diskon" type="number" min="0" value="0" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500">
+                </label>
+                <label class="text-sm font-bold text-slate-600 md:col-span-2">Catatan untuk customer
+                    <textarea id="catatan" rows="2" class="mt-1 w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-500"></textarea>
+                </label>
+            </section>
+        </div>
+
+        <aside>
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sticky top-6">
+                <h2 class="font-bold text-slate-800 mb-4">Perhitungan</h2>
+                <div id="ringkasanError" class="hidden mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3"></div>
+                <div id="rincian" class="text-sm text-slate-600 space-y-1 mb-4"></div>
+                <dl class="space-y-2 text-sm border-t border-slate-100 pt-3">
+                    <div class="flex justify-between"><dt class="text-slate-500">Subtotal</dt><dd id="rSubtotal" class="font-bold">Rp0</dd></div>
+                    <div class="flex justify-between"><dt class="text-slate-500">Ongkir</dt><dd id="rOngkir" class="font-bold">Rp0</dd></div>
+                    <div class="flex justify-between"><dt class="text-slate-500">Diskon</dt><dd id="rDiskon" class="font-bold">Rp0</dd></div>
+                    <div class="flex justify-between border-t border-slate-100 pt-2 text-base"><dt class="font-bold">Total</dt><dd id="rTotal" class="font-extrabold text-orange-600">Rp0</dd></div>
+                </dl>
+                <button id="btnKirim" onclick="kirim()" class="mt-6 w-full bg-orange-500 hover:bg-orange-600 disabled:bg-slate-300 text-white font-bold py-3 rounded-xl shadow transition">Kirim Penawaran</button>
+                <p class="text-[11px] text-slate-400 mt-3">Total dihitung ulang di server. Angka di sini hanya preview.</p>
+            </section>
+        </aside>
+    </main>
+
+    <script>
+        const API_BASE = API_ORIGIN + '';
+        const adminToken = localStorage.getItem('adminToken');
+        const token = adminToken || localStorage.getItem('userToken');
+        const isAdmin = Boolean(adminToken);
+        const designId = new URLSearchParams(location.search).get('id');
+
+        if (!token || !designId) {
+            document.getElementById('infoDesain').textContent = 'Request tidak valid. Buka dari dashboard.';
+        }
+        document.getElementById('kembali').href = isAdmin ? 'admin-invoice.html' : 'dashboard.html';
+
+        function authHeader() { return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }; }
+
+        // Isi pilihan paket & kerumitan dari helper bersama
+        document.getElementById('paket').innerHTML = Object.entries(INVOICE_PAKET_LABEL)
+            .map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+        document.getElementById('kerumitan').innerHTML = Object.entries(INVOICE_KERUMITAN_LABEL)
+            .map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+
+        function bodyForm() {
+            const angka = id => Number(document.getElementById(id).value) || 0;
+            const pakai = document.getElementById('pakaiCat').checked;
+            return {
+                berat_gram: document.getElementById('berat').value,
+                qty: angka('qty'),
+                paket_desain: document.getElementById('paket').value,
+                pakai_cat: pakai,
+                jumlah_warna: pakai ? angka('warna') : null,
+                tingkat_kerumitan: pakai ? document.getElementById('kerumitan').value : null,
+                ongkir: angka('ongkir'),
+                diskon: angka('diskon'),
+                catatan: document.getElementById('catatan').value,
+            };
+        }
+
+        document.getElementById('pakaiCat').addEventListener('change', e => {
+            document.getElementById('blokCat').classList.toggle('hidden', !e.target.checked);
+            jadwalPreview();
+        });
+        ['berat', 'qty', 'paket', 'warna', 'kerumitan', 'ongkir', 'diskon'].forEach(id =>
+            document.getElementById(id).addEventListener('input', jadwalPreview));
+
+        let previewTimer = null;
+        function jadwalPreview() {
+            clearTimeout(previewTimer);
+            previewTimer = setTimeout(preview, 300);
+        }
+
+        async function preview() {
+            const err = document.getElementById('ringkasanError');
+            if (!document.getElementById('berat').value) {
+                document.getElementById('rincian').innerHTML = '';
+                return;
+            }
+            try {
+                const res = await fetch(`${API_BASE}/api/seller/ai-requests/${designId}/invoice/preview`, {
+                    method: 'POST', headers: authHeader(), body: JSON.stringify(bodyForm()),
+                });
+                const json = await res.json();
+                if (!json.success) throw new Error(json.message);
+                const it = json.data.items[0];
+                document.getElementById('rincian').innerHTML = `
+                    <div>Cetak: ${Number(it.berat_gram)} gr × ${rupiah(it.tarif_cetak_per_gram)} = ${rupiah(it.biaya_cetak)}</div>
+                    <div>Desain ${INVOICE_PAKET_LABEL[it.paket_desain]}: ${rupiah(it.biaya_desain)}</div>
+                    <div>Cat: ${it.pakai_cat ? `${it.jumlah_warna} warna = ${rupiah(it.biaya_warna)}, kerumitan ${rupiah(it.biaya_kerumitan)}` : 'Tanpa cat'}</div>
+                    <div>× ${it.qty} pcs</div>`;
+                document.getElementById('rSubtotal').textContent = rupiah(json.data.subtotal);
+                document.getElementById('rOngkir').textContent = rupiah(json.data.ongkir);
+                document.getElementById('rDiskon').textContent = rupiah(json.data.diskon);
+                document.getElementById('rTotal').textContent = rupiah(json.data.total);
+                err.classList.add('hidden');
+            } catch (e) {
+                err.textContent = e.message;
+                err.classList.remove('hidden');
+            }
+        }
+
+        async function kirim() {
+            const btn = document.getElementById('btnKirim');
+            if (!document.getElementById('berat').value) return alert('Isi berat hasil slicing dulu.');
+            btn.disabled = true;
+            btn.textContent = 'Mengirim...';
+            try {
+                const res = await fetch(`${API_BASE}/api/seller/ai-requests/${designId}/invoice`, {
+                    method: 'POST', headers: authHeader(), body: JSON.stringify(bodyForm()),
+                });
+                const json = await res.json();
+                if (!json.success) throw new Error(json.message);
+                alert(json.message);
+                window.location.href = isAdmin ? `admin-invoice-detail.html?id=${json.data.id}` : 'dashboard.html';
+            } catch (e) {
+                alert('Gagal: ' + e.message);
+                btn.disabled = false;
+                btn.textContent = 'Kirim Penawaran';
+            }
+        }
+
+        // Muat info request dan penawaran sebelumnya (kalau ada revisi)
+        async function muat() {
+            try {
+                const listUrl = isAdmin ? '/api/admin/ai-requests' : '/api/seller/ai-requests';
+                const resList = await fetch(`${API_BASE}${listUrl}`, { headers: authHeader() });
+                const jsonList = await resList.json();
+                const d = (jsonList.data || []).find(x => String(x.id) === String(designId));
+                if (!d) {
+                    document.getElementById('infoDesain').textContent = 'Request tidak ditemukan.';
+                    return;
+                }
+                document.getElementById('infoDesain').innerHTML = `
+                    <div class="flex gap-4">
+                        ${d.image_url ? `<img src="${esc(d.image_url)}" class="w-24 h-24 rounded-xl object-cover bg-slate-100">` : ''}
+                        <div class="space-y-1">
+                            <div><b>Pemesan:</b> ${esc(d.nama_user || 'Tamu')}</div>
+                            <div><b>Prompt:</b> ${esc(d.prompt_text || '—')}</div>
+                            <div><b>Gaya:</b> ${esc(d.visual_style || '—')} · <b>Material:</b> ${esc(d.material || '—')}</div>
+                            <div><b>Status:</b> ${d.status_approval === 'disetujui' ? 'Siap Produksi' : esc(d.status_approval)}</div>
+                        </div>
+                    </div>`;
+
+                const resInv = await fetch(`${API_BASE}/api/seller/ai-requests/${designId}/invoice`, { headers: authHeader() });
+                const jsonInv = await resInv.json();
+                const inv = jsonInv.data;
+                if (inv) {
+                    const terakhir = (inv.revisions || []).slice(-1)[0];
+                    if (inv.status === 'revisi_diminta' && terakhir) {
+                        document.getElementById('kotakRevisi').classList.remove('hidden');
+                        document.getElementById('teksRevisi').textContent = terakhir.catatan;
+                    }
+                    const it = (inv.items || [])[0];
+                    if (it && it.tipe_item === 'custom') {
+                        document.getElementById('berat').value = it.berat_gram;
+                        document.getElementById('qty').value = it.qty;
+                        document.getElementById('paket').value = it.paket_desain;
+                        document.getElementById('pakaiCat').checked = !!it.pakai_cat;
+                        document.getElementById('blokCat').classList.toggle('hidden', !it.pakai_cat);
+                        if (it.pakai_cat) {
+                            document.getElementById('warna').value = it.jumlah_warna;
+                            document.getElementById('kerumitan').value = it.tingkat_kerumitan;
+                        }
+                    }
+                    document.getElementById('ongkir').value = inv.ongkir;
+                    document.getElementById('diskon').value = inv.diskon;
+                    document.getElementById('catatan').value = inv.catatan || '';
+                    document.getElementById('btnKirim').textContent = 'Kirim Ulang Penawaran';
+                    if (['lunas', 'diproduksi', 'dikirim', 'selesai', 'menunggu_pembayaran'].includes(inv.status)) {
+                        document.getElementById('btnKirim').disabled = true;
+                        document.getElementById('btnKirim').textContent = 'Penawaran sudah disetujui, tidak bisa diubah';
+                    }
+                }
+                preview();
+            } catch (e) {
+                document.getElementById('infoDesain').textContent = 'Gagal memuat: ' + e.message;
+            }
+        }
+
+        if (token && designId) muat();
+    </script>
+</body>
+</html>

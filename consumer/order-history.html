@@ -51,6 +51,7 @@
             <button onclick="filterOrders('custom_ai', this)" class="tab-btn shrink-0 px-6 py-2.5 rounded-full text-sm font-bold transition bg-white text-slate-600 border border-slate-200 hover:border-orange-500 hover:text-orange-500 hover:bg-orange-50">Custom AI</button>
         </div>
 
+        <div id="customSection" class="flex flex-col gap-4 mb-6"></div>
         <div class="flex flex-col gap-6" id="ordersContainer">
             <div class="text-center py-20">
                 <div class="w-10 h-10 border-4 border-orange-500/20 border-t-orange-500 rounded-full animate-spin mx-auto mb-4"></div>
@@ -61,6 +62,7 @@
         <div class="flex flex-col gap-4 hidden" id="aiRequestsContainer"></div>
     </main>
 
+    <script src="../shared/invoice-common.js"></script>
     <script>
         const userData = JSON.parse(localStorage.getItem('userSession'));
 
@@ -78,6 +80,7 @@
 
             // Tarik data riwayat pesanan
             fetchOrders();
+            loadCustomOrders();
             updateCartBadge();
         };
 
@@ -292,6 +295,8 @@
             const ordersContainer = document.getElementById('ordersContainer');
             const aiContainer = document.getElementById('aiRequestsContainer');
 
+            document.getElementById('customSection').classList.toggle('hidden', status !== 'all');
+
             if (status === 'custom_ai') {
                 ordersContainer.classList.add('hidden');
                 aiContainer.classList.remove('hidden');
@@ -313,11 +318,156 @@
         }
 
         // ── Riwayat Custom AI ──────────────────────────────────────────
-        const aiStatusBadge = {
-            pending:   { cls: 'bg-yellow-100 text-yellow-600', text: 'Menunggu Review Seller' },
-            disetujui: { cls: 'bg-green-100 text-green-600',   text: 'Disetujui' },
-            ditolak:   { cls: 'bg-red-100 text-red-600',       text: 'Ditolak' }
+        const CUSTOM_REQ_BADGE = {
+            pending:   { cls: 'bg-yellow-100 text-yellow-600', text: 'Menunggu Validasi Seller' },
+            disetujui: { cls: 'bg-blue-100 text-blue-600',     text: 'Siap Produksi · Menunggu Penawaran' },
+            ditolak:   { cls: 'bg-red-100 text-red-600',       text: 'Ditolak' },
         };
+        const API_PELANGGAN = 'http://localhost:3000';
+        const userToken = localStorage.getItem('userToken');
+        let customOrders = [];
+
+        async function aksiCustom(method, path, body) {
+            const res = await fetch(`${API_PELANGGAN}/api/user/${userData.id}${path}`, {
+                method,
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userToken}` },
+                body: body ? JSON.stringify(body) : undefined,
+            });
+            const json = await res.json();
+            if (!json.success) throw new Error(json.message);
+            return json;
+        }
+
+        async function setujuiCustom(invoiceId) {
+            if (!confirm('Setujui penawaran ini? Setelah itu kamu bisa lanjut ke pembayaran.')) return;
+            try {
+                await aksiCustom('PATCH', `/invoices/${invoiceId}/setuju`);
+                await loadCustomOrders();
+            } catch (e) { alert(e.message); }
+        }
+
+        async function kirimRevisiCustom(invoiceId) {
+            const catatan = document.getElementById(`rev-${invoiceId}`).value.trim();
+            if (!catatan) return alert('Tulis dulu catatan revisinya.');
+            try {
+                await aksiCustom('PATCH', `/invoices/${invoiceId}/revisi`, { catatan });
+                await loadCustomOrders();
+            } catch (e) { alert(e.message); }
+        }
+
+        async function kirimBuktiCustom(invoiceId) {
+            const file = document.getElementById(`bukti-${invoiceId}`).files[0];
+            if (!file) return alert('Pilih file bukti transfer dulu.');
+            try {
+                const fd = new FormData();
+                fd.append('file', file);
+                const up = await fetch(`${API_PELANGGAN}/api/upload`, { method: 'POST', body: fd });
+                const upJson = await up.json();
+                if (!upJson.success) throw new Error(upJson.message);
+                await aksiCustom('PATCH', `/invoices/${invoiceId}/bayar`, { bukti_pembayaran: upJson.fileUrl });
+                await loadCustomOrders();
+            } catch (e) { alert(e.message); }
+        }
+
+        function itemCustomRingkas(s) {
+            return `${Number(s.berat_gram)} gr · ${INVOICE_PAKET_LABEL[s.paket_desain] || s.paket_desain}` +
+                (s.pakai_cat ? ` · cat ${s.jumlah_warna} warna` : ' · tanpa cat') + ` × ${s.qty}`;
+        }
+
+        function kartuCustom(o) {
+            const inv = o.invoice;
+            const img = o.image_url
+                ? `<img src="${esc(o.image_url)}" class="w-full h-full object-cover" onerror="this.style.display='none'">`
+                : '';
+            let badge = CUSTOM_REQ_BADGE[o.status_approval] || CUSTOM_REQ_BADGE.pending;
+            let isi = '';
+
+            if (!inv) {
+                isi = o.status_approval === 'disetujui'
+                    ? '<p class="text-xs text-slate-500">Seller sedang menyiapkan penawaran harga.</p>'
+                    : o.status_approval === 'pending'
+                        ? '<p class="text-xs text-slate-500">Menunggu validasi dari seller.</p>'
+                        : '<p class="text-xs text-red-500">Request ini ditolak seller.</p>';
+            } else {
+                const st = INVOICE_STATUS[inv.status] || { label: inv.status, cls: 'bg-slate-100 text-slate-600' };
+                badge = { cls: st.cls, text: st.label };
+                const items = (inv.items || []).map(s => `<p class="text-xs text-slate-600">${itemCustomRingkas(s)}</p>`).join('');
+                const revisi = (inv.revisions || []).slice(-1)[0];
+                isi = `
+                    <p class="text-xs text-slate-400 font-mono">${esc(inv.nomor_invoice)}</p>
+                    ${items}
+                    <p class="font-extrabold text-orange-600 mt-1">${rupiah(inv.total)}</p>
+                    ${inv.status === 'menunggu_persetujuan' ? `
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <button onclick="setujuiCustom(${inv.id})" class="bg-orange-500 text-white px-5 py-2 rounded-xl font-bold text-sm hover:bg-orange-600 transition">Setuju</button>
+                            <button onclick="document.getElementById('revBox-${inv.id}').classList.toggle('hidden')" class="border border-slate-300 text-slate-600 px-5 py-2 rounded-xl font-bold text-sm hover:border-orange-500 hover:text-orange-500 transition">Minta Revisi</button>
+                        </div>
+                        <div id="revBox-${inv.id}" class="hidden mt-3 space-y-2">
+                            <textarea id="rev-${inv.id}" rows="2" placeholder="Tulis yang ingin direvisi (misal: ukuran lebih kecil)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm"></textarea>
+                            <button onclick="kirimRevisiCustom(${inv.id})" class="bg-slate-900 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-orange-500 transition">Kirim Revisi</button>
+                        </div>` : ''}
+                    ${inv.status === 'revisi_diminta' ? `<p class="text-xs text-purple-600 mt-2">Revisimu sudah dikirim. Menunggu seller mengirim penawaran baru.${revisi ? ` Catatan: "${esc(revisi.catatan)}"` : ''}</p>` : ''}
+                    ${inv.status === 'menunggu_pembayaran' ? (inv.bukti_pembayaran
+                        ? '<p class="text-xs text-blue-600 mt-2">Bukti pembayaran sudah dikirim. Menunggu verifikasi admin.</p>'
+                        : `<div class="mt-3 space-y-2">
+                             <p class="text-xs text-slate-500">Transfer sesuai total, lalu upload bukti transfer.</p>
+                             <input id="bukti-${inv.id}" type="file" accept="image/*" class="text-xs">
+                             <button onclick="kirimBuktiCustom(${inv.id})" class="bg-orange-500 text-white px-5 py-2 rounded-xl font-bold text-sm hover:bg-orange-600 transition">Kirim Bukti Bayar</button>
+                           </div>`) : ''}
+                    <a href="invoice-view.html?token=${inv.public_token}" class="inline-block mt-3 text-xs font-bold text-orange-500 hover:text-orange-600">Lihat invoice →</a>`;
+            }
+
+            return `
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex gap-4 p-4">
+                    <div class="w-20 h-20 bg-slate-100 rounded-xl shrink-0 overflow-hidden flex items-center justify-center">${img}</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start gap-2 mb-1">
+                            <p class="font-bold text-slate-800 text-sm line-clamp-2">${esc(o.prompt_text)}</p>
+                            <span class="shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full ${badge.cls}">${badge.text}</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Seller: ${esc(o.nama_kreator || 'Belum ditentukan')} &middot; ${formatDate(o.created_at)}</p>
+                        ${isi}
+                    </div>
+                </div>`;
+        }
+
+        async function loadCustomOrders() {
+            try {
+                const res = await fetch(`${API_PELANGGAN}/api/user/${userData.id}/custom-orders`, {
+                    headers: { 'Authorization': `Bearer ${userToken}` },
+                });
+                const json = await res.json();
+                if (!json.success) throw new Error(json.message);
+                customOrders = json.data;
+            } catch (e) {
+                customOrders = null;
+            }
+            renderCustomOrders();
+        }
+
+        function renderCustomOrders() {
+            const aiContainer = document.getElementById('aiRequestsContainer');
+            const section = document.getElementById('customSection');
+
+            if (customOrders === null) {
+                aiContainer.innerHTML = '<p class="text-center text-red-500 font-bold py-10">Gagal memuat riwayat Custom AI.</p>';
+                section.innerHTML = '';
+                return;
+            }
+            if (customOrders.length === 0) {
+                aiContainer.innerHTML = `
+                    <div class="text-center py-16 bg-white rounded-3xl border border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Belum Ada Request Custom AI</h3>
+                        <p class="text-slate-500 mb-6">Yuk, coba kustomisasi desain souvenir pakai AI!</p>
+                        <button onclick="window.location.href='custom-ai.html'" class="bg-orange-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-orange-600 transition">Coba Custom AI</button>
+                    </div>`;
+                section.innerHTML = '';
+                return;
+            }
+            const kartu = customOrders.map(kartuCustom).join('');
+            aiContainer.innerHTML = kartu;
+            section.innerHTML = `<h3 class="text-sm font-extrabold text-slate-500 uppercase tracking-widest">Custom AI</h3>${kartu}`;
+        }
 
         async function fetchAiRequests() {
             const aiContainer = document.getElementById('aiRequestsContainer');
@@ -327,44 +477,10 @@
                     <p class="text-slate-500 font-bold">Memuat riwayat Custom AI...</p>
                 </div>`;
             try {
-                const res = await fetch(`http://localhost:3000/api/user/${userData.id}/ai-requests`);
-                const json = await res.json();
-                renderAiRequests(json.data || []);
+                await loadCustomOrders();
             } catch (error) {
                 aiContainer.innerHTML = '<p class="text-center text-red-500 font-bold py-10">Gagal terhubung ke server backend.</p>';
             }
-        }
-
-        function renderAiRequests(requests) {
-            const aiContainer = document.getElementById('aiRequestsContainer');
-            if (requests.length === 0) {
-                aiContainer.innerHTML = `
-                    <div class="text-center py-16 bg-white rounded-3xl border border-slate-200">
-                        <h3 class="text-xl font-bold text-slate-800 mb-2">Belum Ada Request Custom AI</h3>
-                        <p class="text-slate-500 mb-6">Yuk, coba kustomisasi desain souvenir pakai AI!</p>
-                        <button onclick="window.location.href='custom-ai.html'" class="bg-orange-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-orange-600 transition">Coba Custom AI</button>
-                    </div>`;
-                return;
-            }
-
-            aiContainer.innerHTML = requests.map(r => {
-                const badge = aiStatusBadge[r.status_approval] || aiStatusBadge.pending;
-                const imgHtml = r.image_url
-                    ? `<img src="${r.image_url}" class="w-full h-full object-cover" onerror="this.style.display='none'">`
-                    : '';
-                return `
-                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex gap-4 p-4">
-                        <div class="w-20 h-20 bg-slate-100 rounded-xl shrink-0 overflow-hidden flex items-center justify-center">${imgHtml}</div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex justify-between items-start gap-2 mb-1">
-                                <p class="font-bold text-slate-800 text-sm line-clamp-2">${r.prompt_text}</p>
-                                <span class="shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full ${badge.cls}">${badge.text}</span>
-                            </div>
-                            <p class="text-xs text-slate-400">${r.visual_style || '-'} &middot; ${r.material || '-'}</p>
-                            <p class="text-xs text-slate-400 mt-1">Seller: ${r.nama_kreator || 'Belum ditentukan'} &middot; ${formatDate(r.created_at)}</p>
-                        </div>
-                    </div>`;
-            }).join('');
         }
 
         // --- LOGIKA ULASAN/REVIEW BARU ---
